@@ -1,6 +1,7 @@
 from django.contrib.auth.signals import user_logged_in, user_logged_out
 from django.dispatch import receiver
 
+from .context import get_audit_context
 from .models import AuditActionType, AuditEntityType, AuditLog
 
 # Заповнюється у AuditConfig.ready() після того, як усі додатки готові.
@@ -56,12 +57,21 @@ def log_user_logout(sender, request, user, **kwargs):
     )
 
 
-# TODO: field-level diff — не реалізовано
-# @receiver(pre_save)
-# def cache_old_instance_state(sender, instance, **kwargs): ...
+def get_acting_user(using):
+    context = get_audit_context()
+    # Read request.user at the time of the event: login/logout can replace it.
+    user = context.user if context.user is not None else getattr(context.request, 'user', None)
+    if user is None or not user.is_authenticated or user.pk is None:
+        return None
+    # Deletion signals may run after the actor's own account was deleted.
+    if not user._meta.model.objects.using(using).filter(pk=user.pk).exists():
+        return None
+    return user
 
 
-def log_model_save(sender, instance, created, **kwargs):
+def log_model_save(sender, instance, created, using, raw=False, **kwargs):
+    if raw:
+        return
     entity_type = _TRACKED_MODELS[sender]
     if created:
         action_type = AuditActionType.CREATE
@@ -70,14 +80,11 @@ def log_model_save(sender, instance, created, **kwargs):
         action_type = AuditActionType.UPDATE
         description = f"Оновлено об'єкт {instance._meta.verbose_name} з id={instance.pk}."
 
-    # LIMITATION: acting_user = creator, не поточний користувач.
-    # Для точної атрибуції потрібен middleware з threading.local.
-    acting_user = getattr(instance, "created_by", None)
-    organization = get_instance_organization(instance) or get_user_organization(acting_user)
+    acting_user = get_acting_user(using)
 
-    AuditLog.objects.create(
-        user=acting_user if acting_user else None,
-        organization=organization,
+    AuditLog.objects.using(using).create(
+        user=acting_user,
+        organization=get_instance_organization(instance),
         action_type=action_type,
         entity_type=entity_type,
         entity_id=instance.pk,
@@ -85,19 +92,25 @@ def log_model_save(sender, instance, created, **kwargs):
     )
 
 
-def log_model_delete(sender, instance, **kwargs):
+def log_model_delete(sender, instance, using, **kwargs):
     entity_type = _TRACKED_MODELS[sender]
 
-    # LIMITATION: acting_user = creator, не поточний користувач.
-    # Для точної атрибуції потрібен middleware з threading.local.
-    acting_user = getattr(instance, "created_by", None)
-    organization = get_instance_organization(instance) or get_user_organization(acting_user)
+    if entity_type == AuditEntityType.USER:
+        # Logs written during a bulk deletion were not in Django's initial
+        # SET_NULL collection. Clear those references too, including self-delete.
+        AuditLog.objects.using(using).filter(user_id=instance.pk).update(user=None)
+    acting_user = get_acting_user(using)
+    description = get_audit_context().description or (
+        f"Видалено об'єкт {instance._meta.verbose_name} з id={instance.pk}."
+    )
+    request = get_audit_context().request
 
-    AuditLog.objects.create(
-        user=acting_user if acting_user else None,
-        organization=organization,
+    AuditLog.objects.using(using).create(
+        user=acting_user,
+        organization=get_instance_organization(instance),
         action_type=AuditActionType.DELETE,
         entity_type=entity_type,
         entity_id=instance.pk,
-        description=f"Видалено об'єкт {instance._meta.verbose_name} з id={instance.pk}.",
+        description=description,
+        ip_address=request.META.get('REMOTE_ADDR') if request is not None else None,
     )

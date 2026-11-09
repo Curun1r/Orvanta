@@ -10,6 +10,7 @@ from django.utils.text import slugify
 from django.views.decorators.http import require_POST
 
 from django.conf import settings
+from audit.context import audit_context
 from .decorators import admin_required, organization_required
 from .forms import (
     ConfirmDeleteOrganizationForm,
@@ -127,7 +128,8 @@ def signup_view(request):
                 user.is_active = True
                 user.is_staff = False
                 user.is_superuser = False
-                user.save()
+                with audit_context(user=user):
+                    user.save()
 
             login(request, user)
             messages.success(request, 'Реєстрацію завершено успішно.')

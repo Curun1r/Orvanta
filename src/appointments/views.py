@@ -6,7 +6,7 @@ from django.utils import timezone
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.decorators.http import require_POST
 
-from audit.models import AuditActionType, AuditEntityType, AuditLog
+from audit.context import audit_context
 from config.csv_export import (
     build_csv_response,
     format_csv_date,
@@ -340,17 +340,8 @@ def appointment_delete_view(request, pk):
         f'статус: {appointment.get_status_display()}'
     )
 
-    appointment.delete()
-
-    AuditLog.objects.create(
-        user=request.user,
-        action_type=AuditActionType.DELETE,
-        entity_type=AuditEntityType.APPOINTMENT,
-        entity_id=pk,
-        description=description,
-        ip_address=request.META.get('REMOTE_ADDR'),
-        organization=request.user.organization,
-    )
+    with audit_context(description=description):
+        appointment.delete()
 
     messages.success(request, 'Запис успішно видалено.')
     return redirect('appointment_list')
