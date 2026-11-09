@@ -2,7 +2,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
-from appointments.models import Appointment
+from appointments.querysets import appointments_visible_to
 from clients.models import Client
 from config.views import get_dashboard_analytics
 from services_catalog.models import Service
@@ -33,9 +33,7 @@ class AppointmentViewSet(ReadOnlyModelViewSet):
 
 
     def get_queryset(self):
-        return Appointment.objects.select_related('client', 'service', 'employee').filter(
-            organization=self.request.user.organization,
-        )
+        return appointments_visible_to(self.request.user)
 
 
 class DashboardAnalyticsApiView(APIView):

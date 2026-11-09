@@ -361,3 +361,128 @@ class ReadOnlyApiTests(APITestCase):
         self.assertEqual(Decimal(str(response.data['total_revenue'])), Decimal('75.00'))
         self.assertEqual(Decimal(str(response.data['average_check'])), Decimal('75.00'))
         self.assertEqual(response.data['revenue_appointments_count'], 1)
+
+
+class AppointmentApiAccessTests(APITestCase):
+    @classmethod
+    def setUpTestData(cls):
+        user_model = get_user_model()
+        cls.organization = Organization.objects.create(name='Access Org', slug='access-org')
+        cls.other_organization = Organization.objects.create(name='Foreign Org', slug='foreign-org')
+        cls.admin = user_model.objects.create_user(
+            username='access_admin', role=UserRole.ADMIN, organization=cls.organization,
+        )
+        cls.manager = user_model.objects.create_user(
+            username='access_manager', role=UserRole.MANAGER, organization=cls.organization,
+        )
+        cls.employee = user_model.objects.create_user(
+            username='access_employee', role=UserRole.EMPLOYEE, organization=cls.organization,
+        )
+        cls.colleague = user_model.objects.create_user(
+            username='access_colleague', role=UserRole.EMPLOYEE, organization=cls.organization,
+        )
+        cls.other_employee = user_model.objects.create_user(
+            username='access_foreign', role=UserRole.EMPLOYEE, organization=cls.other_organization,
+        )
+        cls.without_organization = user_model.objects.create_user(
+            username='access_no_org', role=UserRole.ADMIN,
+        )
+        cls.unknown_role = user_model.objects.create_user(
+            username='access_unknown', role='unknown', organization=cls.organization,
+        )
+        client = Client.objects.create(
+            full_name='Shared Client', phone='+380501112201', organization=cls.organization,
+        )
+        other_client = Client.objects.create(
+            full_name='Foreign Client', phone='+380501112202', organization=cls.other_organization,
+        )
+        category = ServiceCategory.objects.create(name='Access Category', organization=cls.organization)
+        other_category = ServiceCategory.objects.create(name='Foreign Category', organization=cls.other_organization)
+        service = Service.objects.create(
+            name='Access Service', category=category, price='100.00',
+            duration_minutes=60, organization=cls.organization,
+        )
+        other_service = Service.objects.create(
+            name='Foreign Service', category=other_category, price='100.00',
+            duration_minutes=60, organization=cls.other_organization,
+        )
+        common = {
+            'client': client, 'service': service, 'organization': cls.organization,
+            'appointment_date': date(2026, 5, 1), 'start_time': time(10), 'end_time': time(11),
+        }
+        cls.own_appointment = Appointment.objects.create(employee=cls.employee, **common)
+        cls.colleague_appointment = Appointment.objects.create(
+            employee=cls.colleague, actual_price='900.00', comment='Private colleague comment', **common,
+        )
+        cls.foreign_appointment = Appointment.objects.create(
+            client=other_client, service=other_service, employee=cls.other_employee,
+            organization=cls.other_organization, appointment_date=date(2026, 5, 1),
+            start_time=time(10), end_time=time(11),
+        )
+        cls.orphan_appointment = Appointment.objects.create(
+            client=client, service=service, employee=cls.employee,
+            appointment_date=date(2026, 5, 2), start_time=time(10), end_time=time(11),
+        )
+
+    def test_employee_can_only_list_and_retrieve_assigned_appointments(self):
+        self.client.force_authenticate(user=self.employee)
+
+        response = self.client.get('/api/appointments/')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual([item['id'] for item in response.data], [self.own_appointment.pk])
+        self.assertNotContains(response, 'Private colleague comment')
+        self.assertEqual(
+            self.client.get(f'/api/appointments/{self.own_appointment.pk}/').status_code,
+            status.HTTP_200_OK,
+        )
+        for hidden in (self.colleague_appointment, self.foreign_appointment, self.orphan_appointment):
+            with self.subTest(appointment=hidden.pk):
+                self.assertEqual(
+                    self.client.get(f'/api/appointments/{hidden.pk}/').status_code,
+                    status.HTTP_404_NOT_FOUND,
+                )
+
+    def test_admin_and_manager_can_access_all_appointments_in_their_organization(self):
+        for user in (self.admin, self.manager):
+            with self.subTest(role=user.role):
+                self.client.force_authenticate(user=user)
+                response = self.client.get('/api/appointments/')
+                self.assertEqual(
+                    {item['id'] for item in response.data},
+                    {self.own_appointment.pk, self.colleague_appointment.pk},
+                )
+                self.assertEqual(
+                    self.client.get(f'/api/appointments/{self.colleague_appointment.pk}/').status_code,
+                    status.HTTP_200_OK,
+                )
+                self.assertEqual(
+                    self.client.get(f'/api/appointments/{self.foreign_appointment.pk}/').status_code,
+                    status.HTTP_404_NOT_FOUND,
+                )
+
+    def test_user_without_organization_cannot_read_orphaned_appointments(self):
+        self.client.force_authenticate(user=self.without_organization)
+
+        response = self.client.get('/api/appointments/')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, [])
+        self.assertEqual(
+            self.client.get(f'/api/appointments/{self.orphan_appointment.pk}/').status_code,
+            status.HTTP_404_NOT_FOUND,
+        )
+        self.assertEqual(self.client.get('/api/dashboard/').data['appointments_count'], 0)
+
+    def test_unknown_role_cannot_read_organization_appointments(self):
+        self.client.force_authenticate(user=self.unknown_role)
+
+        response = self.client.get('/api/appointments/')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, [])
+        self.assertEqual(
+            self.client.get(f'/api/appointments/{self.own_appointment.pk}/').status_code,
+            status.HTTP_404_NOT_FOUND,
+        )
+        self.assertEqual(self.client.get('/api/dashboard/').data['appointments_count'], 0)

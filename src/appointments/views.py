@@ -1,5 +1,6 @@
 from django.contrib import messages
-from django.db import models
+from django.core.exceptions import ValidationError
+from django.db import models, transaction
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.utils.http import url_has_allowed_host_and_scheme
@@ -19,25 +20,14 @@ from users.models import UserRole
 
 from .forms import AppointmentActualPriceForm, AppointmentFilterForm, AppointmentForm
 from .models import Appointment, AppointmentStatus, AppointmentStatusHistory
+from .querysets import appointments_visible_to
+from .scheduling import lock_organization_schedule, validate_appointment_slot
 
 APPOINTMENTS_PAGE_SIZE = settings.PAGINATION_PAGE_SIZE
 
 
-def _organization_appointments_queryset(user):
-    if user.organization_id is None:
-        return Appointment.objects.none()
-    return Appointment.objects.select_related(
-        'client',
-        'service',
-        'employee',
-    ).filter(organization=user.organization)
-
-
 def _filtered_appointments_queryset(user, data):
-    appointments = _organization_appointments_queryset(user)
-
-    if user.role == UserRole.EMPLOYEE:
-        appointments = appointments.filter(employee=user)
+    appointments = appointments_visible_to(user)
 
     filter_form = AppointmentFilterForm(
         data or None,
@@ -163,8 +153,10 @@ def appointment_actual_price_update_view(request, pk):
 
 @manager_or_admin_required
 @organization_required
+@transaction.atomic
 def appointment_create_view(request):
     if request.method == 'POST':
+        lock_organization_schedule(request.user.organization_id)
         form = AppointmentForm(
             request.POST,
             organization=request.user.organization,
@@ -200,7 +192,11 @@ def appointment_create_view(request):
 
 
 @manager_or_admin_required
+@organization_required
+@transaction.atomic
 def appointment_update_view(request, pk):
+    if request.method == 'POST':
+        lock_organization_schedule(request.user.organization_id)
     appointment = get_object_or_404(
         Appointment,
         pk=pk,
@@ -250,13 +246,9 @@ def appointment_update_view(request, pk):
 @employee_manager_admin_required
 def appointment_detail_view(request, pk):
     appointment = get_object_or_404(
-        _organization_appointments_queryset(request.user),
+        appointments_visible_to(request.user),
         pk=pk,
     )
-
-    if request.user.role == UserRole.EMPLOYEE and appointment.employee != request.user:
-        messages.error(request, 'У вас немає прав доступу до цього запису.')
-        return redirect('appointment_list')
 
     status_history = appointment.status_history.select_related('changed_by').filter(
         organization=request.user.organization,
@@ -273,17 +265,15 @@ def appointment_detail_view(request, pk):
 
 
 @employee_manager_admin_required
+@organization_required
 @require_POST
+@transaction.atomic
 def appointment_quick_status_update_view(request, pk, new_status):
+    lock_organization_schedule(request.user.organization_id)
     appointment = get_object_or_404(
-        Appointment,
+        appointments_visible_to(request.user),
         pk=pk,
-        organization=request.user.organization,
     )
-
-    if request.user.role == UserRole.EMPLOYEE and appointment.employee != request.user:
-        messages.error(request, 'У вас немає прав для зміни цього запису.')
-        return redirect('appointment_list')
 
     allowed_statuses = {
         AppointmentStatus.CONFIRMED,
@@ -297,6 +287,20 @@ def appointment_quick_status_update_view(request, pk, new_status):
 
     if appointment.status == new_status:
         messages.error(request, 'Запис уже має цей статус.')
+        return redirect('appointment_list')
+
+    try:
+        validate_appointment_slot(
+            organization_id=appointment.organization_id,
+            employee_id=appointment.employee_id,
+            appointment_date=appointment.appointment_date,
+            start_time=appointment.start_time,
+            end_time=appointment.end_time,
+            status=new_status,
+            exclude_pk=appointment.pk,
+        )
+    except ValidationError as error:
+        messages.error(request, error.messages[0])
         return redirect('appointment_list')
 
     old_status = appointment.status

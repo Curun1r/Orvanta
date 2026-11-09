@@ -1,6 +1,11 @@
+from datetime import date, time
+from decimal import Decimal
+
 from django.test import TestCase
 from django.urls import reverse
 
+from appointments.models import Appointment, AppointmentStatus
+from services_catalog.models import Service, ServiceCategory
 from users.models import Organization, User, UserRole
 
 from .models import Client
@@ -178,3 +183,113 @@ class ClientExportCsvTests(TestCase):
 
         self.assertEqual(response.status_code, 302)
         self.assertNotEqual(response.get('Content-Type'), 'text/csv; charset=utf-8')
+
+
+class ClientAppointmentAccessTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.organization = Organization.objects.create(name='History Org', slug='history-org')
+        cls.other_organization = Organization.objects.create(name='Other History Org', slug='other-history-org')
+        cls.admin = User.objects.create_user(
+            username='history_admin', role=UserRole.ADMIN, organization=cls.organization,
+        )
+        cls.manager = User.objects.create_user(
+            username='history_manager', role=UserRole.MANAGER, organization=cls.organization,
+        )
+        cls.employee = User.objects.create_user(
+            username='history_employee', role=UserRole.EMPLOYEE, organization=cls.organization,
+        )
+        cls.colleague = User.objects.create_user(
+            username='history_colleague', role=UserRole.EMPLOYEE, organization=cls.organization,
+        )
+        cls.unassigned_employee = User.objects.create_user(
+            username='history_unassigned', role=UserRole.EMPLOYEE, organization=cls.organization,
+        )
+        cls.client_entity = Client.objects.create(
+            full_name='Shared History Client', phone='+380501112211', organization=cls.organization,
+        )
+        cls.other_client = Client.objects.create(
+            full_name='Foreign History Client', phone='+380501112212', organization=cls.other_organization,
+        )
+        category = ServiceCategory.objects.create(name='History Category', organization=cls.organization)
+        service = Service.objects.create(
+            name='History Service', category=category, price='100.00',
+            duration_minutes=60, organization=cls.organization,
+        )
+        common = {
+            'client': cls.client_entity, 'service': service, 'organization': cls.organization,
+            'start_time': time(10), 'end_time': time(11),
+        }
+        cls.own_completed = Appointment.objects.create(
+            employee=cls.employee, appointment_date=date(2026, 5, 1),
+            status=AppointmentStatus.COMPLETED, actual_price='100.00', **common,
+        )
+        cls.own_planned = Appointment.objects.create(
+            employee=cls.employee, appointment_date=date(2026, 5, 10), **common,
+        )
+        cls.colleague_completed = Appointment.objects.create(
+            employee=cls.colleague, appointment_date=date(2026, 5, 20),
+            status=AppointmentStatus.COMPLETED, actual_price='900.00', **common,
+        )
+
+    def test_employee_history_and_statistics_only_include_assigned_appointments(self):
+        self.client.force_login(self.employee)
+
+        response = self.client.get(reverse('client_detail', args=[self.client_entity.pk]))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            {item.pk for item in response.context['appointments']},
+            {self.own_completed.pk, self.own_planned.pk},
+        )
+        self.assertEqual(response.context['total_count'], 2)
+        self.assertEqual(response.context['completed_count'], 1)
+        self.assertEqual(response.context['total_spent'], Decimal('100.00'))
+        self.assertEqual(response.context['last_visit'], date(2026, 5, 1))
+        self.assertNotContains(response, self.colleague.username)
+
+    def test_history_filters_do_not_expand_access_or_change_visible_totals(self):
+        self.client.force_login(self.employee)
+
+        response = self.client.get(
+            reverse('client_detail', args=[self.client_entity.pk]),
+            {'status': AppointmentStatus.PLANNED, 'date_from': '2026-05-02'},
+        )
+
+        self.assertEqual([item.pk for item in response.context['appointments']], [self.own_planned.pk])
+        self.assertEqual(response.context['total_count'], 2)
+        self.assertEqual(response.context['completed_count'], 1)
+        self.assertEqual(response.context['total_spent'], Decimal('100.00'))
+        self.assertEqual(response.context['last_visit'], date(2026, 5, 1))
+
+    def test_admin_and_manager_keep_complete_client_history_and_statistics(self):
+        for user in (self.admin, self.manager):
+            with self.subTest(role=user.role):
+                self.client.force_login(user)
+                response = self.client.get(reverse('client_detail', args=[self.client_entity.pk]))
+                self.assertEqual(
+                    {item.pk for item in response.context['appointments']},
+                    {self.own_completed.pk, self.own_planned.pk, self.colleague_completed.pk},
+                )
+                self.assertEqual(response.context['total_count'], 3)
+                self.assertEqual(response.context['completed_count'], 2)
+                self.assertEqual(response.context['total_spent'], Decimal('1000.00'))
+                self.assertEqual(response.context['last_visit'], date(2026, 5, 20))
+
+    def test_employee_without_assignments_sees_empty_history_and_zero_totals(self):
+        self.client.force_login(self.unassigned_employee)
+
+        response = self.client.get(reverse('client_detail', args=[self.client_entity.pk]))
+
+        self.assertEqual(list(response.context['appointments']), [])
+        self.assertEqual(response.context['total_count'], 0)
+        self.assertEqual(response.context['completed_count'], 0)
+        self.assertEqual(response.context['total_spent'], 0)
+        self.assertIsNone(response.context['last_visit'])
+
+    def test_foreign_organization_client_is_not_accessible(self):
+        for user in (self.employee, self.admin, self.manager):
+            with self.subTest(role=user.role):
+                self.client.force_login(user)
+                response = self.client.get(reverse('client_detail', args=[self.other_client.pk]))
+                self.assertEqual(response.status_code, 404)

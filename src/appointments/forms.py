@@ -6,6 +6,7 @@ from services_catalog.models import Service
 from users.models import User, UserRole
 
 from .models import Appointment, AppointmentStatus
+from .scheduling import validate_appointment_slot
 
 
 class AppointmentForm(BootstrapFormMixin, forms.ModelForm):
@@ -98,29 +99,15 @@ class AppointmentForm(BootstrapFormMixin, forms.ModelForm):
                 'Час завершення запису повинен бути пізнішим за час початку.'
             )
 
-        if (
-            self.organization
-            and employee
-            and appointment_date
-            and start_time
-            and end_time
-            and status != AppointmentStatus.CANCELLED
-        ):
-            overlapping_appointments = Appointment.objects.filter(
-                organization=self.organization,
-                employee=employee,
-                appointment_date=appointment_date,
-                start_time__lt=end_time,
-                end_time__gt=start_time,
-            ).exclude(status=AppointmentStatus.CANCELLED)
-
-            if self.instance.pk:
-                overlapping_appointments = overlapping_appointments.exclude(pk=self.instance.pk)
-
-            if overlapping_appointments.exists():
-                raise forms.ValidationError(
-                    'У цього співробітника вже є запис на обраний проміжок часу.'
-                )
+        validate_appointment_slot(
+            organization_id=self.organization.pk if self.organization else None,
+            employee_id=employee.pk if employee else None,
+            appointment_date=appointment_date,
+            start_time=start_time,
+            end_time=end_time,
+            status=status,
+            exclude_pk=self.instance.pk,
+        )
 
         return cleaned_data
 

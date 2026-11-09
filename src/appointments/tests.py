@@ -1,6 +1,7 @@
 from datetime import date, time, timedelta
 from decimal import Decimal
 
+from django.contrib.messages import get_messages
 from django.test import TestCase
 from django.urls import reverse
 
@@ -9,7 +10,8 @@ from services_catalog.models import Service, ServiceCategory
 from users.models import Organization, User, UserRole
 
 from .forms import AppointmentForm
-from .models import Appointment, AppointmentStatus
+from .models import Appointment, AppointmentStatus, AppointmentStatusHistory
+from .scheduling import APPOINTMENT_CONFLICT_MESSAGE
 
 
 class AppointmentFormConflictValidationTests(TestCase):
@@ -624,6 +626,155 @@ class AppointmentListPaginationTests(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(appointment.status, AppointmentStatus.COMPLETED)
         self.assertIsNone(appointment.actual_price)
+
+    def test_cancelled_appointment_cannot_be_reactivated_into_an_occupied_slot(self):
+        self._create_appointment(start_time=time(9, 30), end_time=time(10, 30))
+        cancelled = self._create_appointment(status=AppointmentStatus.CANCELLED)
+        self.client.force_login(self.employee)
+
+        for status in (AppointmentStatus.CONFIRMED, AppointmentStatus.COMPLETED):
+            with self.subTest(status=status):
+                response = self.client.post(reverse(
+                    'appointment_quick_status_update', args=[cancelled.pk, status],
+                ))
+
+                cancelled.refresh_from_db()
+                self.assertRedirects(response, reverse('appointment_list'))
+                self.assertEqual(cancelled.status, AppointmentStatus.CANCELLED)
+                self.assertFalse(cancelled.status_history.exists())
+                self.assertIn(
+                    APPOINTMENT_CONFLICT_MESSAGE,
+                    [str(message) for message in get_messages(response.wsgi_request)],
+                )
+
+    def test_cancelled_appointment_can_be_reactivated_in_a_free_slot(self):
+        self.client.force_login(self.manager)
+        for status in (AppointmentStatus.CONFIRMED, AppointmentStatus.COMPLETED):
+            with self.subTest(status=status):
+                cancelled = self._create_appointment(status=AppointmentStatus.CANCELLED)
+                response = self.client.post(reverse(
+                    'appointment_quick_status_update', args=[cancelled.pk, status],
+                ))
+
+                cancelled.refresh_from_db()
+                self.assertRedirects(response, reverse('appointment_list'))
+                self.assertEqual(cancelled.status, status)
+                history = cancelled.status_history.get()
+                self.assertEqual(history.old_status, AppointmentStatus.CANCELLED)
+                self.assertEqual(history.new_status, status)
+                self.assertEqual(history.changed_by, self.manager)
+                cancelled.delete()
+
+    def test_adjacent_appointment_does_not_block_reactivation(self):
+        self._create_appointment(start_time=time(10), end_time=time(11))
+        cancelled = self._create_appointment(status=AppointmentStatus.CANCELLED)
+        self.client.force_login(self.employee)
+
+        self.client.post(reverse(
+            'appointment_quick_status_update',
+            args=[cancelled.pk, AppointmentStatus.CONFIRMED],
+        ))
+
+        cancelled.refresh_from_db()
+        self.assertEqual(cancelled.status, AppointmentStatus.CONFIRMED)
+
+    def test_other_employee_or_date_does_not_block_reactivation(self):
+        self._create_appointment(employee=self.other_employee)
+        self._create_appointment(appointment_date=date(2026, 5, 11))
+        cancelled = self._create_appointment(status=AppointmentStatus.CANCELLED)
+        self.client.force_login(self.manager)
+
+        self.client.post(reverse(
+            'appointment_quick_status_update',
+            args=[cancelled.pk, AppointmentStatus.CONFIRMED],
+        ))
+
+        cancelled.refresh_from_db()
+        self.assertEqual(cancelled.status, AppointmentStatus.CONFIRMED)
+
+    def test_cancellation_releases_slot_and_an_unchanged_status_creates_no_history(self):
+        appointment = self._create_appointment()
+        self.client.force_login(self.employee)
+        status_url = reverse(
+            'appointment_quick_status_update',
+            args=[appointment.pk, AppointmentStatus.CANCELLED],
+        )
+
+        self.client.post(status_url)
+        self.client.post(status_url)
+
+        appointment.refresh_from_db()
+        self.assertEqual(appointment.status, AppointmentStatus.CANCELLED)
+        self.assertEqual(appointment.status_history.count(), 1)
+        form = AppointmentForm(data={
+            'client': self.client_record.pk, 'service': self.service.pk,
+            'employee': self.employee.pk, 'appointment_date': '2026-05-10',
+            'start_time': '09:00', 'end_time': '10:00',
+            'status': AppointmentStatus.PLANNED,
+        }, organization=self.organization)
+        self.assertTrue(form.is_valid(), form.errors)
+
+    def test_employee_cannot_read_or_change_colleague_appointment_directly(self):
+        appointment = self._create_appointment(employee=self.other_employee)
+        self.client.force_login(self.employee)
+
+        detail = self.client.get(reverse('appointment_detail', args=[appointment.pk]))
+        update = self.client.post(reverse(
+            'appointment_quick_status_update',
+            args=[appointment.pk, AppointmentStatus.COMPLETED],
+        ))
+
+        self.assertEqual(detail.status_code, 404)
+        self.assertEqual(update.status_code, 404)
+        appointment.refresh_from_db()
+        self.assertEqual(appointment.status, AppointmentStatus.PLANNED)
+        self.assertFalse(appointment.status_history.exists())
+
+    def test_manager_can_read_colleague_appointment_but_not_another_organization(self):
+        appointment = self._create_appointment(employee=self.other_employee)
+        external = self._create_appointment(
+            employee=self.external_employee, organization=self.other_organization,
+        )
+        self.client.force_login(self.manager)
+
+        self.assertEqual(self.client.get(reverse(
+            'appointment_detail', args=[appointment.pk],
+        )).status_code, 200)
+        self.assertEqual(self.client.get(reverse(
+            'appointment_detail', args=[external.pk],
+        )).status_code, 404)
+        self.assertEqual(self.client.post(reverse(
+            'appointment_quick_status_update',
+            args=[external.pk, AppointmentStatus.COMPLETED],
+        )).status_code, 404)
+
+    def test_create_and_edit_reject_overlapping_slots_through_http(self):
+        self._create_appointment()
+        editable = self._create_appointment(start_time=time(11), end_time=time(12))
+        self.client.force_login(self.manager)
+        data = {
+            'client': self.client_record.pk, 'service': self.service.pk,
+            'employee': self.employee.pk, 'appointment_date': '2026-05-10',
+            'start_time': '09:30', 'end_time': '10:30',
+            'status': AppointmentStatus.PLANNED,
+        }
+
+        for url in (
+            reverse('appointment_create'),
+            reverse('appointment_update', args=[editable.pk]),
+        ):
+            with self.subTest(url=url):
+                response = self.client.post(url, data)
+                self.assertEqual(response.status_code, 200)
+                self.assertIn(
+                    APPOINTMENT_CONFLICT_MESSAGE,
+                    response.context['form'].non_field_errors(),
+                )
+
+        editable.refresh_from_db()
+        self.assertEqual(editable.start_time, time(11))
+        self.assertEqual(Appointment.objects.count(), 2)
+        self.assertFalse(AppointmentStatusHistory.objects.exists())
 
     def test_manager_can_update_actual_price_from_appointment_list(self):
         appointment = self._create_appointment(actual_price=None)

@@ -12,6 +12,7 @@ from django.urls import reverse
 from django.utils import timezone
 
 from appointments.models import Appointment, AppointmentStatus, AppointmentStatusHistory
+from appointments.querysets import appointments_visible_to
 from audit.models import AuditLog, AuditActionType, AuditEntityType
 from clients.models import Client
 from config.csv_export import format_csv_date
@@ -118,14 +119,7 @@ def get_onboarding_status(user):
 def get_dashboard_analytics(user):
     user_organization = user.organization
 
-    appointments = Appointment.objects.select_related(
-        'client',
-        'service',
-        'employee',
-    ).filter(organization=user_organization)
-
-    if user.role == UserRole.EMPLOYEE:
-        appointments = appointments.filter(employee=user)
+    appointments = appointments_visible_to(user)
 
     raw_status_counts = (
         appointments.values('status')

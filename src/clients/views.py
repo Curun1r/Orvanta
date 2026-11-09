@@ -17,7 +17,8 @@ from users.decorators import (
     organization_required,
 )
 
-from appointments.models import Appointment, AppointmentStatus
+from appointments.models import AppointmentStatus
+from appointments.querysets import appointments_visible_to
 
 from .forms import ClientFilterForm, ClientForm
 from .models import Client
@@ -145,12 +146,8 @@ def client_detail_view(request, pk):
         organization=request.user.organization,
     )
 
-    appointments = (
-        Appointment.objects
-        .filter(client=client)
-        .select_related('service', 'employee')
-        .order_by('-appointment_date', '-start_time')
-    )
+    all_appointments = appointments_visible_to(request.user).filter(client=client)
+    appointments = all_appointments.order_by('-appointment_date', '-start_time')
 
     # Фільтрація
     status_filter  = request.GET.get('status', '')
@@ -164,8 +161,7 @@ def client_detail_view(request, pk):
     if date_to:
         appointments = appointments.filter(appointment_date__lte=date_to)
 
-    # Статистика (завжди по всіх записах, без фільтрів)
-    all_appointments = Appointment.objects.filter(client=client)
+    # Статистика за всіма доступними записами клієнта, без фільтрів сторінки.
     total_count      = all_appointments.count()
     completed_count  = all_appointments.filter(status=AppointmentStatus.COMPLETED).count()
     total_spent      = all_appointments.filter(
