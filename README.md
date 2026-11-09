@@ -4,6 +4,8 @@ A multi-tenant SaaS platform for managing service businesses — appointments, c
 
 > **Stack:** Python · Django · PostgreSQL · Bootstrap 5 · Chart.js · Django REST Framework · Railway
 
+[Run the local demo](#local-demo-docker) to explore the application with generated sample data and accounts for all three roles.
+
 ---
 
 ## Screenshots
@@ -200,7 +202,7 @@ Read-only REST API endpoints built with Django REST Framework. Available for cli
 ## Project Structure
 
 ```text
-Thesis/
+orvanta/
 ├── Dockerfile
 ├── railway.toml
 ├── docker-compose.yml
@@ -210,7 +212,7 @@ Thesis/
 ├── README.md
 └── src/
     ├── manage.py
-    ├── seed_salon.py
+    ├── seed_salon.py      # Compatibility entry point for setup_demo
     ├── config/           # Django settings, URLs, WSGI, views, utils, CSV export
     ├── users/            # Custom user model, roles, decorators, profile, password change
     ├── clients/          # Client model, views, CSV export
@@ -224,53 +226,122 @@ Thesis/
 
 ---
 
-## Local Development
+## Local Demo (Docker)
 
 ### Requirements
 
-- Docker
-- Docker Compose
+- Docker Engine or Docker Desktop
+- Docker Compose with `docker compose up --wait` support
+- Local ports `8000` and `5433` available
 
 ### Setup
 
 1. Clone the repository:
 
 ```bash
-git clone <repository-url>
-cd Thesis
+git clone https://github.com/Curun1r/Orvanta.git orvanta
+cd orvanta
 ```
 
-2. Copy the example environment file and fill in your values:
+2. Copy the example environment file:
 
 ```bash
 cp .env.example .env
 ```
 
-3. Build and start the containers:
+Set a random `SECRET_KEY` and a local `DATABASE_PASSWORD` in `.env`. Keep `DEBUG=True`, `DATABASE_HOST=db`, and `ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0` for this Docker demo. Leave `DATABASE_URL` unset so the local PostgreSQL settings are used.
+
+3. Build and start the containers, waiting until the application is ready:
 
 ```bash
-docker-compose up --build
+docker compose up --build --detach --wait --wait-timeout 120
 ```
 
-4. Apply migrations:
+PostgreSQL must pass its health check before the web service starts. The web startup command collects static files and applies migrations before starting Gunicorn. The application health check then confirms it is serving requests.
+
+4. Create the demo workspace and sample data:
 
 ```bash
-docker-compose exec web python src/manage.py migrate
+docker compose exec web python src/manage.py setup_demo
 ```
 
-5. Create a superuser:
+This command creates **Orvanta Demo** (`orvanta-demo`), accounts for all three roles, 35 sample clients, 30 services, and 180 appointments around the current date. Past completed appointments populate financial analytics; upcoming appointments populate the dashboard.
+
+A shared password is generated and printed when the demo accounts are created. Save it for the following logins:
+
+| Role | Username | Organization |
+|---|---|---|
+| Admin | `demo_admin` | `orvanta-demo` |
+| Manager | `demo_manager` | `orvanta-demo` |
+| Employee | `demo_olena` | `orvanta-demo` |
+
+The other employee accounts are `demo_natalia`, `demo_iryna`, `demo_tetyana`, and `demo_oksana`; they use the same demo password and organization.
+
+Open [http://localhost:8000/login/](http://localhost:8000/login/) and enter the username, generated password, and organization slug. The application admin account is ready to use; creating a Django superuser is not required.
+
+For a local demo with a password you choose, provide it on initial setup:
 
 ```bash
-docker-compose exec web python src/manage.py createsuperuser
+docker compose exec web python src/manage.py setup_demo --password 'LocalDemo2026!'
 ```
 
-6. (Optional) Seed demo data:
+### Repeat or refresh the demo
+
+Running `setup_demo` again leaves existing demo data and passwords unchanged. It does not add another set of appointments or select an existing business organization.
+
+To rebuild the dedicated demo workspace with dates relative to today and new credentials:
 
 ```bash
-docker-compose exec web python src/seed_salon.py
+docker compose exec web python src/manage.py setup_demo --reset
 ```
 
-The application will be available at `http://localhost:8000`.
+Reset removes changes made inside the managed demo workspace. Other organizations are preserved. Setup refuses conflicting organization names or usernames instead of reusing another organization's accounts.
+
+The legacy `python src/seed_salon.py` entry point runs the same demo setup command.
+
+### Suggested walkthrough
+
+1. Sign in as `demo_admin` and inspect the dashboard, upcoming appointments, clients, and service catalog.
+2. Open **Фінанси** to inspect completed-appointment revenue and export a filtered CSV.
+3. Create an appointment, then attempt another appointment for the same employee at an overlapping time to see conflict validation.
+4. Sign in as `demo_olena`. Appointment lists, API responses, and client appointment history are limited to this employee's assigned records.
+5. Sign in as `demo_manager` to manage operational data; sign in as `demo_admin` to inspect user management and the audit log.
+
+### Start with your own organization
+
+Open [http://localhost:8000/signup/](http://localhost:8000/signup/) to create a separate organization with your own administrator account. The demo command is optional and does not populate that organization.
+
+For developer access to Django admin at `/orvanta-admin/`, create a separate superuser:
+
+```bash
+docker compose exec web python src/manage.py createsuperuser
+```
+
+### Stop or inspect the local application
+
+```bash
+docker compose logs --tail=100 web
+docker compose stop
+```
+
+Stopping the services preserves PostgreSQL data. Starting them again with `docker compose up --detach --wait` reuses the existing database.
+
+### Tests
+
+Run the suite with the in-memory SQLite test settings:
+
+```bash
+docker compose exec --workdir /app/src web python manage.py test --settings=config.test_settings
+```
+
+For an existing native Python environment, run from the `src` directory:
+
+```bash
+cd src
+python manage.py test --settings=config.test_settings
+```
+
+PostgreSQL-specific concurrency tests require PostgreSQL and are skipped with SQLite.
 
 ---
 
