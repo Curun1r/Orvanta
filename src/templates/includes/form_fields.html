@@ -1,6 +1,7 @@
+{% load i18n %}
 {% if form.errors %}
     <div class="alert alert-danger form-alert" role="alert">
-        <strong>Перевірте форму.</strong>
+        <strong>{% translate "Check the form." %}</strong>
         {% if form.non_field_errors %}
             <div class="mt-2">
                 {% for error in form.non_field_errors %}
@@ -47,9 +48,9 @@
                         type="button"
                         class="password-toggle"
                         data-password-toggle
-                        aria-label="Показати пароль"
+                        aria-label="{% translate 'Show password' %}"
                     >
-                        Показати
+                        {% translate "Show" %}
                     </button>
                 </div>
             {% else %}

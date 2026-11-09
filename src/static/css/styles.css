@@ -4773,3 +4773,14 @@ body.dark-theme .onboarding-step .step-status.pending {
     border-color: #475569;
     color: #94a3b8;
 }
+
+/* Language preference, shared by the app and standalone authentication pages. */
+.language-switcher { display: inline-flex; flex: 0 0 auto; gap: 0.15rem; margin: 0; padding: 0.2rem; border: 1px solid #cbd5e1; border-radius: 0.65rem; background: #f8fafc; }
+.language-switcher button { border: 0; border-radius: 0.4rem; background: transparent; color: #475569; font: inherit; font-size: 0.78rem; font-weight: 700; padding: 0.35rem 0.45rem; cursor: pointer; }
+.language-switcher button[aria-pressed="true"] { background: #123166; color: #fff; }
+.language-switcher button:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+.auth-card > .language-switcher { display: flex; width: max-content; margin: 0 0 1rem auto; }
+.dark-theme .language-switcher { background: #0f172a; border-color: #475569; }
+.dark-theme .language-switcher button { color: #cbd5e1; }
+.dark-theme .language-switcher button[aria-pressed="true"] { background: #2563eb; color: #fff; }
+@media (max-width: 1280px) { .navbar-inner { flex-wrap: wrap; } .nav-links { order: 3; justify-content: flex-start; width: 100%; overflow-x: auto; padding-bottom: 0.35rem; } .app-brand { min-width: auto; margin-right: auto; } }

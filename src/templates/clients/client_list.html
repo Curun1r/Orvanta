@@ -1,23 +1,24 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
-{% block title %}Клієнти{% endblock %}
+{% block title %}{% translate "Clients" %}{% endblock %}
 
 {% block content %}
 <div class="app-page">
     <header class="page-header">
         <div>
-            <h1>Клієнти</h1>
-            <p>Керуйте клієнтською базою та контактними даними.</p>
+            <h1>{% translate "Clients" %}</h1>
+            <p>{% translate "Manage your clients and their contact details." %}</p>
         </div>
         <div class="page-actions">
             {% if request.user.role == 'admin' or request.user.role == 'manager' %}
-                <a href="{% url 'client_create' %}" class="btn btn-primary">Додати клієнта</a>
+                <a href="{% url 'client_create' %}" class="btn btn-primary">{% translate "Add client" %}</a>
             {% endif %}
             <a
                 href="{% url 'client_export_csv' %}{% if query_string %}?{{ query_string }}{% endif %}"
                 class="btn btn-outline-secondary"
             >
-                Експорт CSV
+                {% translate "Export CSV" %}
             </a>
         </div>
     </header>
@@ -25,8 +26,8 @@
     <section class="filter-card">
         <div class="filter-card-header">
             <div>
-                <h2 class="filter-card-title">Пошук і фільтрація</h2>
-                <p class="filter-card-subtitle">Знайдіть клієнта за ПІБ, телефоном або email.</p>
+                <h2 class="filter-card-title">{% translate "Search and filters" %}</h2>
+                <p class="filter-card-subtitle">{% translate "Find a client by name, phone or email." %}</p>
             </div>
         </div>
 
@@ -42,8 +43,8 @@
             </p>
 
             <div class="filter-actions">
-                <button type="submit" class="btn btn-primary">Застосувати</button>
-                <a href="{% url 'client_list' %}" class="btn btn-outline-secondary">Скинути</a>
+                <button type="submit" class="btn btn-primary">{% translate "Apply" %}</button>
+                <a href="{% url 'client_list' %}" class="btn btn-outline-secondary">{% translate "Reset" %}</a>
             </div>
         </form>
     </section>
@@ -52,8 +53,8 @@
         <section class="table-card">
             <div class="table-card-header">
                 <div>
-                    <h2>Клієнти</h2>
-                    <p>Показано {{ page_obj.start_index }}–{{ page_obj.end_index }} із {{ page_obj.paginator.count }}</p>
+                    <h2>{% translate "Clients" %}</h2>
+                    <p>{% translate "Showing" %} {{ page_obj.start_index }}–{{ page_obj.end_index }} {% translate "of" %} {{ page_obj.paginator.count }}</p>
                 </div>
             </div>
 
@@ -61,11 +62,11 @@
                 <table class="table app-table align-middle">
                     <thead>
                     <tr>
-                        <th>ПІБ</th>
-                        <th>Телефон</th>
+                        <th>{% translate "Full name" %}</th>
+                        <th>{% translate "Phone" %}</th>
                         <th>Email</th>
-                        <th>Статус</th>
-                        <th>Дії</th>
+                        <th>{% translate "Status" %}</th>
+                        <th>{% translate "Actions" %}</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -76,23 +77,23 @@
                             <td>{% if client.email %}<a href="mailto:{{ client.email }}" class="tel-link">{{ client.email }}</a>{% else %}—{% endif %}</td>
                             <td>
                                 {% if client.is_active %}
-                                    <span class="badge-soft badge-soft-success">Активний</span>
+                                    <span class="badge-soft badge-soft-success">{% translate "Active" %}</span>
                                 {% else %}
-                                    <span class="badge-soft badge-soft-muted">Неактивний</span>
+                                    <span class="badge-soft badge-soft-muted">{% translate "Inactive" %}</span>
                                 {% endif %}
                             </td>
                             <td>
                                 <div class="table-actions">
-                                    <a href="{% url 'client_detail' client.pk %}" class="btn btn-sm btn-outline-secondary btn-sm-action">Перегляд</a>
+                                    <a href="{% url 'client_detail' client.pk %}" class="btn btn-sm btn-outline-secondary btn-sm-action">{% translate "View" %}</a>
                                     {% if request.user.role == 'admin' or request.user.role == 'manager' %}
-                                        <a href="{% url 'client_update' client.pk %}" class="btn btn-sm btn-outline-primary btn-sm-action">Редагувати</a>
+                                        <a href="{% url 'client_update' client.pk %}" class="btn btn-sm btn-outline-primary btn-sm-action">{% translate "Edit" %}</a>
 
                                         <form method="post" action="{% url 'client_toggle_active' client.pk %}">
                                             {% csrf_token %}
                                             {% if client.is_active %}
-                                                <button type="submit" class="btn btn-sm btn-outline-danger btn-sm-action">Деактивувати</button>
+                                                <button type="submit" class="btn btn-sm btn-outline-danger btn-sm-action">{% translate "Deactivate" %}</button>
                                             {% else %}
-                                                <button type="submit" class="btn btn-sm btn-outline-success btn-sm-action">Активувати</button>
+                                                <button type="submit" class="btn btn-sm btn-outline-success btn-sm-action">{% translate "Activate" %}</button>
                                             {% endif %}
                                         </form>
                                     {% endif %}
@@ -108,11 +109,11 @@
         </section>
     {% else %}
         <section class="table-empty-state">
-            <strong>Клієнтів поки немає</strong>
-            <span>Додайте першого клієнта, щоб створювати записи на послуги.</span>
+            <strong>{% translate "No clients yet" %}</strong>
+            <span>{% translate "Add your first client to start booking appointments." %}</span>
             {% if request.user.role == 'admin' or request.user.role == 'manager' %}
                 <div class="empty-state-actions">
-                    <a href="{% url 'client_create' %}" class="btn btn-primary">Додати клієнта</a>
+                    <a href="{% url 'client_create' %}" class="btn btn-primary">{% translate "Add client" %}</a>
                 </div>
             {% endif %}
         </section>

@@ -1,3 +1,4 @@
+from django.utils.translation import gettext as _
 from django.contrib.auth.signals import user_logged_in, user_logged_out
 from django.dispatch import receiver
 
@@ -37,7 +38,7 @@ def log_user_login(sender, request, user, **kwargs):
         action_type=AuditActionType.LOGIN,
         entity_type=AuditEntityType.AUTH,
         entity_id=user.id,
-        description=f"Користувач {user.username} виконав вхід до системи.",
+        description=_('User %(username)s signed in.') % {'username': user.username},
         ip_address=get_client_ip(request),
     )
 
@@ -52,7 +53,7 @@ def log_user_logout(sender, request, user, **kwargs):
         action_type=AuditActionType.LOGOUT,
         entity_type=AuditEntityType.AUTH,
         entity_id=user.id,
-        description=f"Користувач {user.username} вийшов із системи.",
+        description=_('User %(username)s signed out.') % {'username': user.username},
         ip_address=get_client_ip(request),
     )
 
@@ -75,10 +76,10 @@ def log_model_save(sender, instance, created, using, raw=False, **kwargs):
     entity_type = _TRACKED_MODELS[sender]
     if created:
         action_type = AuditActionType.CREATE
-        description = f"Створено об'єкт {instance._meta.verbose_name} з id={instance.pk}."
+        description = _('Created %(entity)s with id=%(id)s.') % {'entity': instance._meta.verbose_name, 'id': instance.pk}
     else:
         action_type = AuditActionType.UPDATE
-        description = f"Оновлено об'єкт {instance._meta.verbose_name} з id={instance.pk}."
+        description = _('Updated %(entity)s with id=%(id)s.') % {'entity': instance._meta.verbose_name, 'id': instance.pk}
 
     acting_user = get_acting_user(using)
 
@@ -101,7 +102,7 @@ def log_model_delete(sender, instance, using, **kwargs):
         AuditLog.objects.using(using).filter(user_id=instance.pk).update(user=None)
     acting_user = get_acting_user(using)
     description = get_audit_context().description or (
-        f"Видалено об'єкт {instance._meta.verbose_name} з id={instance.pk}."
+        _('Deleted %(entity)s with id=%(id)s.') % {'entity': instance._meta.verbose_name, 'id': instance.pk}
     )
     request = get_audit_context().request
 

@@ -173,7 +173,7 @@ class AuditAttributionTests(TestCase):
         self.assertEqual(log.user, deleting_admin)
         self.assertEqual(log.organization, self.organization)
         self.assertEqual(log.ip_address, '192.0.2.26')
-        self.assertIn(f'Видалено запис #{appointment_id}', log.description)
+        self.assertIn(f'Deleted appointment #{appointment_id}', log.description)
         self.assertIn(self.client_record.full_name, log.description)
         self.assertIn(self.service.name, log.description)
 

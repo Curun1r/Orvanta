@@ -1,3 +1,4 @@
+from django.utils.translation import gettext_lazy as _
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
@@ -14,10 +15,10 @@ class OrganizationAdmin(admin.ModelAdmin):
 @admin.register(User)
 class CustomUserAdmin(UserAdmin):
     add_fieldsets = UserAdmin.add_fieldsets + (
-        ('Додатково', {'fields': ('phone', 'role', 'organization')}),
+        (_('Additional information'), {'fields': ('phone', 'role', 'organization')}),
     )
     fieldsets = UserAdmin.fieldsets + (
-        ('Додатково', {'fields': ('phone', 'role', 'organization')}),
+        (_('Additional information'), {'fields': ('phone', 'role', 'organization')}),
     )
     list_display = ('username', 'email', 'role', 'organization', 'is_staff', 'is_active')
     list_filter = ('role', 'organization', 'is_staff', 'is_active')

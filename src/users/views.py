@@ -1,3 +1,4 @@
+from django.utils.translation import gettext as _
 from django.contrib import messages
 from django.contrib.auth import login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
@@ -132,7 +133,7 @@ def signup_view(request):
                     user.save()
 
             login(request, user)
-            messages.success(request, 'Реєстрацію завершено успішно.')
+            messages.success(request, _('Registration completed successfully.'))
             return redirect('home')
     else:
         form = SignupForm()
@@ -161,7 +162,7 @@ def user_create_view(request):
             new_user.is_superuser = False
             new_user.save()
 
-            messages.success(request, 'Користувача успішно створено.')
+            messages.success(request, _('User created successfully.'))
             return redirect('user_list')
     else:
         form = OrganizationUserCreateForm()
@@ -183,16 +184,16 @@ def user_toggle_active_view(request, pk):
     )
 
     if user_obj == request.user and user_obj.is_active:
-        messages.error(request, 'Ви не можете деактивувати власний обліковий запис.')
+        messages.error(request, _('You cannot deactivate your own account.'))
         return redirect('user_list')
 
     user_obj.is_active = not user_obj.is_active
     user_obj.save(update_fields=['is_active'])
 
     if user_obj.is_active:
-        messages.success(request, 'Користувача успішно активовано.')
+        messages.success(request, _('User activated successfully.'))
     else:
-        messages.success(request, 'Користувача успішно деактивовано.')
+        messages.success(request, _('User deactivated successfully.'))
 
     return redirect('user_list')
 
@@ -214,16 +215,16 @@ def user_delete_view(request, pk):
         except ProtectedError:
             form.add_error(
                 None,
-                "Користувача не можна видалити, доки з ним пов'язані захищені записи.",
+                _('This user cannot be deleted while protected records are linked to them.'),
             )
         else:
-            messages.success(request, f'Користувача {username} успішно видалено.')
+            messages.success(request, _('User %(username)s deleted successfully.') % {'username': username})
             return redirect('user_list')
 
     visible_target = target_user
     if target_user is None or target_user.organization_id != request.user.organization_id:
         visible_target = None
-        messages.error(request, 'Користувача не знайдено в межах вашої організації.')
+        messages.error(request, _('User not found in your organization.'))
 
     modal_id = f'deleteUserModal{visible_target.pk}' if visible_target is not None else ''
     return _render_user_list(
@@ -249,10 +250,10 @@ def user_edit_role_view(request, pk):
         if form.is_valid():
             new_role = form.cleaned_data['role']
             if user_obj == request.user and new_role != UserRole.ADMIN:
-                messages.error(request, 'Ви не можете змінити власну роль адміністратора.')
+                messages.error(request, _('You cannot change your own administrator role.'))
             else:
                 form.save()
-                messages.success(request, 'Роль користувача успішно оновлено.')
+                messages.success(request, _('User role updated successfully.'))
                 return redirect('user_list')
     else:
         form = UserRoleForm(instance=user_obj)
@@ -274,14 +275,14 @@ def profile_view(request):
         if 'organization_submit' in request.POST:
             messages.error(
                 request,
-                'Налаштування організації доступні на окремій сторінці.',
+                _('Organization settings are available on a separate page.'),
             )
             return redirect('profile')
 
         profile_form = UserProfileForm(request.POST, instance=request.user)
         if profile_form.is_valid():
             profile_form.save()
-            messages.success(request, 'Профіль успішно оновлено.')
+            messages.success(request, _('Profile updated successfully.'))
             return redirect('profile')
     else:
         profile_form = UserProfileForm(instance=request.user)
@@ -308,7 +309,7 @@ def profile_password_change_view(request):
         if form.is_valid():
             user = form.save()
             update_session_auth_hash(request, user)
-            messages.success(request, 'Пароль успішно змінено.')
+            messages.success(request, _('Password changed successfully.'))
             return redirect('profile')
     else:
         form = ProfilePasswordChangeForm(request.user)
@@ -331,7 +332,7 @@ def organization_settings_view(request):
         form = OrganizationSettingsForm(request.POST, instance=organization)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Налаштування організації успішно оновлено.')
+            messages.success(request, _('Organization settings updated successfully.'))
             return redirect('organization_settings')
     else:
         form = OrganizationSettingsForm(instance=organization)
@@ -355,7 +356,7 @@ def organization_delete_view(request):
         organization_name = organization.name
         logout(request)
         delete_form.delete()
-        messages.success(request, f'Організацію "{organization_name}" успішно видалено.')
+        messages.success(request, _('Organization "%(organization)s" deleted successfully.') % {'organization': organization_name})
         return redirect('login')
 
     return render(

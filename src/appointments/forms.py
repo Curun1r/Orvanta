@@ -1,3 +1,4 @@
+from django.utils.translation import gettext_lazy as _
 from django import forms
 
 from clients.models import Client
@@ -24,21 +25,21 @@ class AppointmentForm(BootstrapFormMixin, forms.ModelForm):
             'comment',
         ]
         labels = {
-            'client': 'Клієнт',
-            'service': 'Послуга',
-            'employee': 'Співробітник',
-            'appointment_date': 'Дата запису',
-            'start_time': 'Час початку',
-            'end_time': 'Час завершення',
-            'actual_price': 'Фактична вартість',
-            'status': 'Статус',
-            'comment': 'Коментар',
+            'client': _('Client'),
+            'service': _('Service'),
+            'employee': _('Employee'),
+            'appointment_date': _('Appointment date'),
+            'start_time': _('Start time'),
+            'end_time': _('End time'),
+            'actual_price': _('Actual price'),
+            'status': _('Status'),
+            'comment': _('Comment'),
         }
         help_texts = {
-            'actual_price': 'Фактична вартість може відрізнятися від базової вартості послуги.',
+            'actual_price': _('The actual price may differ from the service base price.'),
         }
         widgets = {
-            'appointment_date': forms.DateInput(attrs={'type': 'date'}),
+            'appointment_date': forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'}),
             'start_time': forms.TimeInput(attrs={'type': 'time'}),
             'end_time': forms.TimeInput(attrs={'type': 'time'}),
             'actual_price': forms.NumberInput(attrs={
@@ -48,16 +49,16 @@ class AppointmentForm(BootstrapFormMixin, forms.ModelForm):
             }),
             'comment': forms.Textarea(attrs={
                 'rows': 4,
-                'placeholder': 'Додаткові деталі запису',
+                'placeholder': _('Additional appointment details'),
             }),
         }
 
     def __init__(self, *args, organization=None, **kwargs):
         super().__init__(*args, **kwargs)
         self.organization = organization
-        self.fields['client'].empty_label = 'Оберіть клієнта'
-        self.fields['service'].empty_label = 'Оберіть послугу'
-        self.fields['employee'].empty_label = 'Оберіть співробітника'
+        self.fields['client'].empty_label = _('Select a client')
+        self.fields['service'].empty_label = _('Select a service')
+        self.fields['employee'].empty_label = _('Select an employee')
 
         if organization is None:
             self.fields['client'].queryset = Client.objects.none()
@@ -88,15 +89,15 @@ class AppointmentForm(BootstrapFormMixin, forms.ModelForm):
 
         if self.organization:
             if client and client.organization_id != self.organization.id:
-                raise forms.ValidationError('Обраний клієнт не належить вашій організації.')
+                raise forms.ValidationError(_('The selected client does not belong to your organization.'))
             if service and service.organization_id != self.organization.id:
-                raise forms.ValidationError('Обрана послуга не належить вашій організації.')
+                raise forms.ValidationError(_('The selected service does not belong to your organization.'))
             if employee and employee.organization_id != self.organization.id:
-                raise forms.ValidationError('Обраний співробітник не належить вашій організації.')
+                raise forms.ValidationError(_('The selected employee does not belong to your organization.'))
 
         if start_time and end_time and start_time >= end_time:
             raise forms.ValidationError(
-                'Час завершення запису повинен бути пізнішим за час початку.'
+                _('The appointment end time must be later than the start time.')
             )
 
         validate_appointment_slot(
@@ -117,7 +118,7 @@ class AppointmentActualPriceForm(forms.ModelForm):
         model = Appointment
         fields = ['actual_price']
         labels = {
-            'actual_price': 'Фактична вартість',
+            'actual_price': _('Actual price'),
         }
         widgets = {
             'actual_price': forms.NumberInput(
@@ -134,27 +135,27 @@ class AppointmentActualPriceForm(forms.ModelForm):
 class AppointmentFilterForm(forms.Form):
     search = forms.CharField(
         required=False,
-        label='Пошук',
+        label=_('Search'),
         widget=forms.TextInput(attrs={
-            'placeholder': 'Клієнт, послуга або співробітник...',
+            'placeholder': _('Client, service or employee...'),
             'autocomplete': 'off',
         }),
     )
     appointment_date = forms.DateField(
         required=False,
-        label='Дата',
-        widget=forms.DateInput(attrs={'type': 'date'}),
+        label=_('Date'),
+        widget=forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'}),
     )
     status = forms.ChoiceField(
         required=False,
-        label='Статус',
-        choices=[('', 'Усі статуси')] + list(AppointmentStatus.choices),
+        label=_('Status'),
+        choices=[('', _('All statuses'))] + list(AppointmentStatus.choices),
     )
     employee = forms.ModelChoiceField(
         required=False,
-        label='Співробітник',
+        label=_('Employee'),
         queryset=User.objects.none(),
-        empty_label='Усі співробітники',
+        empty_label=_('All employees'),
     )
 
     def __init__(self, *args, organization=None, **kwargs):

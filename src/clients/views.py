@@ -1,3 +1,4 @@
+from django.utils.translation import gettext as _
 from django.contrib import messages
 from django.db.models import Q, Sum
 from django.shortcuts import get_object_or_404, redirect, render
@@ -71,12 +72,12 @@ def client_export_csv_view(request):
     filename = f'clients_export_{timezone.localdate():%Y%m%d}.csv'
     headers = [
         'ID',
-        'ПІБ',
-        'Телефон',
+        _('Full name'),
+        _('Phone'),
         'Email',
-        'Активний',
-        'Дата створення',
-        'Дата оновлення',
+        _('Active'),
+        _('Created at'),
+        _('Updated at'),
     ]
     rows = (
         [
@@ -104,14 +105,14 @@ def client_create_view(request):
             client.created_by = request.user
             client.organization = request.user.organization
             client.save()
-            messages.success(request, 'Клієнта успішно створено.')
+            messages.success(request, _('Client created successfully.'))
             return redirect('client_list')
     else:
         form = ClientForm()
 
     return render(request, 'clients/client_form.html', {
         'form': form,
-        'title': 'Додавання клієнта',
+        'title': _('Add client'),
     })
 
 
@@ -127,14 +128,14 @@ def client_update_view(request, pk):
         form = ClientForm(request.POST, instance=client)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Дані клієнта успішно оновлено.')
+            messages.success(request, _('Client details updated successfully.'))
             return redirect('client_list')
     else:
         form = ClientForm(instance=client)
 
     return render(request, 'clients/client_form.html', {
         'form': form,
-        'title': 'Редагування клієнта',
+        'title': _('Edit client'),
     })
 
 
@@ -176,7 +177,7 @@ def client_detail_view(request, pk):
         .first()
     )
 
-    status_choices = [('', 'Всі статуси')] + list(AppointmentStatus.choices)
+    status_choices = [('', _('All statuses'))] + list(AppointmentStatus.choices)
 
     return render(request, 'clients/client_detail.html', {
         'client':          client,
@@ -204,8 +205,8 @@ def client_toggle_active_view(request, pk):
     client.save(update_fields=['is_active', 'updated_at'])
 
     if client.is_active:
-        messages.success(request, 'Клієнта успішно активовано.')
+        messages.success(request, _('Client activated successfully.'))
     else:
-        messages.success(request, 'Клієнта успішно деактивовано.')
+        messages.success(request, _('Client deactivated successfully.'))
 
     return redirect('client_list')

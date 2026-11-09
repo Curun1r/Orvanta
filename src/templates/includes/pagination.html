@@ -1,3 +1,4 @@
+{% load i18n %}
 {% if page_obj.paginator.num_pages > 1 %}
 <script>
 (function () {
@@ -16,27 +17,27 @@
     });
 })();
 </script>
-<nav class="pager" aria-label="Пагінація">
+<nav class="pager" aria-label="{% translate 'Pagination' %}">
     <div class="pager-info">
-        Сторінка <strong>{{ page_obj.number }}</strong> з <strong>{{ page_obj.paginator.num_pages }}</strong>
+        {% translate "Page" %} <strong>{{ page_obj.number }}</strong> {% translate "of" %} <strong>{{ page_obj.paginator.num_pages }}</strong>
     </div>
 
     <div class="pager-controls">
         {% if page_obj.has_previous %}
-            <a class="pager-btn" href="?{% if query_string %}{{ query_string }}&amp;{% endif %}page=1" aria-label="Перша сторінка" title="Перша">«</a>
-            <a class="pager-btn" href="?{% if query_string %}{{ query_string }}&amp;{% endif %}page={{ page_obj.previous_page_number }}" aria-label="Попередня сторінка">‹ Назад</a>
+            <a class="pager-btn" href="?{% if query_string %}{{ query_string }}&amp;{% endif %}page=1" aria-label="{% translate 'First page' %}" title="{% translate 'First' %}">«</a>
+            <a class="pager-btn" href="?{% if query_string %}{{ query_string }}&amp;{% endif %}page={{ page_obj.previous_page_number }}" aria-label="{% translate 'Previous page' %}">{% translate "‹ Previous" %}</a>
         {% else %}
             <span class="pager-btn pager-btn--disabled" aria-disabled="true">«</span>
-            <span class="pager-btn pager-btn--disabled" aria-disabled="true">‹ Назад</span>
+            <span class="pager-btn pager-btn--disabled" aria-disabled="true">{% translate "‹ Previous" %}</span>
         {% endif %}
 
         <span class="pager-current">{{ page_obj.number }}</span>
 
         {% if page_obj.has_next %}
-            <a class="pager-btn" href="?{% if query_string %}{{ query_string }}&amp;{% endif %}page={{ page_obj.next_page_number }}" aria-label="Наступна сторінка">Далі ›</a>
-            <a class="pager-btn" href="?{% if query_string %}{{ query_string }}&amp;{% endif %}page={{ page_obj.paginator.num_pages }}" aria-label="Остання сторінка" title="Остання">»</a>
+            <a class="pager-btn" href="?{% if query_string %}{{ query_string }}&amp;{% endif %}page={{ page_obj.next_page_number }}" aria-label="{% translate 'Next page' %}">{% translate "Next ›" %}</a>
+            <a class="pager-btn" href="?{% if query_string %}{{ query_string }}&amp;{% endif %}page={{ page_obj.paginator.num_pages }}" aria-label="{% translate 'Last page' %}" title="{% translate 'Last' %}">»</a>
         {% else %}
-            <span class="pager-btn pager-btn--disabled" aria-disabled="true">Далі ›</span>
+            <span class="pager-btn pager-btn--disabled" aria-disabled="true">{% translate "Next ›" %}</span>
             <span class="pager-btn pager-btn--disabled" aria-disabled="true">»</span>
         {% endif %}
     </div>

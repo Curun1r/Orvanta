@@ -1,13 +1,15 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
-{% block title %}Профіль{% endblock %}
+{% block title %}{% translate "Profile" %}{% endblock %}
 
 {% block content %}
+{% translate "Email not provided" as email_not_provided %}
 <div class="app-page profile-page">
     <header class="page-header">
         <div>
-            <h1>Профіль користувача</h1>
-            <p>Переглядайте дані облікового запису та налаштування вашої організації.</p>
+            <h1>{% translate "User profile" %}</h1>
+            <p>{% translate "View account details and your organization settings." %}</p>
         </div>
     </header>
 
@@ -16,20 +18,20 @@
             <span class="profile-avatar">{{ request.user.username|slice:":1"|upper }}</span>
             <div>
                 <h2>{{ request.user.username }}</h2>
-                <p>{{ request.user.email|default:'Email не вказано' }}</p>
+                <p>{{ request.user.email|default:email_not_provided }}</p>
                 <div class="profile-meta-row">
                     <span class="badge-soft role-{{ request.user.role }}">{{ request.user.get_role_display }}</span>
                     {% if organization %}
                         <span>{{ organization.name }}</span>
                     {% else %}
-                        <span>Організацію не вказано</span>
+                        <span>{% translate "No organization specified" %}</span>
                     {% endif %}
                 </div>
             </div>
         </div>
         <div class="profile-joined">
-            <span>Дата реєстрації</span>
-            <strong>{{ request.user.date_joined|date:'d.m.Y H:i' }}</strong>
+            <span>{% translate "Registration date" %}</span>
+            <strong>{{ request.user.date_joined|date:'SHORT_DATETIME_FORMAT' }}</strong>
         </div>
     </section>
 
@@ -39,8 +41,8 @@
                 <div class="card-body">
                     <div class="profile-card-header">
                         <div>
-                            <h2>Контактні дані</h2>
-                            <p>Email використовується для службової інформації та ідентифікації користувача.</p>
+                            <h2>{% translate "Contact details" %}</h2>
+                            <p>{% translate "Email is used for account information and identification." %}</p>
                         </div>
                     </div>
 
@@ -48,7 +50,7 @@
                         {% csrf_token %}
                         {% include 'includes/form_fields.html' with form=profile_form %}
                         <div class="form-actions">
-                            <button type="submit" name="profile_submit" class="btn btn-primary">Зберегти зміни</button>
+                            <button type="submit" name="profile_submit" class="btn btn-primary">{% translate "Save changes" %}</button>
                         </div>
                     </form>
                 </div>
@@ -58,23 +60,23 @@
                 <div class="card-body">
                     <div class="profile-card-header">
                         <div>
-                            <h2>Службова інформація</h2>
-                            <p>Стан облікового запису у системі.</p>
+                            <h2>{% translate "Account information" %}</h2>
+                            <p>{% translate "Your account status in the application." %}</p>
                         </div>
                     </div>
 
                     <div class="profile-detail-list">
                         <div class="profile-detail-row">
-                            <span>Останній вхід</span>
-                            <strong>{{ request.user.last_login|date:'d.m.Y H:i'|default:'—' }}</strong>
+                            <span>{% translate "Last sign-in" %}</span>
+                            <strong>{{ request.user.last_login|date:'SHORT_DATETIME_FORMAT'|default:'—' }}</strong>
                         </div>
                         <div class="profile-detail-row">
-                            <span>Активність</span>
+                            <span>{% translate "Activity" %}</span>
                             <strong>
                                 {% if request.user.is_active %}
-                                    <span class="badge-soft badge-soft-success">Активний</span>
+                                    <span class="badge-soft badge-soft-success">{% translate "Active" %}</span>
                                 {% else %}
-                                    <span class="badge-soft badge-soft-muted">Неактивний</span>
+                                    <span class="badge-soft badge-soft-muted">{% translate "Inactive" %}</span>
                                 {% endif %}
                             </strong>
                         </div>
@@ -88,22 +90,22 @@
                 <div class="card-body">
                     <div class="profile-card-header">
                         <div>
-                            <h2>Організація</h2>
-                            <p>Робочий простір, до якого прив’язаний ваш обліковий запис.</p>
+                            <h2>{% translate "Organization" %}</h2>
+                            <p>{% translate "The workspace linked to your account." %}</p>
                         </div>
                     </div>
 
                     <div class="profile-detail-list">
                         <div class="profile-detail-row">
-                            <span>Назва організації</span>
+                            <span>{% translate "Organization name" %}</span>
                             <strong>{% if organization %}{{ organization.name }}{% else %}—{% endif %}</strong>
                         </div>
                         <div class="profile-detail-row">
-                            <span>Ідентифікатор організації</span>
+                            <span>{% translate "Organization ID" %}</span>
                             <strong>{% if organization %}{{ organization.slug }}{% else %}—{% endif %}</strong>
                         </div>
                         <div class="profile-detail-row">
-                            <span>Роль в організації</span>
+                            <span>{% translate "Organization role" %}</span>
                             <strong>
                                 <span class="badge-soft role-{{ request.user.role }}">
                                     {{ request.user.get_role_display }}
@@ -115,7 +117,7 @@
                     {% if can_edit_organization %}
                         <div class="profile-card-actions">
                             <a href="{% url 'organization_settings' %}" class="btn btn-outline-primary">
-                                Налаштування організації
+                                {% translate "Organization settings" %}
                             </a>
                         </div>
                     {% endif %}
@@ -126,10 +128,10 @@
                 <div class="card-body">
                     <div class="profile-card-header">
                         <div>
-                            <h2>Безпека</h2>
-                            <p>Тут можна змінити пароль від вашого облікового запису.</p>
+                            <h2>{% translate "Security" %}</h2>
+                            <p>{% translate "Change the password for your account here." %}</p>
                         </div>
-                        <a href="{% url 'profile_password_change' %}" class="btn btn-secondary" style="margin-top: 0.75rem; align-self: flex-end;">Змінити пароль</a>
+                        <a href="{% url 'profile_password_change' %}" class="btn btn-secondary" style="margin-top: 0.75rem; align-self: flex-end;">{% translate "Change password" %}</a>
                     </div>
                 </div>
             </section>
@@ -138,15 +140,15 @@
                 <div class="card-body">
                     <div class="profile-card-header">
                         <div>
-                            <h2>Інтерфейс</h2>
-                            <p>Приховує підписи під заголовками для більшого робочого простору.</p>
+                            <h2>{% translate "Interface" %}</h2>
+                            <p>{% translate "Hide subtitles below headings to make more room for your work." %}</p>
                         </div>
                     </div>
                     <form method="post" action="{% url 'toggle_compact_ui' %}" style="margin-top: 0.75rem;">
                         {% csrf_token %}
                         <input type="hidden" name="next" value="profile">
                         <button type="submit" class="btn {% if request.user.hide_section_subtitles %}btn-primary{% else %}btn-outline-secondary{% endif %}">
-                            {% if request.user.hide_section_subtitles %}Компактний режим: увімкнено{% else %}Компактний режим: вимкнено{% endif %}
+                            {% if request.user.hide_section_subtitles %}{% translate "Compact mode: on" %}{% else %}{% translate "Compact mode: off" %}{% endif %}
                         </button>
                     </form>
                 </div>

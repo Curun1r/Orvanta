@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
 {% block title %}{{ client.full_name }}{% endblock %}
 
@@ -7,12 +8,12 @@
     <header class="page-header">
         <div>
             <h1>{{ client.full_name }}</h1>
-            <p>Контакти, статус і службові дати клієнта.</p>
+            <p>{% translate "Client contact details, status and record dates." %}</p>
         </div>
         <div class="page-actions">
-            <a href="{% url 'client_list' %}" class="btn btn-outline-secondary">Назад до списку</a>
+            <a href="{% url 'client_list' %}" class="btn btn-outline-secondary">{% translate "Back to list" %}</a>
             {% if request.user.role == 'admin' or request.user.role == 'manager' %}
-                <a href="{% url 'client_update' client.pk %}" class="btn btn-primary">Редагувати клієнта</a>
+                <a href="{% url 'client_update' client.pk %}" class="btn btn-primary">{% translate "Edit client" %}</a>
             {% endif %}
         </div>
     </header>
@@ -20,11 +21,11 @@
     <section class="detail-card mb-4">
         <div class="detail-grid">
             <div class="detail-item">
-                <span class="detail-label">ПІБ</span>
+                <span class="detail-label">{% translate "Full name" %}</span>
                 <span class="detail-value">{{ client.full_name }}</span>
             </div>
             <div class="detail-item">
-                <span class="detail-label">Телефон</span>
+                <span class="detail-label">{% translate "Phone" %}</span>
                 <span class="detail-value"><a href="tel:{{ client.phone }}" class="tel-link">{{ client.phone }}</a></span>
             </div>
             <div class="detail-item">
@@ -32,27 +33,27 @@
                 <span class="detail-value">{% if client.email %}<a href="mailto:{{ client.email }}" class="tel-link">{{ client.email }}</a>{% else %}—{% endif %}</span>
             </div>
             <div class="detail-item">
-                <span class="detail-label">Дата народження</span>
-                <span class="detail-value">{{ client.birth_date|date:'d.m.Y'|default:'—' }}</span>
+                <span class="detail-label">{% translate "Date of birth" %}</span>
+                <span class="detail-value">{{ client.birth_date|date:'SHORT_DATE_FORMAT'|default:'—' }}</span>
             </div>
             <div class="detail-item">
-                <span class="detail-label">Статус</span>
+                <span class="detail-label">{% translate "Status" %}</span>
                 {% if client.is_active %}
-                    <span class="badge-soft badge-soft-success">Активний</span>
+                    <span class="badge-soft badge-soft-success">{% translate "Active" %}</span>
                 {% else %}
-                    <span class="badge-soft badge-soft-muted">Неактивний</span>
+                    <span class="badge-soft badge-soft-muted">{% translate "Inactive" %}</span>
                 {% endif %}
             </div>
             <div class="detail-item">
-                <span class="detail-label">Створено</span>
-                <span class="detail-value">{{ client.created_at|date:'d.m.Y H:i' }}</span>
+                <span class="detail-label">{% translate "Created" %}</span>
+                <span class="detail-value">{{ client.created_at|date:'SHORT_DATETIME_FORMAT' }}</span>
             </div>
             <div class="detail-item">
-                <span class="detail-label">Оновлено</span>
-                <span class="detail-value">{{ client.updated_at|date:'d.m.Y H:i' }}</span>
+                <span class="detail-label">{% translate "Updated" %}</span>
+                <span class="detail-value">{{ client.updated_at|date:'SHORT_DATETIME_FORMAT' }}</span>
             </div>
             <div class="detail-item full">
-                <span class="detail-label">Примітки</span>
+                <span class="detail-label">{% translate "Notes" %}</span>
                 <span class="detail-value">{{ client.notes|default:'—' }}</span>
             </div>
         </div>
@@ -61,20 +62,20 @@
     {# ── Статистика ── #}
     <div class="client-stats-grid mb-4">
         <div class="client-stat-card">
-            <span class="client-stat-label">Всього записів</span>
+            <span class="client-stat-label">{% translate "Total appointments" %}</span>
             <span class="client-stat-value">{{ total_count }}</span>
         </div>
         <div class="client-stat-card">
-            <span class="client-stat-label">Виконано</span>
+            <span class="client-stat-label">{% translate "Completed" %}</span>
             <span class="client-stat-value">{{ completed_count }}</span>
         </div>
         <div class="client-stat-card">
-            <span class="client-stat-label">Витрачено загалом</span>
-            <span class="client-stat-value">{{ total_spent|floatformat:2 }} грн</span>
+            <span class="client-stat-label">{% translate "Total spent" %}</span>
+            <span class="client-stat-value">{{ total_spent|floatformat:2 }} {% translate "UAH" %}</span>
         </div>
         <div class="client-stat-card">
-            <span class="client-stat-label">Останній візит</span>
-            <span class="client-stat-value">{{ last_visit|date:'d.m.Y'|default:'—' }}</span>
+            <span class="client-stat-label">{% translate "Last visit" %}</span>
+            <span class="client-stat-value">{{ last_visit|date:'SHORT_DATE_FORMAT'|default:'—' }}</span>
         </div>
     </div>
 
@@ -82,8 +83,8 @@
     <section class="table-card">
         <div class="table-card-header">
             <div>
-                <h2>Історія записів</h2>
-                <p>Всі записи цього клієнта.</p>
+                <h2>{% translate "Appointment history" %}</h2>
+                <p>{% translate "All appointments for this client." %}</p>
             </div>
         </div>
 
@@ -105,8 +106,8 @@
                 class="form-control form-control-sm"
                 value="{{ date_to }}"
             >
-            <button type="submit" class="btn btn-sm btn-primary">Застосувати</button>
-            <a href="{% url 'client_detail' client.pk %}" class="btn btn-sm btn-outline-secondary">Скинути</a>
+            <button type="submit" class="btn btn-sm btn-primary">{% translate "Apply" %}</button>
+            <a href="{% url 'client_detail' client.pk %}" class="btn btn-sm btn-outline-secondary">{% translate "Reset" %}</a>
         </form>
 
         {% if appointments %}
@@ -114,12 +115,12 @@
                 <table class="table app-table align-middle">
                     <thead>
                         <tr>
-                            <th>Дата</th>
-                            <th>Послуга</th>
-                            <th>Співробітник</th>
-                            <th>Час</th>
-                            <th>Статус</th>
-                            <th>Вартість</th>
+                            <th>{% translate "Date" %}</th>
+                            <th>{% translate "Service" %}</th>
+                            <th>{% translate "Employee" %}</th>
+                            <th>{% translate "Time" %}</th>
+                            <th>{% translate "Status" %}</th>
+                            <th>{% translate "Price" %}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -127,7 +128,7 @@
                             <tr>
                                 <td>
                                     <a href="{% url 'appointment_detail' appt.pk %}" class="tel-link">
-                                        {{ appt.appointment_date|date:'d.m.Y' }}
+                                        {{ appt.appointment_date|date:'SHORT_DATE_FORMAT' }}
                                     </a>
                                 </td>
                                 <td>{{ appt.service.name }}</td>
@@ -140,7 +141,7 @@
                                 </td>
                                 <td>
                                     {% if appt.actual_price is not None %}
-                                        {{ appt.actual_price|floatformat:2 }} грн
+                                        {{ appt.actual_price|floatformat:2 }} {% translate "UAH" %}
                                     {% else %}
                                         <span class="text-muted">—</span>
                                     {% endif %}
@@ -152,8 +153,8 @@
             </div>
         {% else %}
             <div class="table-empty-state m-3">
-                <strong>Записів не знайдено</strong>
-                <span>Змініть фільтри або створіть новий запис для цього клієнта.</span>
+                <strong>{% translate "No appointments found" %}</strong>
+                <span>{% translate "Change the filters or create a new appointment for this client." %}</span>
             </div>
         {% endif %}
     </section>

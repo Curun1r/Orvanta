@@ -1,3 +1,4 @@
+from django.utils.translation import gettext_lazy as _, pgettext_lazy
 from django import forms
 
 from config.form_ui import BootstrapFormMixin
@@ -10,14 +11,14 @@ class ServiceCategoryForm(BootstrapFormMixin, forms.ModelForm):
         model = ServiceCategory
         fields = ['name', 'description']
         labels = {
-            'name': 'Назва',
-            'description': 'Опис',
+            'name': _('Name'),
+            'description': _('Description'),
         }
         widgets = {
-            'name': forms.TextInput(attrs={'placeholder': 'Наприклад, Консультації'}),
+            'name': forms.TextInput(attrs={'placeholder': _('For example, consultations')}),
             'description': forms.Textarea(attrs={
                 'rows': 3,
-                'placeholder': 'Короткий опис категорії',
+                'placeholder': _('Short category description'),
             }),
         }
 
@@ -27,18 +28,18 @@ class ServiceForm(BootstrapFormMixin, forms.ModelForm):
         model = Service
         fields = ['category', 'name', 'description', 'price', 'duration_minutes', 'is_active']
         labels = {
-            'category': 'Категорія',
-            'name': 'Назва',
-            'description': 'Опис',
-            'price': 'Базова вартість',
-            'duration_minutes': 'Тривалість, хв',
-            'is_active': 'Активна',
+            'category': _('Category'),
+            'name': _('Name'),
+            'description': _('Description'),
+            'price': _('Base price'),
+            'duration_minutes': _('Duration, min'),
+            'is_active': pgettext_lazy('service status', 'Active'),
         }
         widgets = {
-            'name': forms.TextInput(attrs={'placeholder': 'Назва послуги'}),
+            'name': forms.TextInput(attrs={'placeholder': _('Service name')}),
             'description': forms.Textarea(attrs={
                 'rows': 4,
-                'placeholder': 'Що входить до послуги',
+                'placeholder': _('What the service includes'),
             }),
             'price': forms.NumberInput(attrs={
                 'min': '0',
@@ -54,7 +55,7 @@ class ServiceForm(BootstrapFormMixin, forms.ModelForm):
 
     def __init__(self, *args, organization=None, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['category'].empty_label = 'Без категорії'
+        self.fields['category'].empty_label = _('Uncategorized')
         if organization is None:
             self.fields['category'].queryset = ServiceCategory.objects.none()
         else:
@@ -66,22 +67,22 @@ class ServiceForm(BootstrapFormMixin, forms.ModelForm):
 class ServiceFilterForm(forms.Form):
     query = forms.CharField(
         required=False,
-        label='Пошук',
-        widget=forms.TextInput(attrs={'placeholder': 'Назва або опис послуги'}),
+        label=_('Search'),
+        widget=forms.TextInput(attrs={'placeholder': _('Service name or description')}),
     )
     category = forms.ModelChoiceField(
         required=False,
-        label='Категорія',
+        label=_('Category'),
         queryset=ServiceCategory.objects.none(),
-        empty_label='Усі категорії',
+        empty_label=_('All categories'),
     )
     is_active = forms.ChoiceField(
         required=False,
-        label='Статус',
+        label=_('Status'),
         choices=[
-            ('', 'Усі'),
-            ('true', 'Активні'),
-            ('false', 'Неактивні'),
+            ('', _('All')),
+            ('true', pgettext_lazy('summary', 'Active')),
+            ('false', pgettext_lazy('summary', 'Inactive')),
         ],
     )
 

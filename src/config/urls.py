@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.urls import include, path
+from django.views.i18n import JavaScriptCatalog
 from django_ratelimit.decorators import ratelimit
 
 from django.shortcuts import render
@@ -50,6 +51,8 @@ signup_view = ratelimit(
 )(signup_view)
 
 urlpatterns = [
+    path('i18n/', include('django.conf.urls.i18n')),
+    path('jsi18n/', JavaScriptCatalog.as_view(), name='javascript-catalog'),
     path('health/', health_view, name='health'),
     path('orvanta-admin/', admin.site.urls),
     path('', home_view, name='home'),

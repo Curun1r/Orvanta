@@ -1,3 +1,4 @@
+from django.utils.translation import gettext as _, pgettext
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
@@ -73,14 +74,14 @@ def category_create_view(request):
             category = form.save(commit=False)
             category.organization = request.user.organization
             category.save()
-            messages.success(request, 'Категорію послуг успішно створено.')
+            messages.success(request, _('Service category created successfully.'))
             return redirect('category_list')
     else:
         form = ServiceCategoryForm()
 
     return render(request, 'services_catalog/category_form.html', {
         'form': form,
-        'title': 'Додавання категорії послуг',
+        'title': _('Add service category'),
     })
 
 
@@ -96,14 +97,14 @@ def category_update_view(request, pk):
         form = ServiceCategoryForm(request.POST, instance=category)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Категорію послуг успішно оновлено.')
+            messages.success(request, _('Service category updated successfully.'))
             return redirect('category_list')
     else:
         form = ServiceCategoryForm(instance=category)
 
     return render(request, 'services_catalog/category_form.html', {
         'form': form,
-        'title': 'Редагування категорії послуг',
+        'title': _('Edit service category'),
     })
 
 
@@ -123,14 +124,14 @@ def service_export_csv_view(request):
     filename = f'services_export_{timezone.localdate():%Y%m%d}.csv'
     headers = [
         'ID',
-        'Назва',
-        'Категорія',
-        'Опис',
-        'Базова вартість',
-        'Тривалість, хв',
-        'Активна',
-        'Дата створення',
-        'Дата оновлення',
+        _('Name'),
+        _('Category'),
+        _('Description'),
+        _('Base price'),
+        _('Duration, min'),
+        pgettext('service status', 'Active'),
+        _('Created at'),
+        _('Updated at'),
     ]
     rows = (
         [
@@ -159,14 +160,14 @@ def service_create_view(request):
             service = form.save(commit=False)
             service.organization = request.user.organization
             service.save()
-            messages.success(request, 'Послугу успішно створено.')
+            messages.success(request, _('Service created successfully.'))
             return redirect('service_list')
     else:
         form = ServiceForm(organization=request.user.organization)
 
     return render(request, 'services_catalog/service_form.html', {
         'form': form,
-        'title': 'Додавання послуги',
+        'title': _('Add service'),
     })
 
 
@@ -188,7 +189,7 @@ def service_update_view(request, pk):
             updated_service = form.save(commit=False)
             updated_service.organization = request.user.organization
             updated_service.save()
-            messages.success(request, 'Послугу успішно оновлено.')
+            messages.success(request, _('Service updated successfully.'))
             return redirect('service_list')
     else:
         form = ServiceForm(
@@ -198,7 +199,7 @@ def service_update_view(request, pk):
 
     return render(request, 'services_catalog/service_form.html', {
         'form': form,
-        'title': 'Редагування послуги',
+        'title': _('Edit service'),
     })
 
 
@@ -225,8 +226,8 @@ def service_toggle_active_view(request, pk):
     service.save(update_fields=['is_active', 'updated_at'])
 
     if service.is_active:
-        messages.success(request, 'Послугу успішно активовано.')
+        messages.success(request, _('Service activated successfully.'))
     else:
-        messages.success(request, 'Послугу успішно деактивовано.')
+        messages.success(request, _('Service deactivated successfully.'))
 
     return redirect('service_list')

@@ -174,7 +174,7 @@ class AppointmentFormConflictValidationTests(TestCase):
 
         self.assertFalse(form.is_valid())
         self.assertIn(
-            'У цього співробітника вже є запис на обраний проміжок часу.',
+            'This employee already has an appointment during the selected time slot.',
             form.non_field_errors(),
         )
 
@@ -274,7 +274,7 @@ class AppointmentFormConflictValidationTests(TestCase):
 
         self.assertFalse(form.is_valid())
         self.assertIn(
-            'У цього співробітника вже є запис на обраний проміжок часу.',
+            'This employee already has an appointment during the selected time slot.',
             form.non_field_errors(),
         )
 
@@ -286,7 +286,7 @@ class AppointmentFormConflictValidationTests(TestCase):
 
         self.assertFalse(form.is_valid())
         self.assertIn(
-            'Час завершення запису повинен бути пізнішим за час початку.',
+            'The appointment end time must be later than the start time.',
             form.non_field_errors(),
         )
 
@@ -513,8 +513,8 @@ class AppointmentListPaginationTests(TestCase):
             )
         )
         self.assertIn(
-            'ID;Клієнт;Послуга;Базова вартість послуги;Фактична вартість запису;'
-            'Співробітник;Дата;Час початку;Час завершення',
+            'ID;Client;Service;Service base price;Appointment actual price;'
+            'Employee;Date;Start time;End time',
             csv_text,
         )
         self.assertIn('Organization appointment', csv_text)
@@ -567,7 +567,7 @@ class AppointmentListPaginationTests(TestCase):
         csv_text = self._csv_text(response)
 
         self.assertEqual(response.status_code, 200)
-        self.assertIn('Скасовано', csv_text)
+        self.assertIn('Cancelled', csv_text)
         self.assertIn('Cancelled export appointment', csv_text)
         self.assertNotIn('Completed export appointment', csv_text)
 
@@ -605,8 +605,8 @@ class AppointmentListPaginationTests(TestCase):
         csv_text = self._csv_text(response)
 
         self.assertEqual(response.status_code, 200)
-        self.assertIn('Базова вартість послуги', csv_text)
-        self.assertIn('Фактична вартість запису', csv_text)
+        self.assertIn('Service base price', csv_text)
+        self.assertIn('Appointment actual price', csv_text)
         self.assertIn('100.00', csv_text)
         self.assertIn('175.25', csv_text)
         self.assertIn('Paid export appointment', csv_text)

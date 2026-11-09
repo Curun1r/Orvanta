@@ -77,7 +77,7 @@ class ServiceListPaginationTests(TestCase):
             )
         )
         self.assertIn(
-            'ID;Назва;Категорія;Опис;Базова вартість;Тривалість, хв;Активна',
+            'ID;Name;Category;Description;Base price;Duration, min;Active',
             csv_text,
         )
         self.assertIn('Українська послуга', csv_text)

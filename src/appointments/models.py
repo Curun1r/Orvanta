@@ -1,3 +1,4 @@
+from django.utils.translation import gettext_lazy as _
 from django.conf import settings
 from django.core.validators import MinValueValidator
 from django.db import models
@@ -8,10 +9,10 @@ from users.models import Organization
 
 
 class AppointmentStatus(models.TextChoices):
-    PLANNED = 'planned', 'Заплановано'
-    CONFIRMED = 'confirmed', 'Підтверджено'
-    COMPLETED = 'completed', 'Виконано'
-    CANCELLED = 'cancelled', 'Скасовано'
+    PLANNED = 'planned', _('Planned')
+    CONFIRMED = 'confirmed', _('Confirmed')
+    COMPLETED = 'completed', _('Completed')
+    CANCELLED = 'cancelled', _('Cancelled')
 
 
 class Appointment(models.Model):
@@ -38,8 +39,8 @@ class Appointment(models.Model):
         null=True,
         blank=True,
         validators=[MinValueValidator(0)],
-        verbose_name='Фактична вартість',
-        help_text='Може відрізнятися від базової вартості послуги.',
+        verbose_name=_('Actual price'),
+        help_text=_('May differ from the service base price.'),
     )
     status = models.CharField(
         max_length=20,
@@ -59,8 +60,8 @@ class Appointment(models.Model):
 
     class Meta:
         ordering = ['-appointment_date', '-start_time']
-        verbose_name = 'Запис'
-        verbose_name_plural = 'Записи'
+        verbose_name = _('Appointment')
+        verbose_name_plural = _('Appointments')
         indexes = [
             models.Index(
                 fields=['organization', 'appointment_date', 'start_time'],
@@ -111,8 +112,8 @@ class AppointmentStatusHistory(models.Model):
 
     class Meta:
         ordering = ['-changed_at']
-        verbose_name = 'Історія статусу запису'
-        verbose_name_plural = 'Історія статусів записів'
+        verbose_name = _('Appointment status history')
+        verbose_name_plural = _('Appointment status history')
         indexes = [
             models.Index(
                 fields=['organization', '-changed_at'],

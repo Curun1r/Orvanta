@@ -1,15 +1,16 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
-{% block title %}Головна{% endblock %}
+{% block title %}{% translate "Home" %}{% endblock %}
 
 {% block content %}
 <div class="dashboard-page">
     <section class="dashboard-hero">
         <div class="dashboard-hero-content">
             <div>
-                <h1 class="dashboard-title">Огляд організації</h1>
+                <h1 class="dashboard-title">{% translate "Organization overview" %}</h1>
                 <p class="dashboard-subtitle">
-                    Ключові показники, найближчі записи та швидкі дії для роботи з даними.
+                    {% translate "Key metrics, upcoming appointments and quick actions for your daily work." %}
                 </p>
                 <div class="dashboard-context">
                     <span class="dashboard-role-badge">
@@ -32,42 +33,41 @@
         {% include 'includes/onboarding.html' %}
     {% endif %}
 
-    <section class="metric-grid" aria-label="Ключові показники">
+    <section class="metric-grid" aria-label="{% translate 'Key metrics' %}">
         <div class="dashboard-refresh-bar">
             <span class="refresh-dot" data-refresh-dot></span>
             <span class="refresh-label" data-last-updated></span>
         </div>
 
         <article class="metric-card">
-            <div class="metric-card-label">Записи</div>
+            <div class="metric-card-label">{% translate "Appointments" %}</div>
             <div class="metric-card-value" data-metric="appointments_count">{{ appointments_count }}</div>
             <div class="metric-card-description">
-                Виконані: <span data-metric="completed_count">{{ completed_count }}</span> ·
-                Скасовані: <span data-metric="cancelled_count">{{ cancelled_count }}</span>
+                {% translate "Completed:" %} <span data-metric="completed_count">{{ completed_count }}</span> {% translate "· Cancelled:" %} <span data-metric="cancelled_count">{{ cancelled_count }}</span>
             </div>
-            <a href="{% url 'appointment_list' %}" class="metric-card-link">Перейти →</a>
+            <a href="{% url 'appointment_list' %}" class="metric-card-link">{% translate "View →" %}</a>
         </article>
 
         <article class="metric-card">
-            <div class="metric-card-label">Клієнти</div>
+            <div class="metric-card-label">{% translate "Clients" %}</div>
             <div class="metric-card-value" data-metric="clients_count">{{ clients_count }}</div>
-            <div class="metric-card-description">Активні: <span data-metric="active_clients_count">{{ active_clients_count }}</span></div>
-            <a href="{% url 'client_list' %}" class="metric-card-link">Перейти →</a>
+            <div class="metric-card-description">{% translate "Active:" %} <span data-metric="active_clients_count">{{ active_clients_count }}</span></div>
+            <a href="{% url 'client_list' %}" class="metric-card-link">{% translate "View →" %}</a>
         </article>
 
         <article class="metric-card">
-            <div class="metric-card-label">Послуги</div>
+            <div class="metric-card-label">{% translate "Services" %}</div>
             <div class="metric-card-value" data-metric="services_count">{{ services_count }}</div>
-            <div class="metric-card-description">Активні: <span data-metric="active_services_count">{{ active_services_count }}</span></div>
-            <a href="{% url 'service_list' %}" class="metric-card-link">Перейти →</a>
+            <div class="metric-card-description">{% translate "Active:" %} <span data-metric="active_services_count">{{ active_services_count }}</span></div>
+            <a href="{% url 'service_list' %}" class="metric-card-link">{% translate "View →" %}</a>
         </article>
 
         <article class="metric-card">
-            <div class="metric-card-label">Співробітники</div>
+            <div class="metric-card-label">{% translate "Employees" %}</div>
             <div class="metric-card-value" data-metric="employees_count">{{ employees_count }}</div>
-            <div class="metric-card-description">У поточній організації</div>
+            <div class="metric-card-description">{% translate "In the current organization" %}</div>
             {% if request.user.role == 'admin' %}
-                <a href="{% url 'user_list' %}" class="metric-card-link">Перейти →</a>
+                <a href="{% url 'user_list' %}" class="metric-card-link">{% translate "View →" %}</a>
             {% endif %}
         </article>
     </section>
@@ -76,10 +76,10 @@
         <article class="panel-card panel-card-large">
             <div class="panel-card-header">
                 <div>
-                    <h2>Найближчі записи</h2>
-                    <p>Операційний список майбутніх записів.</p>
+                    <h2>{% translate "Upcoming appointments" %}</h2>
+                    <p>{% translate "Your upcoming appointment schedule." %}</p>
                 </div>
-                <a href="{% url 'appointment_list' %}" class="btn btn-sm btn-outline-secondary">Усі записи</a>
+                <a href="{% url 'appointment_list' %}" class="btn btn-sm btn-outline-secondary">{% translate "All appointments" %}</a>
             </div>
 
             {% if nearest_appointments %}
@@ -87,7 +87,7 @@
                     {% for appointment in nearest_appointments %}
                         <a href="{% url 'appointment_detail' appointment.pk %}" class="appointment-item">
                             <div class="appointment-time">
-                                <span>{{ appointment.appointment_date|date:'d.m' }}</span>
+                                <span>{{ appointment.appointment_date|date:'SHORT_DATE_FORMAT' }}</span>
                                 <strong>{{ appointment.start_time|time:'H:i' }}</strong>
                             </div>
                             <div class="appointment-content">
@@ -99,7 +99,7 @@
                                 </div>
                                 <div class="appointment-service">{{ appointment.service.name }}</div>
                                 {% if appointment.actual_price is not None %}
-                                    <div class="appointment-meta">Факт. вартість: {{ appointment.actual_price|floatformat:2 }} грн</div>
+                                    <div class="appointment-meta">{% translate "Actual price:" %} {{ appointment.actual_price|floatformat:2 }} {% translate "UAH" %}</div>
                                 {% endif %}
                             </div>
                         </a>
@@ -107,10 +107,10 @@
                 </div>
             {% else %}
                 <div class="empty-state">
-                    <strong>Найближчих записів поки немає</strong>
-                    <span>Коли з’являться майбутні записи, вони будуть тут.</span>
+                    <strong>{% translate "No upcoming appointments yet" %}</strong>
+                    <span>{% translate "Upcoming appointments will appear here." %}</span>
                     {% if quick_actions %}
-                        <a href="{% url 'appointment_create' %}" class="btn btn-sm btn-primary">Створити запис</a>
+                        <a href="{% url 'appointment_create' %}" class="btn btn-sm btn-primary">{% translate "Create appointment" %}</a>
                     {% endif %}
                 </div>
             {% endif %}
@@ -119,7 +119,7 @@
         <aside class="dashboard-side-stack">
             <article class="panel-card">
                 <div class="panel-card-header compact">
-                    <h2>Швидкі дії</h2>
+                    <h2>{% translate "Quick actions" %}</h2>
                 </div>
                 <div class="quick-actions">
                     {% if quick_actions %}
@@ -127,28 +127,28 @@
                             <a href="{{ action.url }}" class="btn btn-{{ action.style }}">{{ action.label }}</a>
                         {% endfor %}
                     {% else %}
-                        <button type="button" class="btn btn-secondary" disabled>Створити запис</button>
-                        <button type="button" class="btn btn-outline-secondary" disabled>Додати клієнта</button>
-                        <button type="button" class="btn btn-outline-secondary" disabled>Додати послугу</button>
+                        <button type="button" class="btn btn-secondary" disabled>{% translate "Create appointment" %}</button>
+                        <button type="button" class="btn btn-outline-secondary" disabled>{% translate "Add client" %}</button>
+                        <button type="button" class="btn btn-outline-secondary" disabled>{% translate "Add service" %}</button>
                     {% endif %}
                 </div>
             </article>
 
             <article class="panel-card">
                 <div class="panel-card-header compact">
-                    <h2>Потребує уваги</h2>
+                    <h2>{% translate "Needs attention" %}</h2>
                 </div>
                 <div class="attention-list">
                     <div class="metric-row{% if completed_without_price_count %} is-warning{% endif %}">
-                        <span>Виконані без фактичної вартості</span>
+                        <span>{% translate "Completed without an actual price" %}</span>
                         <strong>{{ completed_without_price_count }}</strong>
                     </div>
                     <div class="metric-row{% if planned_count %} is-warning{% endif %}">
-                        <span>Заплановані записи</span>
+                        <span>{% translate "Planned appointments" %}</span>
                         <strong>{{ planned_count }}</strong>
                     </div>
                     <div class="metric-row{% if confirmed_count %} is-warning{% endif %}">
-                        <span>Підтверджені записи</span>
+                        <span>{% translate "Confirmed appointments" %}</span>
                         <strong>{{ confirmed_count }}</strong>
                     </div>
                 </div>
@@ -160,7 +160,7 @@
         <div class="dashboard-column">
             <article class="panel-card">
                 <div class="panel-card-header compact">
-                    <h2>Статистика за статусами</h2>
+                    <h2>{% translate "Appointment statuses" %}</h2>
                 </div>
 
                 {% if status_counts %}
@@ -173,27 +173,27 @@
                         {% endfor %}
                     </div>
                 {% else %}
-                    <p class="empty-state compact">Поки немає даних</p>
+                    <p class="empty-state compact">{% translate "No data yet" %}</p>
                 {% endif %}
             </article>
 
             {% if can_view_financials %}
                 <article class="panel-card financial-analytics-card">
                     <div class="panel-card-header compact">
-                        <h2>Дохід за сьогодні</h2>
+                        <h2>{% translate "Revenue today" %}</h2>
                     </div>
 
                     <div class="today-revenue-card">
-                        <strong>{{ today_revenue|floatformat:2 }} грн</strong>
-                        <span>Виконані записи з фактичною вартістю за сьогодні.</span>
-                        <a href="{% url 'finance_analytics' %}" class="metric-card-link">Детальніше →</a>
+                        <strong>{{ today_revenue|floatformat:2 }} {% translate "UAH" %}</strong>
+                        <span>{% translate "Completed appointments with an actual price today." %}</span>
+                        <a href="{% url 'finance_analytics' %}" class="metric-card-link">{% translate "View details →" %}</a>
                     </div>
                 </article>
             {% endif %}
 
             <article class="panel-card">
                 <div class="panel-card-header compact">
-                    <h2>Популярні послуги</h2>
+                    <h2>{% translate "Popular services" %}</h2>
                 </div>
 
                 {% if popular_services %}
@@ -206,7 +206,7 @@
                         {% endfor %}
                     </div>
                 {% else %}
-                    <p class="empty-state compact">Поки немає даних</p>
+                    <p class="empty-state compact">{% translate "No data yet" %}</p>
                 {% endif %}
             </article>
         </div>
@@ -214,7 +214,7 @@
         <div class="dashboard-column">
             <article class="panel-card">
                 <div class="panel-card-header compact">
-                    <h2>Завантаженість співробітників</h2>
+                    <h2>{% translate "Employee workload" %}</h2>
                 </div>
 
                 {% if employee_workload %}
@@ -232,13 +232,13 @@
                         {% endfor %}
                     </div>
                 {% else %}
-                    <p class="empty-state compact">Поки немає даних</p>
+                    <p class="empty-state compact">{% translate "No data yet" %}</p>
                 {% endif %}
             </article>
 
             <article class="panel-card">
                 <div class="panel-card-header compact">
-                    <h2>Останні зміни статусів</h2>
+                    <h2>{% translate "Recent status changes" %}</h2>
                 </div>
 
                 {% if recent_status_changes %}
@@ -254,12 +254,12 @@
                                     <span>→</span>
                                     <span class="status-pill status-{{ item.new_status }}">{{ item.get_new_status_display }}</span>
                                 </div>
-                                <time>{{ item.changed_at|date:'d.m.Y H:i' }}</time>
+                                <time>{{ item.changed_at|date:'SHORT_DATETIME_FORMAT' }}</time>
                             </div>
                         {% endfor %}
                     </div>
                 {% else %}
-                    <p class="empty-state compact">Поки немає даних</p>
+                    <p class="empty-state compact">{% translate "No data yet" %}</p>
                 {% endif %}
             </article>
         </div>
@@ -267,7 +267,7 @@
 </div>
 {% endblock %}
 
-{% load static %}
+{% load static i18n %}
 {% block extra_js %}
 <script src="{% static 'js/dashboard.js' %}" defer></script>
 {% endblock %}

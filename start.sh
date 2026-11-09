@@ -1,6 +1,8 @@
 #!/bin/sh
 set -e
 
+python src/manage.py compilemessages --ignore=venv --ignore=.venv
+
 echo "=== Step 1: collectstatic ==="
 python src/manage.py collectstatic --noinput
 

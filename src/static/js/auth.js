@@ -14,10 +14,10 @@
             button.addEventListener('click', function () {
                 var isHidden = input.getAttribute('type') === 'password';
                 input.setAttribute('type', isHidden ? 'text' : 'password');
-                button.textContent = isHidden ? 'Сховати' : 'Показати';
+                button.textContent = isHidden ? window.gettext('Hide') : window.gettext('Show');
                 button.setAttribute(
                     'aria-label',
-                    isHidden ? 'Приховати пароль' : 'Показати пароль'
+                    isHidden ? window.gettext('Hide password') : window.gettext('Show password')
                 );
                 input.focus({ preventScroll: true });
             });
@@ -39,7 +39,7 @@
         spinner.setAttribute('aria-hidden', 'true');
 
         var label = document.createElement('span');
-        label.textContent = text || button.dataset.originalText || 'Зачекайте...';
+        label.textContent = text || button.dataset.originalText || window.gettext('Please wait...');
 
         button.replaceChildren(spinner, label);
     }

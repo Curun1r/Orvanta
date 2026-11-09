@@ -1,15 +1,16 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
-{% block title %}Помилка сервера{% endblock %}
+{% block title %}{% translate "Server error" %}{% endblock %}
 
 {% block content %}
 <div class="error-page">
     <div class="error-page-code">500</div>
-    <h1 class="error-page-title">Помилка сервера</h1>
+    <h1 class="error-page-title">{% translate "Server error" %}</h1>
     <p class="error-page-text">
-        Щось пішло не так на нашому боці.<br>
-        Спробуйте оновити сторінку або поверніться пізніше.
+        {% translate "Something went wrong on our side." %}<br>
+        {% translate "Try refreshing the page or come back later." %}
     </p>
-    <a href="{% url 'home' %}" class="btn btn-primary">На головну</a>
+    <a href="{% url 'home' %}" class="btn btn-primary">{% translate "Back to home" %}</a>
 </div>
 {% endblock %}

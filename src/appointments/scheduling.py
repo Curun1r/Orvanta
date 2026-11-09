@@ -1,3 +1,4 @@
+from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ValidationError
 
 from users.models import Organization
@@ -6,7 +7,7 @@ from .models import Appointment, AppointmentStatus
 
 
 APPOINTMENT_CONFLICT_MESSAGE = (
-    'У цього співробітника вже є запис на обраний проміжок часу.'
+    _('This employee already has an appointment during the selected time slot.')
 )
 
 

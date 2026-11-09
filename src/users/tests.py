@@ -199,8 +199,8 @@ class UserProfileTests(TestCase):
         response = self.client.get(reverse('profile'))
 
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'Профіль користувача')
-        self.assertContains(response, 'Контактні дані')
+        self.assertContains(response, 'User profile')
+        self.assertContains(response, 'Contact details')
         self.assertContains(response, self.user.username)
         self.assertContains(response, self.organization.name)
 
@@ -216,7 +216,7 @@ class UserProfileTests(TestCase):
         self.assertRedirects(response, reverse('profile'))
         self.user.refresh_from_db()
         self.assertEqual(self.user.email, 'new_profile_email@example.com')
-        self.assertContains(response, 'Профіль успішно оновлено.')
+        self.assertContains(response, 'Profile updated successfully.')
 
     def test_profile_post_cannot_override_protected_fields(self):
         self.client.force_login(self.user)
@@ -263,7 +263,7 @@ class UserProfileTests(TestCase):
 
         profile_response = self.client.get(reverse('profile'))
         self.assertEqual(profile_response.status_code, 200)
-        self.assertContains(response, 'Пароль успішно змінено.')
+        self.assertContains(response, 'Password changed successfully.')
 
     def test_password_not_changed_with_incorrect_old_password(self):
         self.client.force_login(self.user)
@@ -320,7 +320,7 @@ class OrganizationLoginTests(TestCase):
         )
 
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'Невірні дані входу або організація.')
+        self.assertContains(response, 'Invalid sign-in details or organization.')
         self.assertNotIn('_auth_user_id', self.client.session)
 
     def test_user_cannot_login_without_organization(self):
@@ -334,7 +334,7 @@ class OrganizationLoginTests(TestCase):
         )
 
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'Невірні дані входу або організація.')
+        self.assertContains(response, 'Invalid sign-in details or organization.')
         self.assertNotIn('_auth_user_id', self.client.session)
 
     def test_login_failure_uses_generic_message(self):
@@ -355,8 +355,8 @@ class OrganizationLoginTests(TestCase):
             },
         )
 
-        self.assertContains(wrong_org_response, 'Невірні дані входу або організація.')
-        self.assertContains(wrong_password_response, 'Невірні дані входу або організація.')
+        self.assertContains(wrong_org_response, 'Invalid sign-in details or organization.')
+        self.assertContains(wrong_password_response, 'Invalid sign-in details or organization.')
 
     def test_superuser_without_organization_can_still_login(self):
         superuser = User.objects.create_superuser(
@@ -419,7 +419,7 @@ class OrganizationSettingsTests(TestCase):
         response = self.client.get(reverse('organization_settings'))
 
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'Налаштування організації')
+        self.assertContains(response, 'Organization settings')
         self.assertContains(response, self.organization.name)
         self.assertContains(response, self.organization.slug)
 
@@ -452,7 +452,7 @@ class OrganizationSettingsTests(TestCase):
         self.assertRedirects(response, reverse('organization_settings'))
         self.organization.refresh_from_db()
         self.assertEqual(self.organization.name, 'Org One Updated')
-        self.assertContains(response, 'Налаштування організації успішно оновлено.')
+        self.assertContains(response, 'Organization settings updated successfully.')
 
     def test_manager_and_employee_cannot_change_organization_name_via_settings(self):
         for user in (self.manager_user, self.employee_user):
@@ -467,7 +467,7 @@ class OrganizationSettingsTests(TestCase):
                 follow=True,
             )
             self.assertRedirects(response, reverse('home'))
-            self.assertContains(response, 'У вас немає прав доступу до цієї сторінки.')
+            self.assertContains(response, 'You do not have permission to access this page.')
 
             self.organization.refresh_from_db()
             self.assertEqual(self.organization.name, 'Org One')
@@ -528,20 +528,20 @@ class OrganizationSettingsTests(TestCase):
         self.assertEqual(self.organization.slug, 'org-one')
         self.assertContains(
             response,
-            'Налаштування організації доступні на окремій сторінці.',
+            'Organization settings are available on a separate page.',
         )
 
     def test_profile_page_shows_organization_settings_link_only_for_admin(self):
         self.client.force_login(self.admin_user)
         admin_response = self.client.get(reverse('profile'))
         self.assertContains(admin_response, reverse('organization_settings'))
-        self.assertContains(admin_response, 'Налаштування організації')
-        self.assertNotContains(admin_response, 'Оновити назву організації')
+        self.assertContains(admin_response, 'Organization settings')
+        self.assertNotContains(admin_response, 'name="organization_submit"')
 
         self.client.force_login(self.manager_user)
         manager_response = self.client.get(reverse('profile'))
         self.assertNotContains(manager_response, reverse('organization_settings'))
-        self.assertNotContains(manager_response, 'Оновити назву організації')
+        self.assertNotContains(manager_response, 'name="organization_submit"')
 
     def test_admin_can_delete_organization_with_correct_credentials(self):
         client_record = Client.objects.create(
@@ -620,7 +620,7 @@ class OrganizationSettingsTests(TestCase):
         )
 
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'Пароль не підтверджено.')
+        self.assertContains(response, 'Password confirmation failed.')
         self.assertTrue(Organization.objects.filter(pk=self.organization.pk).exists())
         self.assertTrue(User.objects.filter(pk=self.admin_user.pk).exists())
 
@@ -637,7 +637,7 @@ class OrganizationSettingsTests(TestCase):
         )
 
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'Назва або slug організації не збігається.')
+        self.assertContains(response, 'The organization name or slug does not match.')
         self.assertTrue(Organization.objects.filter(pk=self.organization.pk).exists())
         self.assertTrue(Organization.objects.filter(pk=self.other_organization.pk).exists())
 
@@ -655,7 +655,7 @@ class OrganizationSettingsTests(TestCase):
         )
 
         self.assertRedirects(response, reverse('home'))
-        self.assertContains(response, 'У вас немає прав доступу до цієї сторінки.')
+        self.assertContains(response, 'You do not have permission to access this page.')
         self.assertTrue(Organization.objects.filter(pk=self.organization.pk).exists())
 
 
@@ -684,16 +684,16 @@ class NavigationUiTests(TestCase):
             organization=self.organization,
         )
 
-    def test_login_page_has_developer_link_to_django_admin(self):
+    def test_login_page_links_to_signup_without_exposing_developer_admin(self):
         response = self.client.get(reverse('login'))
-        self.assertContains(response, 'Для розробників')
-        self.assertContains(response, 'href="/admin/"')
+        self.assertContains(response, f'href="{reverse("signup")}"')
+        self.assertNotContains(response, f'href="{reverse("admin:index")}"')
 
     def test_authenticated_layout_does_not_show_django_admin_link(self):
         self.client.force_login(self.admin_user)
         response = self.client.get(reverse('home'))
         self.assertEqual(response.status_code, 200)
-        self.assertNotContains(response, 'href="/admin/"')
+        self.assertNotContains(response, f'href="{reverse("admin:index")}"')
 
     def test_authenticated_navbar_has_home_link_and_user_dropdown(self):
         self.client.force_login(self.admin_user)
@@ -703,24 +703,24 @@ class NavigationUiTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(
             response,
-            f'<a class="nav-link-custom active" href="{reverse("home")}">Головна</a>',
+            f'<a class="nav-link-custom active" href="{reverse("home")}">Home</a>',
             html=True,
         )
         self.assertContains(response, 'class="user-dropdown"')
         self.assertContains(response, 'class="user-pill"')
         self.assertContains(response, f'href="{reverse("profile")}"')
-        self.assertContains(response, f'href="{reverse("profile_password_change")}"')
         self.assertContains(response, reverse('organization_settings'))
-        self.assertContains(response, 'Профіль')
-        self.assertContains(response, 'Змінити пароль')
-        self.assertContains(response, 'Налаштування організації')
-        self.assertContains(response, 'Вийти')
+        self.assertContains(response, 'Profile')
+        self.assertContains(response, 'Organization settings')
+        self.assertContains(response, 'Log out')
         self.assertContains(response, self.admin_user.username)
+        profile_response = self.client.get(reverse('profile'))
+        self.assertContains(profile_response, f'href="{reverse("profile_password_change")}"')
 
     def test_organization_settings_dropdown_item_is_admin_only(self):
         self.client.force_login(self.admin_user)
         admin_response = self.client.get(reverse('home'))
-        self.assertContains(admin_response, 'Налаштування організації')
+        self.assertContains(admin_response, 'Organization settings')
         self.assertContains(admin_response, reverse('organization_settings'))
 
         for user in (self.manager_user, self.employee_user):
@@ -728,7 +728,7 @@ class NavigationUiTests(TestCase):
 
             response = self.client.get(reverse('home'))
 
-            self.assertNotContains(response, 'Налаштування організації')
+            self.assertNotContains(response, 'Organization settings')
             self.assertNotContains(response, reverse('organization_settings'))
             self.client.logout()
 
@@ -780,7 +780,7 @@ class UserDeleteTests(TestCase):
 
         self.assertRedirects(response, reverse('user_list'))
         self.assertFalse(User.objects.filter(pk=self.employee_user.pk).exists())
-        self.assertContains(response, 'Користувача delete_employee успішно видалено.')
+        self.assertContains(response, 'User delete_employee deleted successfully.')
 
     def test_admin_cannot_delete_user_from_another_organization(self):
         self.client.force_login(self.admin_user)
@@ -792,7 +792,7 @@ class UserDeleteTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertTrue(User.objects.filter(pk=self.other_user.pk).exists())
-        self.assertContains(response, 'Користувача не знайдено в межах вашої організації.')
+        self.assertContains(response, 'User not found in your organization.')
 
     def test_admin_cannot_delete_self(self):
         self.client.force_login(self.admin_user)
@@ -804,7 +804,7 @@ class UserDeleteTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertTrue(User.objects.filter(pk=self.admin_user.pk).exists())
-        self.assertContains(response, 'Ви не можете видалити власний обліковий запис.')
+        self.assertContains(response, 'You cannot delete your own account.')
 
     def test_admin_cannot_delete_last_admin(self):
         self.second_admin.delete()
@@ -817,7 +817,7 @@ class UserDeleteTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertTrue(User.objects.filter(pk=self.admin_user.pk).exists())
-        self.assertContains(response, 'Неможливо видалити останнього адміністратора організації.')
+        self.assertContains(response, 'The last administrator of the organization cannot be deleted.')
 
 
 class UserListPaginationTests(TestCase):
@@ -874,9 +874,9 @@ class UserListPaginationTests(TestCase):
         response = self.client.get(reverse('user_list'))
         html = response.content.decode()
 
-        title_index = html.index('Користувачі системи')
-        create_button_index = html.index('Створити користувача')
-        filter_index = html.index('Пошук і фільтрація')
+        title_index = html.index('<h1>Users</h1>')
+        create_button_index = html.index('Create user')
+        filter_index = html.index('Search and filters')
 
         self.assertLess(title_index, create_button_index)
         self.assertLess(create_button_index, filter_index)

@@ -1,3 +1,4 @@
+from django.utils.translation import gettext_lazy as _, pgettext_lazy
 from django import forms
 from django.contrib.auth import authenticate
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm, UserCreationForm
@@ -17,38 +18,38 @@ SAFE_CREATE_ROLE_CHOICES = [
 class UserFilterForm(forms.Form):
     query = forms.CharField(
         required=False,
-        label='Пошук',
-        widget=forms.TextInput(attrs={'placeholder': 'Ім’я користувача або email'}),
+        label=_('Search'),
+        widget=forms.TextInput(attrs={'placeholder': _('Username or email')}),
     )
     role = forms.ChoiceField(
         required=False,
-        label='Роль',
-        choices=[('', 'Усі ролі')] + list(UserRole.choices),
+        label=_('Role'),
+        choices=[('', _('All roles'))] + list(UserRole.choices),
     )
     is_active = forms.ChoiceField(
         required=False,
-        label='Статус',
+        label=_('Status'),
         choices=[
-            ('', 'Усі'),
-            ('true', 'Активні'),
-            ('false', 'Неактивні'),
+            ('', _('All')),
+            ('true', pgettext_lazy('summary', 'Active')),
+            ('false', pgettext_lazy('summary', 'Inactive')),
         ],
     )
 
 
 def _configure_user_creation_fields(fields):
-    fields['username'].label = 'Ім’я користувача'
-    fields['username'].help_text = 'До 150 символів. Дозволені літери, цифри та @/./+/-/_.'
+    fields['username'].label = _('Username')
+    fields['username'].help_text = _('Up to 150 characters. Letters, digits and @/./+/-/_ are allowed.')
     fields['username'].widget.attrs.setdefault('placeholder', 'username')
 
     fields['email'].widget.attrs.setdefault('placeholder', 'user@example.com')
 
-    fields['password1'].label = 'Пароль'
-    fields['password1'].help_text = 'Використайте надійний пароль, який відповідає вимогам системи.'
-    fields['password1'].widget.attrs.setdefault('placeholder', 'Пароль')
+    fields['password1'].label = _('Password')
+    fields['password1'].help_text = _('Use a strong password that meets the system requirements.')
+    fields['password1'].widget.attrs.setdefault('placeholder', _('Password'))
 
-    fields['password2'].label = 'Підтвердження пароля'
-    fields['password2'].help_text = 'Введіть той самий пароль ще раз.'
+    fields['password2'].label = _('Confirm password')
+    fields['password2'].help_text = _('Enter the same password again.')
     fields['password2'].widget.attrs.setdefault('placeholder', '••••••••')
 
 
@@ -57,13 +58,13 @@ class UserRoleForm(BootstrapFormMixin, forms.ModelForm):
         model = User
         fields = ['role']
         labels = {
-            'role': 'Роль',
+            'role': _('Role'),
         }
 
 
 class SignupForm(BootstrapFormMixin, UserCreationForm):
     email = forms.EmailField(label='Email', required=True)
-    organization_name = forms.CharField(label='Назва організації', max_length=255)
+    organization_name = forms.CharField(label=_('Organization name'), max_length=255)
 
     class Meta(UserCreationForm.Meta):
         model = User
@@ -75,27 +76,27 @@ class SignupForm(BootstrapFormMixin, UserCreationForm):
         self.fields['password1'].widget.attrs['placeholder'] = 'A–Z, a–z, 0–9, ! @ # $ % ^ & * ( ) _ - + ='
         self.fields['organization_name'].widget.attrs.setdefault(
             'placeholder',
-            'напр. Orvanta Demo',
+            _('e.g. Orvanta Demo'),
         )
 
     def clean_email(self):
         email = self.cleaned_data['email'].strip().lower()
         if User.objects.filter(email__iexact=email).exists():
-            raise forms.ValidationError('Користувач із такою email-адресою вже існує.')
+            raise forms.ValidationError(_('A user with this email address already exists.'))
         return email
 
     def clean_organization_name(self):
         organization_name = self.cleaned_data['organization_name'].strip()
         if not organization_name:
-            raise forms.ValidationError('Вкажіть назву організації.')
+            raise forms.ValidationError(_('Enter the organization name.'))
         if Organization.objects.filter(name__iexact=organization_name).exists():
-            raise forms.ValidationError('Організація з такою назвою вже існує.')
+            raise forms.ValidationError(_('An organization with this name already exists.'))
         return organization_name
 
 
 class OrganizationUserCreateForm(BootstrapFormMixin, UserCreationForm):
     email = forms.EmailField(label='Email', required=True)
-    role = forms.ChoiceField(label='Роль', choices=SAFE_CREATE_ROLE_CHOICES)
+    role = forms.ChoiceField(label=_('Role'), choices=SAFE_CREATE_ROLE_CHOICES)
 
     class Meta(UserCreationForm.Meta):
         model = User
@@ -108,13 +109,13 @@ class OrganizationUserCreateForm(BootstrapFormMixin, UserCreationForm):
     def clean_email(self):
         email = self.cleaned_data['email'].strip().lower()
         if User.objects.filter(email__iexact=email).exists():
-            raise forms.ValidationError('Користувач із такою email-адресою вже існує.')
+            raise forms.ValidationError(_('A user with this email address already exists.'))
         return email
 
     def clean_role(self):
         role = self.cleaned_data['role']
         if role not in {UserRole.MANAGER, UserRole.EMPLOYEE}:
-            raise forms.ValidationError('Недопустима роль для створення користувача.')
+            raise forms.ValidationError(_('Invalid role for creating a user.'))
         return role
 
 
@@ -132,7 +133,7 @@ class UserProfileForm(BootstrapFormMixin, forms.ModelForm):
     def clean_email(self):
         email = self.cleaned_data['email'].strip().lower()
         if User.objects.filter(email__iexact=email).exclude(pk=self.instance.pk).exists():
-            raise forms.ValidationError('Користувач із такою email-адресою вже існує.')
+            raise forms.ValidationError(_('A user with this email address already exists.'))
         return email
 
 
@@ -141,13 +142,13 @@ class OrganizationSettingsForm(BootstrapFormMixin, forms.ModelForm):
         model = Organization
         fields = ['name']
         labels = {
-            'name': 'Назва організації',
+            'name': _('Organization name'),
         }
         help_texts = {
-            'name': 'Slug організації використовується для входу та не змінюється автоматично.',
+            'name': _('The organization slug is used to sign in and does not change automatically.'),
         }
         widgets = {
-            'name': forms.TextInput(attrs={'placeholder': 'Назва організації'}),
+            'name': forms.TextInput(attrs={'placeholder': _('Organization name')}),
         }
 
 
@@ -163,16 +164,16 @@ class ConfirmDeleteUserForm(forms.Form):
         cleaned_data = super().clean()
 
         if self.actor is None or self.actor.role != UserRole.ADMIN:
-            raise forms.ValidationError('У вас немає прав видаляти користувачів.')
+            raise forms.ValidationError(_('You do not have permission to delete users.'))
 
         if self.actor.organization_id is None:
-            raise forms.ValidationError('Неможливо видаляти користувачів без організації.')
+            raise forms.ValidationError(_('Users cannot be deleted without an organization.'))
 
         if self.target_user is None:
-            raise forms.ValidationError('Користувача не знайдено в межах вашої організації.')
+            raise forms.ValidationError(_('User not found in your organization.'))
 
         if self.target_user.organization_id != self.actor.organization_id:
-            raise forms.ValidationError('Користувача не знайдено в межах вашої організації.')
+            raise forms.ValidationError(_('User not found in your organization.'))
 
         if self.target_user.role == UserRole.ADMIN:
             admins_count = User.objects.filter(
@@ -181,16 +182,15 @@ class ConfirmDeleteUserForm(forms.Form):
             ).count()
             if admins_count <= 1:
                 raise forms.ValidationError(
-                    'Неможливо видалити останнього адміністратора організації.',
+                    _('The last administrator of the organization cannot be deleted.'),
                 )
 
         if self.target_user.pk == self.actor.pk:
-            raise forms.ValidationError('Ви не можете видалити власний обліковий запис.')
+            raise forms.ValidationError(_('You cannot delete your own account.'))
 
         if self.target_user.employee_appointments.exists():
             raise forms.ValidationError(
-                'Користувача не можна видалити, доки за ним закріплені записи. '
-                'Спочатку перепризначте або видаліть ці записи.',
+                _('This user cannot be deleted while appointments are assigned to them. Reassign or delete those appointments first.'),
             )
 
         return cleaned_data
@@ -200,43 +200,43 @@ class ConfirmDeleteUserForm(forms.Form):
 
 
 class ConfirmDeleteOrganizationForm(BootstrapFormMixin, forms.Form):
-    username = forms.CharField(label='Ім’я користувача', max_length=150)
-    organization = forms.CharField(label='Назва або slug організації', max_length=255)
-    password = forms.CharField(label='Пароль', widget=forms.PasswordInput)
+    username = forms.CharField(label=_('Username'), max_length=150)
+    organization = forms.CharField(label=_('Organization name or slug'), max_length=255)
+    password = forms.CharField(label=_('Password'), widget=forms.PasswordInput)
 
     def __init__(self, *args, user=None, **kwargs):
         super().__init__(*args, **kwargs)
         self.user = user
         self.organization_obj = getattr(user, 'organization', None)
         self.fields['username'].widget.attrs.setdefault('placeholder', 'username')
-        self.fields['organization'].widget.attrs.setdefault('placeholder', 'назва або slug')
+        self.fields['organization'].widget.attrs.setdefault('placeholder', _('name or slug'))
         self.fields['password'].widget.attrs.setdefault('placeholder', 'password')
 
     def clean_username(self):
         username = self.cleaned_data['username'].strip()
         if self.user is None or username != self.user.username:
-            raise forms.ValidationError('Ім’я користувача не збігається з поточним обліковим записом.')
+            raise forms.ValidationError(_('The username does not match the current account.'))
         return username
 
     def clean_organization(self):
         organization_value = self.cleaned_data['organization'].strip()
         organization = self.organization_obj
         if organization is None:
-            raise forms.ValidationError('Ваш користувач не прив’язаний до організації.')
+            raise forms.ValidationError(_('Your account is not linked to an organization.'))
 
         if organization_value not in {organization.name, organization.slug}:
-            raise forms.ValidationError('Назва або slug організації не збігається.')
+            raise forms.ValidationError(_('The organization name or slug does not match.'))
 
         return organization_value
 
     def clean_password(self):
         password = self.cleaned_data['password']
         if self.user is None:
-            raise forms.ValidationError('Пароль не підтверджено.')
+            raise forms.ValidationError(_('Password confirmation failed.'))
 
         authenticated_user = authenticate(username=self.user.username, password=password)
         if authenticated_user is None or authenticated_user.pk != self.user.pk:
-            raise forms.ValidationError('Пароль не підтверджено.')
+            raise forms.ValidationError(_('Password confirmation failed.'))
 
         return password
 
@@ -244,10 +244,10 @@ class ConfirmDeleteOrganizationForm(BootstrapFormMixin, forms.Form):
         cleaned_data = super().clean()
 
         if self.user is None or self.user.role != UserRole.ADMIN:
-            raise forms.ValidationError('У вас немає прав видаляти організацію.')
+            raise forms.ValidationError(_('You do not have permission to delete the organization.'))
 
         if self.organization_obj is None:
-            raise forms.ValidationError('Ваш користувач не прив’язаний до організації.')
+            raise forms.ValidationError(_('Your account is not linked to an organization.'))
 
         return cleaned_data
 
@@ -291,17 +291,17 @@ class ConfirmDeleteOrganizationForm(BootstrapFormMixin, forms.Form):
 class ProfilePasswordChangeForm(BootstrapFormMixin, PasswordChangeForm):
     def __init__(self, user, *args, **kwargs):
         super().__init__(user, *args, **kwargs)
-        self.fields['old_password'].label = 'Поточний пароль'
-        self.fields['old_password'].widget.attrs.setdefault('placeholder', 'Поточний пароль')
+        self.fields['old_password'].label = _('Current password')
+        self.fields['old_password'].widget.attrs.setdefault('placeholder', _('Current password'))
 
-        self.fields['new_password1'].label = 'Новий пароль'
+        self.fields['new_password1'].label = _('New password')
         self.fields['new_password1'].help_text = (
-            'Використайте надійний пароль, який відповідає вимогам системи.'
+            _('Use a strong password that meets the system requirements.')
         )
-        self.fields['new_password1'].widget.attrs.setdefault('placeholder', 'Новий пароль')
+        self.fields['new_password1'].widget.attrs.setdefault('placeholder', _('New password'))
 
-        self.fields['new_password2'].label = 'Підтвердження нового пароля'
-        self.fields['new_password2'].help_text = 'Введіть новий пароль ще раз.'
+        self.fields['new_password2'].label = _('Confirm new password')
+        self.fields['new_password2'].help_text = _('Enter the new password again.')
         self.fields['new_password2'].widget.attrs.setdefault(
             'placeholder',
             '••••••••',
@@ -310,24 +310,24 @@ class ProfilePasswordChangeForm(BootstrapFormMixin, PasswordChangeForm):
 
 class OrganizationAuthenticationForm(AuthenticationForm):
     organization = forms.CharField(
-        label='Організація',
+        label=_('Organization'),
         required=False,
         max_length=255,
     )
 
     error_messages = {
-        'invalid_login': 'Невірні дані входу або організація.',
-        'inactive': 'Цей обліковий запис неактивний.',
+        'invalid_login': _('Invalid sign-in details or organization.'),
+        'inactive': _('This account is inactive.'),
     }
 
     def __init__(self, request=None, *args, **kwargs):
         super().__init__(request, *args, **kwargs)
         self.order_fields(['username', 'password', 'organization'])
-        self.fields['username'].label = 'Ім’я користувача'
+        self.fields['username'].label = _('Username')
         self.fields['username'].widget.attrs.setdefault('placeholder', 'username')
-        self.fields['password'].label = 'Пароль'
+        self.fields['password'].label = _('Password')
         self.fields['password'].widget.attrs.setdefault('placeholder', 'password')
-        self.fields['organization'].widget.attrs.setdefault('placeholder', 'slug або назва')
+        self.fields['organization'].widget.attrs.setdefault('placeholder', _('slug or name'))
 
         for field in self.fields.values():
             existing_class = field.widget.attrs.get('class', '')

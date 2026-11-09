@@ -1,0 +1,2146 @@
+msgid ""
+msgstr "Project-Id-Version: Orvanta\nLanguage: uk\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#: appointments/forms.py:28 appointments/views.py:100 audit/models.py:20
+#: clients/models.py:34 config/views.py:580
+#: templates/appointments/appointment_detail.html:47
+#: templates/appointments/appointment_list.html:75
+#: templates/config/finance_analytics.html:257
+#| msgid "Clients"
+msgid "Client"
+msgstr "Клієнт"
+
+#: appointments/forms.py:29 appointments/views.py:101 audit/models.py:21
+#: config/forms.py:23 config/views.py:581 services_catalog/models.py:61
+#: templates/appointments/appointment_detail.html:51
+#: templates/appointments/appointment_list.html:76
+#: templates/clients/client_detail.html:119
+#: templates/config/finance_analytics.html:186
+#: templates/config/finance_analytics.html:258
+msgid "Service"
+msgstr "Послуга"
+
+#: appointments/forms.py:30 appointments/forms.py:156 appointments/views.py:104
+#: config/forms.py:29 config/views.py:582
+#: templates/appointments/appointment_detail.html:69
+#: templates/appointments/appointment_list.html:77
+#: templates/clients/client_detail.html:120
+#: templates/config/finance_analytics.html:218
+#: templates/config/finance_analytics.html:259 users/models.py:9
+msgid "Employee"
+msgstr "Співробітник"
+
+#: appointments/forms.py:31
+msgid "Appointment date"
+msgstr "Дата запису"
+
+#: appointments/forms.py:32 appointments/views.py:106
+msgid "Start time"
+msgstr "Час початку"
+
+#: appointments/forms.py:33 appointments/views.py:107
+msgid "End time"
+msgstr "Час завершення"
+
+#: appointments/forms.py:34 appointments/forms.py:121 appointments/models.py:42
+#: templates/appointments/appointment_list.html:79
+#: templates/appointments/appointment_list.html:104
+#: templates/config/finance_analytics.html:262
+msgid "Actual price"
+msgstr "Фактична вартість"
+
+#: appointments/forms.py:35 appointments/forms.py:151 appointments/views.py:108
+#: clients/forms.py:41 config/forms.py:35 config/views.py:583
+#: services_catalog/forms.py:81
+#: templates/appointments/appointment_detail.html:81
+#: templates/appointments/appointment_list.html:80
+#: templates/clients/client_detail.html:40
+#: templates/clients/client_detail.html:122
+#: templates/clients/client_list.html:68
+#: templates/config/finance_analytics.html:260
+#: templates/services_catalog/service_detail.html:40
+#: templates/services_catalog/service_list.html:76
+#: templates/users/user_list.html:67 users/forms.py:31
+msgid "Status"
+msgstr "Статус"
+
+#: appointments/forms.py:36 appointments/views.py:109
+#: templates/appointments/appointment_detail.html:87
+#: templates/appointments/appointment_detail.html:110
+msgid "Comment"
+msgstr "Коментар"
+
+#: appointments/forms.py:39
+msgid "The actual price may differ from the service base price."
+msgstr "Фактична вартість може відрізнятися від базової вартості послуги."
+
+#: appointments/forms.py:52
+msgid "Additional appointment details"
+msgstr "Додаткові деталі запису"
+
+#: appointments/forms.py:59
+msgid "Select a client"
+msgstr "Оберіть клієнта"
+
+#: appointments/forms.py:60
+msgid "Select a service"
+msgstr "Оберіть послугу"
+
+#: appointments/forms.py:61
+msgid "Select an employee"
+msgstr "Оберіть співробітника"
+
+#: appointments/forms.py:92
+msgid "The selected client does not belong to your organization."
+msgstr "Обраний клієнт не належить вашій організації."
+
+#: appointments/forms.py:94
+msgid "The selected service does not belong to your organization."
+msgstr "Обрана послуга не належить вашій організації."
+
+#: appointments/forms.py:96
+msgid "The selected employee does not belong to your organization."
+msgstr "Обраний співробітник не належить вашій організації."
+
+#: appointments/forms.py:100
+msgid "The appointment end time must be later than the start time."
+msgstr "Час завершення запису повинен бути пізнішим за час початку."
+
+#: appointments/forms.py:138 clients/forms.py:36 services_catalog/forms.py:70
+#: users/forms.py:21
+msgid "Search"
+msgstr "Пошук"
+
+#: appointments/forms.py:140
+msgid "Client, service or employee..."
+msgstr "Клієнт, послуга або співробітник..."
+
+#: appointments/forms.py:146 appointments/views.py:105 config/views.py:579
+#: templates/appointments/appointment_detail.html:73
+#: templates/clients/client_detail.html:118
+#: templates/config/finance_analytics.html:256
+msgid "Date"
+msgstr "Дата"
+
+#: appointments/forms.py:152 clients/views.py:180
+msgid "All statuses"
+msgstr "Усі статуси"
+
+#: appointments/forms.py:158 config/forms.py:31
+msgid "All employees"
+msgstr "Усі співробітники"
+
+#: appointments/models.py:12
+msgid "Planned"
+msgstr "Заплановано"
+
+#: appointments/models.py:13
+msgid "Confirmed"
+msgstr "Підтверджено"
+
+#: appointments/models.py:14 templates/appointments/appointment_list.html:171
+#: templates/clients/client_detail.html:69
+#: templates/includes/onboarding.html:21
+msgid "Completed"
+msgstr "Виконано"
+
+#: appointments/models.py:15
+msgid "Cancelled"
+msgstr "Скасовано"
+
+#: appointments/models.py:43
+msgid "May differ from the service base price."
+msgstr "Може відрізнятися від базової вартості послуги."
+
+#: appointments/models.py:63 audit/models.py:22
+msgid "Appointment"
+msgstr "Запис"
+
+#: appointments/models.py:64 templates/appointments/appointment_list.html:4
+#: templates/appointments/appointment_list.html:10
+#: templates/appointments/appointment_list.html:66 templates/base.html:31
+#: templates/config/finance_analytics.html:187
+#: templates/config/finance_analytics.html:219 templates/home.html:43
+msgid "Appointments"
+msgstr "Записи"
+
+#: appointments/models.py:115 appointments/models.py:116
+msgid "Appointment status history"
+msgstr "Історія статусу запису"
+
+#: appointments/scheduling.py:10
+msgid "This employee already has an appointment during the selected time slot."
+msgstr "У цього співробітника вже є запис на обраний проміжок часу."
+
+#: appointments/views.py:102 config/views.py:584
+#: templates/appointments/appointment_detail.html:55
+msgid "Service base price"
+msgstr "Базова вартість послуги"
+
+#: appointments/views.py:103 config/views.py:585
+#: templates/appointments/appointment_detail.html:59
+msgid "Appointment actual price"
+msgstr "Фактична вартість запису"
+
+#: appointments/views.py:110 clients/views.py:79 services_catalog/views.py:133
+msgid "Created at"
+msgstr "Дата створення"
+
+#: appointments/views.py:111 clients/views.py:80 services_catalog/views.py:134
+msgid "Updated at"
+msgstr "Дата оновлення"
+
+#: appointments/views.py:148
+msgid "Appointment actual price updated."
+msgstr "Фактичну вартість запису оновлено."
+
+#: appointments/views.py:150
+msgid "Check the appointment actual price."
+msgstr "Перевірте фактичну вартість запису."
+
+#: appointments/views.py:176
+msgid "Initial appointment status."
+msgstr "Початковий статус запису."
+
+#: appointments/views.py:180
+msgid "Appointment created successfully."
+msgstr "Запис успішно створено."
+
+#: appointments/views.py:190 config/views.py:110 config/views.py:477
+#: templates/appointments/appointment_list.html:15
+#: templates/appointments/appointment_list.html:192 templates/home.html:113
+#: templates/home.html:130
+msgid "Create appointment"
+msgstr "Створити запис"
+
+#: appointments/views.py:225
+msgid "Status changed through the appointment edit form."
+msgstr "Статус змінено через форму редагування запису."
+
+#: appointments/views.py:229
+msgid "Appointment updated successfully."
+msgstr "Запис успішно оновлено."
+
+#: appointments/views.py:242 templates/appointments/appointment_detail.html:16
+msgid "Edit appointment"
+msgstr "Редагувати запис"
+
+#: appointments/views.py:286
+msgid "Invalid status change action."
+msgstr "Невірна дія для зміни статусу."
+
+#: appointments/views.py:290
+msgid "The appointment already has this status."
+msgstr "Запис уже має цей статус."
+
+#: appointments/views.py:316
+msgid "Status changed using a quick action in the appointment list."
+msgstr "Статус змінено швидкою дією зі списку записів."
+
+#: appointments/views.py:320
+msgid "Appointment status updated successfully."
+msgstr "Статус запису успішно оновлено."
+
+#: appointments/views.py:328
+msgid "Only an administrator can delete appointments."
+msgstr "Видаляти записи може лише адміністратор."
+
+#: appointments/views.py:338
+#, python-format
+msgid "Deleted appointment #%(id)s: %(client)s — %(service)s, %(date)s, status: %(status)s"
+msgstr "Видалено запис #%(id)s: %(client)s — %(service)s, %(date)s, статус: %(status)s"
+
+#: appointments/views.py:349
+msgid "Appointment deleted successfully."
+msgstr "Запис успішно видалено."
+
+#: audit/apps.py:8
+msgid "Audit"
+msgstr "Аудит"
+
+#: audit/forms.py:12 audit/models.py:19 templates/admin_dashboard.html:106
+#: templates/audit/audit_log_list.html:69 templates/users/user_list.html:64
+#: users/models.py:48
+msgid "User"
+msgstr "Користувач"
+
+#: audit/forms.py:14
+msgid "All users"
+msgstr "Усі користувачі"
+
+#: audit/forms.py:18 templates/audit/audit_log_list.html:70
+msgid "Action type"
+msgstr "Тип дії"
+
+#: audit/forms.py:19
+msgid "All actions"
+msgstr "Усі дії"
+
+#: audit/forms.py:23
+msgid "Entity type"
+msgstr "Тип сутності"
+
+#: audit/forms.py:24
+msgid "All entities"
+msgstr "Усі сутності"
+
+#: audit/forms.py:28 config/forms.py:13
+msgid "Date from"
+msgstr "Дата від"
+
+#: audit/forms.py:33 config/forms.py:18
+msgid "Date to"
+msgstr "Дата до"
+
+#: audit/models.py:9
+msgid "Log in"
+msgstr "Вхід"
+
+#: audit/models.py:10 templates/base.html:65
+msgid "Log out"
+msgstr "Вийти"
+
+#: audit/models.py:11
+msgid "Creation"
+msgstr "Створення"
+
+#: audit/models.py:12
+msgid "Update"
+msgstr "Оновлення"
+
+#: audit/models.py:13
+msgid "Deletion"
+msgstr "Видалення"
+
+#: audit/models.py:14
+msgid "Status change"
+msgstr "Зміна статусу"
+
+#: audit/models.py:15
+msgid "Role assignment"
+msgstr "Призначення ролі"
+
+#: audit/models.py:23
+msgid "Authentication"
+msgstr "Автентифікація"
+
+#: audit/models.py:50
+msgid "Audit entry"
+msgstr "Запис аудиту"
+
+#: audit/models.py:51 templates/admin_dashboard.html:15
+#: templates/audit/audit_log_list.html:4 templates/audit/audit_log_list.html:10
+#: templates/base.html:39
+msgid "Audit log"
+msgstr "Журнал аудиту"
+
+#: audit/signals.py:41
+#, python-format
+msgid "User %(username)s signed in."
+msgstr "Користувач %(username)s виконав вхід до системи."
+
+#: audit/signals.py:56
+#, python-format
+msgid "User %(username)s signed out."
+msgstr "Користувач %(username)s вийшов із системи."
+
+#: audit/signals.py:79
+#, python-format
+msgid "Created %(entity)s with id=%(id)s."
+msgstr "Створено об'єкт %(entity)s з id=%(id)s."
+
+#: audit/signals.py:82
+#, python-format
+msgid "Updated %(entity)s with id=%(id)s."
+msgstr "Оновлено об'єкт %(entity)s з id=%(id)s."
+
+#: audit/signals.py:105
+#, python-format
+msgid "Deleted %(entity)s with id=%(id)s."
+msgstr "Видалено об'єкт %(entity)s з id=%(id)s."
+
+#: clients/forms.py:14 clients/views.py:75
+#: templates/clients/client_detail.html:24
+#: templates/clients/client_list.html:65
+msgid "Full name"
+msgstr "ПІБ"
+
+#: clients/forms.py:15 clients/views.py:76
+#: templates/clients/client_detail.html:28
+#: templates/clients/client_list.html:66
+msgid "Phone"
+msgstr "Телефон"
+
+#: clients/forms.py:17 templates/clients/client_detail.html:36
+msgid "Date of birth"
+msgstr "Дата народження"
+
+#: clients/forms.py:18 templates/clients/client_detail.html:56
+msgid "Notes"
+msgstr "Примітки"
+
+#: clients/forms.py:19 clients/views.py:78
+#: templates/clients/client_detail.html:42
+#: templates/clients/client_list.html:80 templates/users/profile.html:77
+#: templates/users/user_list.html:85
+msgid "Active"
+msgstr "Активний"
+
+#: clients/forms.py:22
+msgid "For example, Alex Morgan"
+msgstr "Наприклад, Іваненко Іван"
+
+#: clients/forms.py:28
+msgid "Additional client information"
+msgstr "Додаткова інформація про клієнта"
+
+#: clients/forms.py:37
+msgid "Full name, phone or email"
+msgstr "ПІБ, телефон або email"
+
+#: clients/forms.py:43 services_catalog/forms.py:83 users/forms.py:33
+msgid "All"
+msgstr "Усі"
+
+#: clients/forms.py:44 services_catalog/forms.py:84 users/forms.py:34
+#| msgid "Active"
+msgctxt "summary"
+msgid "Active"
+msgstr "Активні"
+
+#: clients/forms.py:45 services_catalog/forms.py:85 users/forms.py:35
+#| msgid "Inactive"
+msgctxt "summary"
+msgid "Inactive"
+msgstr "Неактивні"
+
+#: clients/models.py:35 templates/base.html:29
+#: templates/clients/client_list.html:4 templates/clients/client_list.html:10
+#: templates/clients/client_list.html:56 templates/home.html:52
+msgid "Clients"
+msgstr "Клієнти"
+
+#: clients/views.py:108
+msgid "Client created successfully."
+msgstr "Клієнта успішно створено."
+
+#: clients/views.py:115 config/views.py:103 config/views.py:482
+#: templates/clients/client_list.html:15 templates/clients/client_list.html:116
+#: templates/home.html:131
+msgid "Add client"
+msgstr "Додати клієнта"
+
+#: clients/views.py:131
+msgid "Client details updated successfully."
+msgstr "Дані клієнта успішно оновлено."
+
+#: clients/views.py:138 templates/clients/client_detail.html:16
+msgid "Edit client"
+msgstr "Редагувати клієнта"
+
+#: clients/views.py:208
+msgid "Client activated successfully."
+msgstr "Клієнта успішно активовано."
+
+#: clients/views.py:210
+msgid "Client deactivated successfully."
+msgstr "Клієнта успішно деактивовано."
+
+#: config/csv_export.py:21 templates/users/user_list.html:92
+msgid "Yes"
+msgstr "Так"
+
+#: config/csv_export.py:21 templates/users/user_list.html:94
+msgid "No"
+msgstr "Ні"
+
+#: config/forms.py:25
+msgid "All services"
+msgstr "Усі послуги"
+
+#: config/views.py:79
+msgid "Create your first service category"
+msgstr "Створіть першу категорію послуг"
+
+#: config/views.py:82
+msgid "Create category"
+msgstr "Створити категорію"
+
+#: config/views.py:86
+msgid "Create your first service"
+msgstr "Створіть першу послугу"
+
+#: config/views.py:89
+msgid "Create service"
+msgstr "Створити послугу"
+
+#: config/views.py:93
+msgid "Add an employee"
+msgstr "Додайте співробітника"
+
+#: config/views.py:96 config/views.py:495
+msgid "Add employee"
+msgstr "Додати співробітника"
+
+#: config/views.py:100
+msgid "Add a client"
+msgstr "Додайте клієнта"
+
+#: config/views.py:107
+msgid "Create your first appointment"
+msgstr "Створіть перший запис"
+
+#: config/views.py:284
+msgid "January"
+msgstr "Січень"
+
+#: config/views.py:284
+msgid "February"
+msgstr "Лютий"
+
+#: config/views.py:284
+msgid "March"
+msgstr "Березень"
+
+#: config/views.py:284
+msgid "April"
+msgstr "Квітень"
+
+#: config/views.py:285
+msgid "May"
+msgstr "Травень"
+
+#: config/views.py:285
+msgid "June"
+msgstr "Червень"
+
+#: config/views.py:285
+msgid "July"
+msgstr "Липень"
+
+#: config/views.py:285
+msgid "August"
+msgstr "Серпень"
+
+#: config/views.py:286
+msgid "September"
+msgstr "Вересень"
+
+#: config/views.py:286
+msgid "October"
+msgstr "Жовтень"
+
+#: config/views.py:286
+msgid "November"
+msgstr "Листопад"
+
+#: config/views.py:286
+msgid "December"
+msgstr "Грудень"
+
+#: config/views.py:487 services_catalog/views.py:170 templates/home.html:132
+#: templates/services_catalog/service_list.html:15
+#: templates/services_catalog/service_list.html:130
+msgid "Add service"
+msgstr "Додати послугу"
+
+#: config/views.py:569
+msgid "Metric"
+msgstr "Показник"
+
+#: config/views.py:569
+msgid "Value"
+msgstr "Значення"
+
+#: config/views.py:570 templates/config/finance_analytics.html:54
+msgid "Total revenue"
+msgstr "Загальний дохід"
+
+#: config/views.py:571
+msgid "Average transaction value"
+msgstr "Середній чек"
+
+#: config/views.py:572
+msgid "Paid appointments"
+msgstr "Кількість записів з оплатою"
+
+#: config/views.py:574 templates/admin_dashboard.html:51
+msgid "Completed appointments without an actual price"
+msgstr "Виконаних записів без фактичної вартості"
+
+#: services_catalog/forms.py:14 services_catalog/forms.py:32
+#: services_catalog/views.py:127
+#: templates/services_catalog/category_list.html:34
+#: templates/services_catalog/service_detail.html:24
+#: templates/services_catalog/service_list.html:72
+#: templates/users/organization_settings.html:29
+msgid "Name"
+msgstr "Назва"
+
+#: services_catalog/forms.py:15 services_catalog/forms.py:33
+#: services_catalog/views.py:129 templates/admin_dashboard.html:144
+#: templates/audit/audit_log_list.html:73
+#: templates/services_catalog/category_list.html:35
+#: templates/services_catalog/service_detail.html:56
+msgid "Description"
+msgstr "Опис"
+
+#: services_catalog/forms.py:18
+msgid "For example, consultations"
+msgstr "Наприклад, Консультації"
+
+#: services_catalog/forms.py:21
+msgid "Short category description"
+msgstr "Короткий опис категорії"
+
+#: services_catalog/forms.py:31 services_catalog/forms.py:75
+#: services_catalog/views.py:128
+#: templates/services_catalog/service_detail.html:28
+#: templates/services_catalog/service_list.html:73
+msgid "Category"
+msgstr "Категорія"
+
+#: services_catalog/forms.py:34 services_catalog/views.py:130
+#: templates/config/finance_analytics.html:261
+#: templates/services_catalog/service_detail.html:32
+#: templates/services_catalog/service_list.html:74
+msgid "Base price"
+msgstr "Базова вартість"
+
+#: services_catalog/forms.py:35 services_catalog/views.py:131
+msgid "Duration, min"
+msgstr "Тривалість, хв"
+
+#: services_catalog/forms.py:36 services_catalog/views.py:132
+#: templates/services_catalog/service_detail.html:42
+#: templates/services_catalog/service_list.html:94
+#| msgid "Active"
+msgctxt "service status"
+msgid "Active"
+msgstr "Активна"
+
+#: services_catalog/forms.py:39
+msgid "Service name"
+msgstr "Назва послуги"
+
+#: services_catalog/forms.py:42
+msgid "What the service includes"
+msgstr "Що входить до послуги"
+
+#: services_catalog/forms.py:58
+msgid "Uncategorized"
+msgstr "Без категорії"
+
+#: services_catalog/forms.py:71
+msgid "Service name or description"
+msgstr "Назва або опис послуги"
+
+#: services_catalog/forms.py:77
+msgid "All categories"
+msgstr "Усі категорії"
+
+#: services_catalog/models.py:20
+msgid "Service category"
+msgstr "Категорія послуг"
+
+#: services_catalog/models.py:21
+#: templates/services_catalog/category_list.html:4
+#: templates/services_catalog/category_list.html:10
+msgid "Service categories"
+msgstr "Категорії послуг"
+
+#: services_catalog/models.py:62 templates/base.html:30 templates/home.html:59
+#: templates/services_catalog/service_list.html:4
+#: templates/services_catalog/service_list.html:10
+#: templates/services_catalog/service_list.html:63
+msgid "Services"
+msgstr "Послуги"
+
+#: services_catalog/views.py:77
+msgid "Service category created successfully."
+msgstr "Категорію послуг успішно створено."
+
+#: services_catalog/views.py:84
+msgid "Add service category"
+msgstr "Додавання категорії послуг"
+
+#: services_catalog/views.py:100
+msgid "Service category updated successfully."
+msgstr "Категорію послуг успішно оновлено."
+
+#: services_catalog/views.py:107
+msgid "Edit service category"
+msgstr "Редагування категорії послуг"
+
+#: services_catalog/views.py:163
+msgid "Service created successfully."
+msgstr "Послугу успішно створено."
+
+#: services_catalog/views.py:192
+msgid "Service updated successfully."
+msgstr "Послугу успішно оновлено."
+
+#: services_catalog/views.py:202
+#: templates/services_catalog/service_detail.html:16
+msgid "Edit service"
+msgstr "Редагувати послугу"
+
+#: services_catalog/views.py:229
+msgid "Service activated successfully."
+msgstr "Послугу успішно активовано."
+
+#: services_catalog/views.py:231
+msgid "Service deactivated successfully."
+msgstr "Послугу успішно деактивовано."
+
+#: templates/404.html:4 templates/404.html:9
+msgid "Page not found"
+msgstr "Сторінку не знайдено"
+
+#: templates/404.html:11
+msgid "This page does not exist or has been moved."
+msgstr "Схоже, ця сторінка не існує або була переміщена."
+
+#: templates/404.html:12
+msgid "Check the address or return to the home page."
+msgstr "Перевірте адресу або поверніться на головну."
+
+#: templates/404.html:14 templates/500.html:14
+msgid "Back to home"
+msgstr "На головну"
+
+#: templates/500.html:4 templates/500.html:9
+msgid "Server error"
+msgstr "Помилка сервера"
+
+#: templates/500.html:11
+msgid "Something went wrong on our side."
+msgstr "Щось пішло не так на нашому боці."
+
+#: templates/500.html:12
+msgid "Try refreshing the page or come back later."
+msgstr "Спробуйте оновити сторінку або поверніться пізніше."
+
+#: templates/admin_dashboard.html:4 templates/admin_dashboard.html:10
+#: templates/base.html:37
+msgid "Admin dashboard"
+msgstr "Адмін-панель"
+
+#: templates/admin_dashboard.html:11
+msgid "System health, security and organization administration."
+msgstr "Здоров'я системи, безпека та адмін-дії організації."
+
+#: templates/admin_dashboard.html:14 templates/base.html:38
+#: templates/users/organization_settings.html:37
+#: templates/users/user_list.html:4 templates/users/user_list.html:10
+#: templates/users/user_list.html:55 users/models.py:49
+msgid "Users"
+msgstr "Користувачі"
+
+#: templates/admin_dashboard.html:21
+msgid "Alerts"
+msgstr "Попередження"
+
+#: templates/admin_dashboard.html:22
+msgid "⚠ Needs attention"
+msgstr "⚠ Потребує уваги"
+
+#: templates/admin_dashboard.html:27
+msgid "Users who have never signed in"
+msgstr "Користувачі, які ніколи не входили"
+
+#: templates/admin_dashboard.html:39
+msgid "Inactive for 30+ days"
+msgstr "Неактивних 30+ днів"
+
+#: templates/admin_dashboard.html:53
+msgid "View finances"
+msgstr "Перейти до фінансів"
+
+#: templates/admin_dashboard.html:63
+msgid "Security — last 7 days"
+msgstr "Безпека — останні 7 днів"
+
+#: templates/admin_dashboard.html:69
+msgid "Sign-in activity"
+msgstr "Активність входів"
+
+#: templates/admin_dashboard.html:75
+msgid "sign-ins in 7 days"
+msgstr "входів за 7 днів"
+
+#: templates/admin_dashboard.html:79
+msgid "unique IP addresses"
+msgstr "унікальних IP"
+
+#: templates/admin_dashboard.html:83
+msgid "active accounts"
+msgstr "активних акаунтів"
+
+#: templates/admin_dashboard.html:87
+msgid "Role distribution"
+msgstr "Розподіл ролей"
+
+#: templates/admin_dashboard.html:99
+msgid "Recent sign-ins / sign-outs"
+msgstr "Останні входи / виходи"
+
+#: templates/admin_dashboard.html:105
+msgid "Event"
+msgstr "Подія"
+
+#: templates/admin_dashboard.html:108 templates/admin_dashboard.html:145
+#: templates/appointments/appointment_detail.html:77
+#: templates/clients/client_detail.html:121
+msgid "Time"
+msgstr "Час"
+
+#: templates/admin_dashboard.html:124
+msgid "No events yet."
+msgstr "Немає подій."
+
+#: templates/admin_dashboard.html:136
+msgid "Recent user administration actions"
+msgstr "Останні адмін-дії з користувачами"
+
+#: templates/admin_dashboard.html:142
+msgid "Action"
+msgstr "Дія"
+
+#: templates/admin_dashboard.html:143
+msgid "Performed by"
+msgstr "Виконав"
+
+#: templates/admin_dashboard.html:161
+msgid "No administrative actions yet."
+msgstr "Адмін-дії відсутні."
+
+#: templates/appointments/appointment_detail.html:14
+#: templates/clients/client_detail.html:14
+msgid "Back to list"
+msgstr "Назад до списку"
+
+#: templates/appointments/appointment_detail.html:19
+msgid "Delete appointment"
+msgstr "Видалити запис"
+
+#: templates/appointments/appointment_detail.html:27
+#: templates/users/organization_settings.html:123
+#: templates/users/user_list.html:152
+msgid "Confirm deletion"
+msgstr "Підтвердити видалення"
+
+#: templates/appointments/appointment_detail.html:28
+msgid "Are you sure you want to delete this appointment?"
+msgstr "Ви впевнені, що хочете видалити цей запис?"
+
+#: templates/appointments/appointment_detail.html:32
+msgid "This cannot be undone. The appointment and its status history will be deleted."
+msgstr "Цю дію неможливо скасувати. Запис буде видалено разом з історією статусів."
+
+#: templates/appointments/appointment_detail.html:34
+#: templates/appointments/appointment_form.html:23
+#: templates/appointments/appointment_list.html:158
+#: templates/clients/client_form.html:23
+#: templates/services_catalog/category_form.html:23
+#: templates/services_catalog/service_form.html:23
+#: templates/users/organization_settings.html:55
+#: templates/users/organization_settings.html:122
+#: templates/users/password_change.html:23
+#: templates/users/user_create_form.html:23 templates/users/user_list.html:151
+#: templates/users/user_role_form.html:23
+msgid "Cancel"
+msgstr "Скасувати"
+
+#: templates/appointments/appointment_detail.html:37
+msgid "Yes, delete"
+msgstr "Так, видалити"
+
+#: templates/appointments/appointment_detail.html:56
+#: templates/appointments/appointment_detail.html:62
+#: templates/clients/client_detail.html:74
+#: templates/clients/client_detail.html:144
+#: templates/config/finance_analytics.html:55
+#: templates/config/finance_analytics.html:61
+#: templates/config/finance_analytics.html:79
+#: templates/config/finance_analytics.html:85
+#: templates/config/finance_analytics.html:125
+#: templates/config/finance_analytics.html:127
+#: templates/config/finance_analytics.html:142
+#: templates/config/finance_analytics.html:144
+#: templates/config/finance_analytics.html:197
+#: templates/config/finance_analytics.html:198
+#: templates/config/finance_analytics.html:229
+#: templates/config/finance_analytics.html:230
+#: templates/config/finance_analytics.html:277
+#: templates/config/finance_analytics.html:278 templates/home.html:102
+#: templates/home.html:187 templates/services_catalog/service_detail.html:33
+#: templates/services_catalog/service_list.html:90
+msgid "UAH"
+msgstr "грн"
+
+#: templates/appointments/appointment_detail.html:96
+msgid "Status history"
+msgstr "Історія зміни статусів"
+
+#: templates/appointments/appointment_detail.html:97
+msgid "Recent changes to this appointment."
+msgstr "Останні службові зміни цього запису."
+
+#: templates/appointments/appointment_detail.html:106
+msgid "Previous status"
+msgstr "Старий статус"
+
+#: templates/appointments/appointment_detail.html:107
+msgid "New status"
+msgstr "Новий статус"
+
+#: templates/appointments/appointment_detail.html:108
+msgid "Changed by"
+msgstr "Ким змінено"
+
+#: templates/appointments/appointment_detail.html:109
+#: templates/appointments/appointment_list.html:78
+#: templates/audit/audit_log_list.html:75
+msgid "Date and time"
+msgstr "Дата і час"
+
+#: templates/appointments/appointment_detail.html:136
+msgid "No status history yet"
+msgstr "Історія статусів відсутня"
+
+#: templates/appointments/appointment_detail.html:137
+msgid "Status changes will appear here after the appointment is updated."
+msgstr "Зміни статусів з’являться тут після оновлення запису."
+
+#: templates/appointments/appointment_form.html:10
+msgid "Client, service, employee and appointment time."
+msgstr "Клієнт, послуга, співробітник і час виконання запису."
+
+#: templates/appointments/appointment_form.html:12
+msgid "Back to appointments"
+msgstr "Назад до списку записів"
+
+#: templates/appointments/appointment_form.html:22
+#: templates/appointments/appointment_list.html:117
+#: templates/clients/client_form.html:22
+#: templates/services_catalog/category_form.html:22
+#: templates/services_catalog/service_form.html:22
+msgid "Save"
+msgstr "Зберегти"
+
+#: templates/appointments/appointment_list.html:11
+msgid "Manage appointments, statuses and actual prices."
+msgstr "Керуйте записами, статусами та фактичною вартістю."
+
+#: templates/appointments/appointment_list.html:21
+#: templates/clients/client_list.html:21
+#: templates/config/finance_analytics.html:15
+#: templates/services_catalog/service_list.html:23
+msgid "Export CSV"
+msgstr "Експорт CSV"
+
+#: templates/appointments/appointment_list.html:29
+#: templates/audit/audit_log_list.html:18
+#: templates/config/finance_analytics.html:23
+msgid "Filters"
+msgstr "Фільтри"
+
+#: templates/appointments/appointment_list.html:30
+msgid "Filter appointments by date, status or employee."
+msgstr "Звузьте список за датою, статусом або співробітником."
+
+#: templates/appointments/appointment_list.html:56
+#: templates/audit/audit_log_list.html:50
+#: templates/clients/client_detail.html:109
+#: templates/clients/client_list.html:46
+#: templates/config/finance_analytics.html:46
+#: templates/services_catalog/service_list.html:53
+#: templates/users/user_list.html:45
+msgid "Apply"
+msgstr "Застосувати"
+
+#: templates/appointments/appointment_list.html:57
+#: templates/audit/audit_log_list.html:51
+#: templates/clients/client_detail.html:110
+#: templates/clients/client_list.html:47
+#: templates/config/finance_analytics.html:47
+#: templates/services_catalog/service_list.html:54
+#: templates/users/user_list.html:46
+msgid "Reset"
+msgstr "Скинути"
+
+#: templates/appointments/appointment_list.html:67
+#: templates/audit/audit_log_list.html:61 templates/clients/client_list.html:57
+#: templates/services_catalog/service_list.html:64
+#: templates/users/user_list.html:56
+msgid "Showing"
+msgstr "Показано"
+
+#: templates/appointments/appointment_list.html:67
+#: templates/audit/audit_log_list.html:61 templates/clients/client_list.html:57
+#: templates/includes/pagination.html:22
+#: templates/services_catalog/service_list.html:64
+#: templates/users/user_list.html:56
+msgid "of"
+msgstr "із"
+
+#: templates/appointments/appointment_list.html:81
+#: templates/clients/client_list.html:69
+#: templates/services_catalog/category_list.html:36
+#: templates/services_catalog/service_list.html:77
+#: templates/users/user_list.html:70
+msgid "Actions"
+msgstr "Дії"
+
+#: templates/appointments/appointment_list.html:131
+#: templates/clients/client_list.html:87
+#: templates/services_catalog/service_list.html:101
+msgid "View"
+msgstr "Перегляд"
+
+#: templates/appointments/appointment_list.html:133
+#: templates/clients/client_list.html:89
+#: templates/services_catalog/category_list.html:47
+#: templates/services_catalog/service_list.html:103
+#: templates/users/organization_settings.html:49
+msgid "Edit"
+msgstr "Редагувати"
+
+#: templates/appointments/appointment_list.html:143
+#| msgid "Confirmed appointments"
+msgid "Confirm this appointment?"
+msgstr "Підтвердити цей запис?"
+
+#: templates/appointments/appointment_list.html:145
+msgid "Confirm"
+msgstr "Підтвердити"
+
+#: templates/appointments/appointment_list.html:156
+#| msgid "Back to appointments"
+msgid "Cancel this appointment?"
+msgstr "Скасувати цей запис?"
+
+#: templates/appointments/appointment_list.html:169
+#| msgid "Back to appointments"
+msgid "Mark this appointment as completed?"
+msgstr "Позначити запис як виконаний?"
+
+#: templates/appointments/appointment_list.html:188
+msgid "No appointments yet"
+msgstr "Записів поки немає"
+
+#: templates/appointments/appointment_list.html:189
+msgid "Create the first appointment for a client or change the filters."
+msgstr "Створіть перший запис для клієнта або змініть фільтри."
+
+#: templates/audit/audit_log_list.html:11
+msgid "Review activity in your organization."
+msgstr "Переглядайте службові події вашої організації."
+
+#: templates/audit/audit_log_list.html:19
+msgid "Filter the log by user, action, entity or date."
+msgstr "Звузьте журнал за користувачем, дією, сутністю або датою."
+
+#: templates/audit/audit_log_list.html:60
+msgid "Events"
+msgstr "Події"
+
+#: templates/audit/audit_log_list.html:71
+msgid "Entity"
+msgstr "Сутність"
+
+#: templates/audit/audit_log_list.html:74
+msgid "IP address"
+msgstr "IP-адреса"
+
+#: templates/audit/audit_log_list.html:102
+msgid "No audit records found"
+msgstr "Записів журналу аудиту не знайдено"
+
+#: templates/audit/audit_log_list.html:103
+msgid "Events will appear here after users take actions in the application."
+msgstr "Події з’являться тут після дій користувачів у системі."
+
+#: templates/base.html:27
+msgid "Main navigation"
+msgstr "Основна навігація"
+
+#: templates/base.html:28 templates/home.html:4
+msgid "Home"
+msgstr "Головна"
+
+#: templates/base.html:33
+msgid "Finance"
+msgstr "Фінанси"
+
+#: templates/base.html:49
+msgid "Toggle theme"
+msgstr "Перемкнути тему"
+
+#: templates/base.html:50
+msgid "Switch between dark and light themes"
+msgstr "Перемкнути темну/світлу тему"
+
+#: templates/base.html:53
+msgid "User menu"
+msgstr "Меню користувача"
+
+#: templates/base.html:59 templates/users/profile.html:4
+msgid "Profile"
+msgstr "Профіль"
+
+#: templates/base.html:61 templates/users/organization_settings.html:4
+#: templates/users/organization_settings.html:10
+#: templates/users/profile.html:120
+msgid "Organization settings"
+msgstr "Налаштування організації"
+
+#: templates/clients/client_detail.html:11
+msgid "Client contact details, status and record dates."
+msgstr "Контакти, статус і службові дати клієнта."
+
+#: templates/clients/client_detail.html:44
+#: templates/clients/client_list.html:82 templates/users/profile.html:79
+#: templates/users/user_list.html:87
+msgid "Inactive"
+msgstr "Неактивний"
+
+#: templates/clients/client_detail.html:48
+#: templates/services_catalog/service_detail.html:48
+#: templates/users/organization_settings.html:41
+msgid "Created"
+msgstr "Створено"
+
+#: templates/clients/client_detail.html:52
+#: templates/services_catalog/service_detail.html:52
+msgid "Updated"
+msgstr "Оновлено"
+
+#: templates/clients/client_detail.html:65
+msgid "Total appointments"
+msgstr "Всього записів"
+
+#: templates/clients/client_detail.html:73
+msgid "Total spent"
+msgstr "Витрачено загалом"
+
+#: templates/clients/client_detail.html:77
+msgid "Last visit"
+msgstr "Останній візит"
+
+#: templates/clients/client_detail.html:86
+msgid "Appointment history"
+msgstr "Історія записів"
+
+#: templates/clients/client_detail.html:87
+msgid "All appointments for this client."
+msgstr "Всі записи цього клієнта."
+
+#: templates/clients/client_detail.html:123
+msgid "Price"
+msgstr "Вартість"
+
+#: templates/clients/client_detail.html:156
+msgid "No appointments found"
+msgstr "Записів не знайдено"
+
+#: templates/clients/client_detail.html:157
+msgid "Change the filters or create a new appointment for this client."
+msgstr "Змініть фільтри або створіть новий запис для цього клієнта."
+
+#: templates/clients/client_form.html:10
+msgid "Client contact details and internal notes."
+msgstr "Контактні дані та службові примітки клієнта."
+
+#: templates/clients/client_form.html:12
+msgid "Back to clients"
+msgstr "Назад до списку клієнтів"
+
+#: templates/clients/client_list.html:11
+msgid "Manage your clients and their contact details."
+msgstr "Керуйте клієнтською базою та контактними даними."
+
+#: templates/clients/client_list.html:29
+#: templates/services_catalog/service_list.html:31
+#: templates/users/user_list.html:23
+msgid "Search and filters"
+msgstr "Пошук і фільтрація"
+
+#: templates/clients/client_list.html:30
+msgid "Find a client by name, phone or email."
+msgstr "Знайдіть клієнта за ПІБ, телефоном або email."
+
+#: templates/clients/client_list.html:94
+#: templates/services_catalog/service_list.html:108
+#: templates/users/user_list.html:104
+msgid "Deactivate"
+msgstr "Деактивувати"
+
+#: templates/clients/client_list.html:96
+#: templates/services_catalog/service_list.html:110
+#: templates/users/user_list.html:106
+msgid "Activate"
+msgstr "Активувати"
+
+#: templates/clients/client_list.html:112
+msgid "No clients yet"
+msgstr "Клієнтів поки немає"
+
+#: templates/clients/client_list.html:113
+msgid "Add your first client to start booking appointments."
+msgstr "Додайте першого клієнта, щоб створювати записи на послуги."
+
+#: templates/config/finance_analytics.html:4
+#: templates/config/finance_analytics.html:10
+msgid "Financial analytics"
+msgstr "Фінансова аналітика"
+
+#: templates/config/finance_analytics.html:11
+msgid "Analyze revenue by period, service and employee."
+msgstr "Аналізуйте дохід за періодами, послугами та співробітниками."
+
+#: templates/config/finance_analytics.html:24
+msgid "Figures are calculated from appointments with an actual price."
+msgstr "Дані рахуються за записами з фактичною вартістю."
+
+#: templates/config/finance_analytics.html:30
+msgid "Check the filter values."
+msgstr "Перевірте значення фільтрів."
+
+#: templates/config/finance_analytics.html:52
+msgid "Financial metrics"
+msgstr "Фінансові показники"
+
+#: templates/config/finance_analytics.html:56
+msgid "For the current filters"
+msgstr "За поточними фільтрами"
+
+#: templates/config/finance_analytics.html:60
+#: templates/config/finance_analytics.html:140
+#: templates/config/finance_analytics.html:189
+#: templates/config/finance_analytics.html:221
+msgid "Average appointment value"
+msgstr "Середній чек"
+
+#: templates/config/finance_analytics.html:62
+msgid "For appointments with an actual price"
+msgstr "За записами з фактичною вартістю"
+
+#: templates/config/finance_analytics.html:66
+msgid "Priced appointments"
+msgstr "Записів з оплатою"
+
+#: templates/config/finance_analytics.html:68
+msgid "Actual price entered"
+msgstr "Фактична вартість заповнена"
+
+#: templates/config/finance_analytics.html:72
+msgid "Completed without a price"
+msgstr "Виконані без вартості"
+
+#: templates/config/finance_analytics.html:74
+msgid "Actual price needs to be entered"
+msgstr "Потребують заповнення фактичної вартості"
+
+#: templates/config/finance_analytics.html:78
+msgid "Minimum amount"
+msgstr "Мінімальна сума"
+
+#: templates/config/finance_analytics.html:80
+#: templates/config/finance_analytics.html:86
+msgid "Among priced appointments"
+msgstr "Серед записів з оплатою"
+
+#: templates/config/finance_analytics.html:84
+msgid "Maximum amount"
+msgstr "Максимальна сума"
+
+#: templates/config/finance_analytics.html:91
+msgid "Revenue chart"
+msgstr "Графік доходу"
+
+#: templates/config/finance_analytics.html:94
+msgid "Revenue by date"
+msgstr "Дохід за датами"
+
+#: templates/config/finance_analytics.html:95
+msgid "Daily revenue for the current filters."
+msgstr "Динаміка доходу по днях за поточними фільтрами."
+
+#: templates/config/finance_analytics.html:98
+msgid "Bars"
+msgstr "Стовпчики"
+
+#: templates/config/finance_analytics.html:99
+msgid "Line"
+msgstr "Лінія"
+
+#: templates/config/finance_analytics.html:104
+msgid "Revenue by date chart"
+msgstr "Графік доходу за датами"
+
+#: templates/config/finance_analytics.html:113
+#: templates/config/finance_analytics.html:116
+msgid "Month-over-month comparison"
+msgstr "Порівняння місяць-до-місяця"
+
+#: templates/config/finance_analytics.html:123
+#: templates/config/finance_analytics.html:188
+#: templates/config/finance_analytics.html:220
+msgid "Revenue"
+msgstr "Дохід"
+
+#: templates/config/finance_analytics.html:135
+#: templates/config/finance_analytics.html:152
+#: templates/config/finance_analytics.html:169
+msgid "— no data for the previous month"
+msgstr "— немає даних за попередній місяць"
+
+#: templates/config/finance_analytics.html:157
+msgid "Appointment count"
+msgstr "Кількість записів"
+
+#: templates/config/finance_analytics.html:180
+msgid "Revenue by service"
+msgstr "Дохід за послугами"
+
+#: templates/config/finance_analytics.html:202
+#: templates/config/finance_analytics.html:234
+msgid "No data yet."
+msgstr "Поки немає даних."
+
+#: templates/config/finance_analytics.html:212
+msgid "Revenue by employee"
+msgstr "Дохід за співробітниками"
+
+#: templates/config/finance_analytics.html:247
+msgid "Appointment breakdown"
+msgstr "Деталізація записів"
+
+#: templates/config/finance_analytics.html:248
+msgid "Appointments with an actual price for the current filters."
+msgstr "Показані записи з фактичною вартістю за поточними фільтрами."
+
+#: templates/config/finance_analytics.html:282
+msgid "No appointments with an actual price yet."
+msgstr "Поки немає записів з фактичною вартістю."
+
+#: templates/home.html:11
+msgid "Organization overview"
+msgstr "Огляд організації"
+
+#: templates/home.html:13
+msgid "Key metrics, upcoming appointments and quick actions for your daily work."
+msgstr "Ключові показники, найближчі записи та швидкі дії для роботи з даними."
+
+#: templates/home.html:36
+msgid "Key metrics"
+msgstr "Ключові показники"
+
+#: templates/home.html:46
+msgid "Completed:"
+msgstr "Виконані:"
+
+#: templates/home.html:46
+msgid "· Cancelled:"
+msgstr "· Скасовані:"
+
+#: templates/home.html:48 templates/home.html:55 templates/home.html:62
+#: templates/home.html:70
+msgid "View →"
+msgstr "Перейти →"
+
+#: templates/home.html:54 templates/home.html:61
+msgid "Active:"
+msgstr "Активні:"
+
+#: templates/home.html:66
+msgid "Employees"
+msgstr "Співробітники"
+
+#: templates/home.html:68
+msgid "In the current organization"
+msgstr "У поточній організації"
+
+#: templates/home.html:79
+msgid "Upcoming appointments"
+msgstr "Найближчі записи"
+
+#: templates/home.html:80
+msgid "Your upcoming appointment schedule."
+msgstr "Операційний список майбутніх записів."
+
+#: templates/home.html:82
+msgid "All appointments"
+msgstr "Усі записи"
+
+#: templates/home.html:102
+msgid "Actual price:"
+msgstr "Факт. вартість:"
+
+#: templates/home.html:110
+msgid "No upcoming appointments yet"
+msgstr "Найближчих записів поки немає"
+
+#: templates/home.html:111
+msgid "Upcoming appointments will appear here."
+msgstr "Коли з’являться майбутні записи, вони будуть тут."
+
+#: templates/home.html:122
+msgid "Quick actions"
+msgstr "Швидкі дії"
+
+#: templates/home.html:139
+msgid "Needs attention"
+msgstr "Потребує уваги"
+
+#: templates/home.html:143
+msgid "Completed without an actual price"
+msgstr "Виконані без фактичної вартості"
+
+#: templates/home.html:147
+msgid "Planned appointments"
+msgstr "Заплановані записи"
+
+#: templates/home.html:151
+msgid "Confirmed appointments"
+msgstr "Підтверджені записи"
+
+#: templates/home.html:163
+msgid "Appointment statuses"
+msgstr "Статистика за статусами"
+
+#: templates/home.html:176 templates/home.html:209 templates/home.html:235
+#: templates/home.html:262
+msgid "No data yet"
+msgstr "Поки немає даних"
+
+#: templates/home.html:183
+msgid "Revenue today"
+msgstr "Дохід за сьогодні"
+
+#: templates/home.html:188
+msgid "Completed appointments with an actual price today."
+msgstr "Виконані записи з фактичною вартістю за сьогодні."
+
+#: templates/home.html:189
+msgid "View details →"
+msgstr "Детальніше →"
+
+#: templates/home.html:196
+msgid "Popular services"
+msgstr "Популярні послуги"
+
+#: templates/home.html:217
+msgid "Employee workload"
+msgstr "Завантаженість співробітників"
+
+#: templates/home.html:241
+msgid "Recent status changes"
+msgstr "Останні зміни статусів"
+
+#: templates/includes/form_fields.html:4
+msgid "Check the form."
+msgstr "Перевірте форму."
+
+#: templates/includes/form_fields.html:51 templates/registration/login.html:81
+msgid "Show password"
+msgstr "Показати пароль"
+
+#: templates/includes/form_fields.html:53 templates/registration/login.html:83
+msgid "Show"
+msgstr "Показати"
+
+#: templates/includes/language_switcher.html:3
+msgid "Language"
+msgstr "Мова"
+
+#: templates/includes/onboarding.html:6
+msgid "Set up your organization"
+msgstr "Початкове налаштування організації"
+
+#: templates/includes/onboarding.html:8
+msgid "Complete these steps to get your workspace ready."
+msgstr "Виконайте кілька кроків, щоб підготувати робочий простір до використання."
+
+#: templates/includes/onboarding.html:12
+msgid "steps"
+msgstr "кроків"
+
+#: templates/includes/onboarding.html:23
+msgid "Pending"
+msgstr "Очікує"
+
+#: templates/includes/onboarding.html:29
+msgid "Done"
+msgstr "Готово"
+
+#: templates/includes/pagination.html:20
+msgid "Pagination"
+msgstr "Пагінація"
+
+#: templates/includes/pagination.html:22
+msgid "Page"
+msgstr "Сторінка"
+
+#: templates/includes/pagination.html:27
+msgid "First page"
+msgstr "Перша сторінка"
+
+#: templates/includes/pagination.html:27
+msgid "First"
+msgstr "Перша"
+
+#: templates/includes/pagination.html:28
+msgid "Previous page"
+msgstr "Попередня сторінка"
+
+#: templates/includes/pagination.html:28 templates/includes/pagination.html:31
+msgid "‹ Previous"
+msgstr "‹ Назад"
+
+#: templates/includes/pagination.html:37
+msgid "Next page"
+msgstr "Наступна сторінка"
+
+#: templates/includes/pagination.html:37 templates/includes/pagination.html:40
+msgid "Next ›"
+msgstr "Далі ›"
+
+#: templates/includes/pagination.html:38
+msgid "Last page"
+msgstr "Остання сторінка"
+
+#: templates/includes/pagination.html:38
+msgid "Last"
+msgstr "Остання"
+
+#: templates/registration/login.html:8 templates/registration/login.html:45
+msgid "Sign in to Orvanta"
+msgstr "Вхід до Orvanta"
+
+#: templates/registration/login.html:19 templates/registration/signup.html:19
+msgid "About Orvanta"
+msgstr "Про Orvanta"
+
+#: templates/registration/login.html:21 templates/registration/signup.html:21
+msgid "A management system for service businesses."
+msgstr "Система управління даними для бізнесу у сфері послуг."
+
+#: templates/registration/login.html:23 templates/registration/signup.html:23
+msgid "Manage clients, services, appointments, users and financial analytics in one workspace."
+msgstr "Керуйте клієнтами, послугами, записами, користувачами та фінансовою аналітикою в одному робочому просторі."
+
+#: templates/registration/login.html:28 templates/registration/signup.html:28
+msgid "One workspace for your organization"
+msgstr "Єдиний робочий простір організації"
+
+#: templates/registration/login.html:32 templates/registration/signup.html:32
+msgid "Appointment and status tracking"
+msgstr "Контроль записів і статусів"
+
+#: templates/registration/login.html:36 templates/registration/signup.html:36
+msgid "Financial analytics and CSV export"
+msgstr "Фінансова аналітика та CSV-експорт"
+
+#: templates/registration/login.html:46
+msgid "Sign in to your organization workspace."
+msgstr "Увійдіть у робочий простір вашої організації."
+
+#: templates/registration/login.html:53 users/forms.py:319
+msgid "Invalid sign-in details or organization."
+msgstr "Невірні дані входу або організація."
+
+#: templates/registration/login.html:60
+msgid "You do not have access to this page."
+msgstr "У вас немає доступу до цієї сторінки."
+
+#: templates/registration/login.html:64
+msgid "Please sign in."
+msgstr "Будь ласка, увійдіть у систему."
+
+#: templates/registration/login.html:69
+msgid "Signing in..."
+msgstr "Вхід..."
+
+#: templates/registration/login.html:94 templates/registration/signup.html:55
+msgid "Sign in"
+msgstr "Увійти"
+
+#: templates/registration/login.html:98
+msgid "Do not have an account yet?"
+msgstr "Ще не маєте акаунта?"
+
+#: templates/registration/login.html:98 templates/registration/signup.html:8
+#: templates/registration/signup.html:51
+msgid "Sign up"
+msgstr "Реєстрація в системі"
+
+#: templates/registration/signup.html:44
+msgid "Create organization"
+msgstr "Створення організації"
+
+#: templates/registration/signup.html:45
+msgid "Register your organization and create a workspace administrator."
+msgstr "Зареєструйте організацію та створіть адміністратора робочого простору."
+
+#: templates/registration/signup.html:48
+msgid "Creating..."
+msgstr "Створення..."
+
+#: templates/registration/signup.html:55
+msgid "Already have an account?"
+msgstr "Вже маєте акаунт?"
+
+#: templates/services_catalog/category_form.html:10
+msgid "Group services for faster search and filtering."
+msgstr "Групування послуг для швидшого пошуку та фільтрації."
+
+#: templates/services_catalog/category_form.html:12
+msgid "Back to categories"
+msgstr "Назад до списку категорій"
+
+#: templates/services_catalog/category_list.html:11
+msgid "Group services to organize the catalog and simplify filtering."
+msgstr "Групуйте послуги для зручнішого каталогу та фільтрації."
+
+#: templates/services_catalog/category_list.html:15
+#: templates/services_catalog/category_list.html:65
+#: templates/services_catalog/service_list.html:16
+#: templates/services_catalog/service_list.html:131
+msgid "Add category"
+msgstr "Додати категорію"
+
+#: templates/services_catalog/category_list.html:17
+msgid "View services"
+msgstr "До списку послуг"
+
+#: templates/services_catalog/category_list.html:25
+#: templates/services_catalog/service_list.html:18
+msgid "Categories"
+msgstr "Категорії"
+
+#: templates/services_catalog/category_list.html:26
+msgid "Categories in the current organization."
+msgstr "Список категорій поточної організації."
+
+#: templates/services_catalog/category_list.html:61
+msgid "No categories yet"
+msgstr "Категорії ще не створено"
+
+#: templates/services_catalog/category_list.html:62
+msgid "Add a category to organize your service catalog."
+msgstr "Додайте категорію, щоб структурувати каталог послуг."
+
+#: templates/services_catalog/service_detail.html:11
+msgid "Base price and service duration."
+msgstr "Базова вартість і тривалість виконання."
+
+#: templates/services_catalog/service_detail.html:14
+#: templates/services_catalog/service_form.html:12
+msgid "Back to services"
+msgstr "Назад до списку послуг"
+
+#: templates/services_catalog/service_detail.html:36
+#: templates/services_catalog/service_list.html:75
+msgid "Duration"
+msgstr "Тривалість"
+
+#: templates/services_catalog/service_detail.html:37
+#: templates/services_catalog/service_list.html:91
+msgid "min"
+msgstr "хв"
+
+#: templates/services_catalog/service_detail.html:44
+#: templates/services_catalog/service_list.html:96
+#| msgid "Inactive"
+msgctxt "service status"
+msgid "Inactive"
+msgstr "Неактивна"
+
+#: templates/services_catalog/service_form.html:10
+msgid "Service base price, duration and category."
+msgstr "Базова вартість, тривалість і категорія послуги."
+
+#: templates/services_catalog/service_list.html:11
+msgid "Organize your services and their base prices."
+msgstr "Структуруйте перелік послуг і базову вартість."
+
+#: templates/services_catalog/service_list.html:32
+msgid "Find a service by name, category or active status."
+msgstr "Знайдіть послугу за назвою, категорією або активністю."
+
+#: templates/services_catalog/service_list.html:126
+msgid "No services yet"
+msgstr "Послуг поки немає"
+
+#: templates/services_catalog/service_list.html:127
+msgid "Create a service or category to get started."
+msgstr "Створіть послугу або категорію для початку роботи."
+
+#: templates/users/organization_settings.html:11
+msgid "Manage the basic settings of your organization workspace."
+msgstr "Керуйте базовими параметрами робочого простору вашої організації."
+
+#: templates/users/organization_settings.html:14
+#: templates/users/password_change.html:12
+msgid "Back to profile"
+msgstr "Назад до профілю"
+
+#: templates/users/organization_settings.html:22
+msgid "Current details"
+msgstr "Поточні дані"
+
+#: templates/users/organization_settings.html:23
+msgid "The organization slug is used to sign in and is not changed automatically."
+msgstr "Slug використовується для входу й не змінюється автоматично."
+
+#: templates/users/organization_settings.html:54
+#: templates/users/profile.html:53
+msgid "Save changes"
+msgstr "Зберегти зміни"
+
+#: templates/users/organization_settings.html:65
+msgid "Deleting the organization removes the entire workspace and cannot be undone."
+msgstr "Видалення організації прибирає весь робочий простір і не може бути скасоване."
+
+#: templates/users/organization_settings.html:73
+#: templates/users/organization_settings.html:84
+msgid "Delete organization"
+msgstr "Видалити організацію"
+
+#: templates/users/organization_settings.html:85
+#: templates/users/user_list.html:131
+msgid "Close"
+msgstr "Закрити"
+
+#: templates/users/organization_settings.html:97
+msgid "This will permanently delete the organization and ALL related data. It cannot be undone."
+msgstr "Ця дія назавжди видалить організацію та ВСІ пов'язані дані. Скасувати неможливо."
+
+#: templates/users/organization_settings.html:99
+msgid "The following data will be deleted:"
+msgstr "Наслідки видалення:"
+
+#: templates/users/organization_settings.html:101
+msgid "users"
+msgstr "користувачі"
+
+#: templates/users/organization_settings.html:102
+msgid "clients"
+msgstr "клієнти"
+
+#: templates/users/organization_settings.html:103
+msgid "services"
+msgstr "послуги"
+
+#: templates/users/organization_settings.html:104
+msgid "appointments"
+msgstr "записи"
+
+#: templates/users/organization_settings.html:105
+msgid "audit log"
+msgstr "журнал аудиту"
+
+#: templates/users/password_change.html:4
+#: templates/users/password_change.html:9
+#: templates/users/password_change.html:22 templates/users/profile.html:134
+msgid "Change password"
+msgstr "Змінити пароль"
+
+#: templates/users/password_change.html:10
+msgid "Update the password for your account."
+msgstr "Оновлення пароля поточного облікового запису."
+
+#: templates/users/profile.html:7
+msgid "Email not provided"
+msgstr "Email не вказано"
+
+#: templates/users/profile.html:11
+msgid "User profile"
+msgstr "Профіль користувача"
+
+#: templates/users/profile.html:12
+msgid "View account details and your organization settings."
+msgstr "Переглядайте дані облікового запису та налаштування вашої організації."
+
+#: templates/users/profile.html:27
+msgid "No organization specified"
+msgstr "Організацію не вказано"
+
+#: templates/users/profile.html:33 templates/users/user_list.html:69
+msgid "Registration date"
+msgstr "Дата реєстрації"
+
+#: templates/users/profile.html:44
+msgid "Contact details"
+msgstr "Контактні дані"
+
+#: templates/users/profile.html:45
+msgid "Email is used for account information and identification."
+msgstr "Email використовується для службової інформації та ідентифікації користувача."
+
+#: templates/users/profile.html:63
+msgid "Account information"
+msgstr "Службова інформація"
+
+#: templates/users/profile.html:64
+msgid "Your account status in the application."
+msgstr "Стан облікового запису у системі."
+
+#: templates/users/profile.html:70
+msgid "Last sign-in"
+msgstr "Останній вхід"
+
+#: templates/users/profile.html:74
+msgid "Activity"
+msgstr "Активність"
+
+#: templates/users/profile.html:93 users/forms.py:313 users/models.py:21
+msgid "Organization"
+msgstr "Організація"
+
+#: templates/users/profile.html:94
+msgid "The workspace linked to your account."
+msgstr "Робочий простір, до якого прив’язаний ваш обліковий запис."
+
+#: templates/users/profile.html:100 users/forms.py:67 users/forms.py:145
+#: users/forms.py:151
+msgid "Organization name"
+msgstr "Назва організації"
+
+#: templates/users/profile.html:104
+msgid "Organization ID"
+msgstr "Ідентифікатор організації"
+
+#: templates/users/profile.html:108
+msgid "Organization role"
+msgstr "Роль в організації"
+
+#: templates/users/profile.html:131
+msgid "Security"
+msgstr "Безпека"
+
+#: templates/users/profile.html:132
+msgid "Change the password for your account here."
+msgstr "Тут можна змінити пароль від вашого облікового запису."
+
+#: templates/users/profile.html:143
+msgid "Interface"
+msgstr "Інтерфейс"
+
+#: templates/users/profile.html:144
+msgid "Hide subtitles below headings to make more room for your work."
+msgstr "Приховує підписи під заголовками для більшого робочого простору."
+
+#: templates/users/profile.html:151
+msgid "Compact mode: on"
+msgstr "Компактний режим: увімкнено"
+
+#: templates/users/profile.html:151
+msgid "Compact mode: off"
+msgstr "Компактний режим: вимкнено"
+
+#: templates/users/user_create_form.html:4
+#: templates/users/user_create_form.html:9
+#: templates/users/user_create_form.html:22 templates/users/user_list.html:15
+#: templates/users/user_list.html:173
+msgid "Create user"
+msgstr "Створити користувача"
+
+#: templates/users/user_create_form.html:10
+msgid "The account will be created in the current organization."
+msgstr "Обліковий запис буде створено в межах поточної організації."
+
+#: templates/users/user_create_form.html:12
+#: templates/users/user_role_form.html:12
+msgid "Back to users"
+msgstr "Назад до списку користувачів"
+
+#: templates/users/user_list.html:11
+msgid "Manage users, roles and active status."
+msgstr "Керуйте користувачами, ролями й активністю."
+
+#: templates/users/user_list.html:24
+msgid "Filter users by name, role or active status."
+msgstr "Фільтруйте користувачів за ім’ям, роллю або активністю."
+
+#: templates/users/user_list.html:66 users/forms.py:26 users/forms.py:61
+#: users/forms.py:99
+msgid "Role"
+msgstr "Роль"
+
+#: templates/users/user_list.html:100
+msgid "Change role"
+msgstr "Змінити роль"
+
+#: templates/users/user_list.html:111 templates/users/user_list.html:119
+msgid "Delete"
+msgstr "Видалити"
+
+#: templates/users/user_list.html:130
+msgid "Delete user"
+msgstr "Видалення користувача"
+
+#: templates/users/user_list.html:142
+msgid "This will permanently delete the user. It cannot be undone."
+msgstr "Ця дія назавжди видалить користувача. Скасувати неможливо."
+
+#: templates/users/user_list.html:144 templates/users/user_role_form.html:10
+msgid "User:"
+msgstr "Користувач:"
+
+#: templates/users/user_list.html:147
+msgid "Appointments assigned to this user prevent deletion. Audit logs and records created by this user are retained; references to the user are cleared where the data model allows it."
+msgstr "Записи, у яких цей користувач призначений співробітником, блокують видалення. Журнал аудиту й записи, створені цим користувачем, залишаються; посилання на користувача очищується там, де це дозволяє модель даних."
+
+#: templates/users/user_list.html:170
+msgid "No users found"
+msgstr "Користувачів не знайдено"
+
+#: templates/users/user_list.html:171
+msgid "Change the filters or create a new organization user."
+msgstr "Змініть фільтри або створіть нового користувача організації."
+
+#: templates/users/user_role_form.html:4 templates/users/user_role_form.html:9
+msgid "Change user role"
+msgstr "Зміна ролі користувача"
+
+#: templates/users/user_role_form.html:22
+msgid "Save role"
+msgstr "Зберегти роль"
+
+#: users/admin.py:18 users/admin.py:21
+msgid "Additional information"
+msgstr "Додатково"
+
+#: users/decorators.py:18
+msgid "You do not have permission to access this page."
+msgstr "У вас немає прав доступу до цієї сторінки."
+
+#: users/decorators.py:39 users/forms.py:225 users/forms.py:250
+msgid "Your account is not linked to an organization."
+msgstr "Ваш користувач не прив’язаний до організації."
+
+#: users/forms.py:22
+msgid "Username or email"
+msgstr "Ім’я користувача або email"
+
+#: users/forms.py:27
+msgid "All roles"
+msgstr "Усі ролі"
+
+#: users/forms.py:41 users/forms.py:203 users/forms.py:326
+msgid "Username"
+msgstr "Ім’я користувача"
+
+#: users/forms.py:42
+msgid "Up to 150 characters. Letters, digits and @/./+/-/_ are allowed."
+msgstr "До 150 символів. Дозволені літери, цифри та @/./+/-/_."
+
+#: users/forms.py:47 users/forms.py:49 users/forms.py:205 users/forms.py:328
+msgid "Password"
+msgstr "Пароль"
+
+#: users/forms.py:48 users/forms.py:299
+msgid "Use a strong password that meets the system requirements."
+msgstr "Використайте надійний пароль, який відповідає вимогам системи."
+
+#: users/forms.py:51
+msgid "Confirm password"
+msgstr "Підтвердження пароля"
+
+#: users/forms.py:52
+msgid "Enter the same password again."
+msgstr "Введіть той самий пароль ще раз."
+
+#: users/forms.py:79
+msgid "e.g. Orvanta Demo"
+msgstr "напр. Orvanta Demo"
+
+#: users/forms.py:85 users/forms.py:112 users/forms.py:136
+msgid "A user with this email address already exists."
+msgstr "Користувач із такою email-адресою вже існує."
+
+#: users/forms.py:91
+msgid "Enter the organization name."
+msgstr "Вкажіть назву організації."
+
+#: users/forms.py:93
+msgid "An organization with this name already exists."
+msgstr "Організація з такою назвою вже існує."
+
+#: users/forms.py:118
+msgid "Invalid role for creating a user."
+msgstr "Недопустима роль для створення користувача."
+
+#: users/forms.py:148
+msgid "The organization slug is used to sign in and does not change automatically."
+msgstr "Slug організації використовується для входу та не змінюється автоматично."
+
+#: users/forms.py:167
+msgid "You do not have permission to delete users."
+msgstr "У вас немає прав видаляти користувачів."
+
+#: users/forms.py:170
+msgid "Users cannot be deleted without an organization."
+msgstr "Неможливо видаляти користувачів без організації."
+
+#: users/forms.py:173 users/forms.py:176 users/views.py:227
+msgid "User not found in your organization."
+msgstr "Користувача не знайдено в межах вашої організації."
+
+#: users/forms.py:185
+msgid "The last administrator of the organization cannot be deleted."
+msgstr "Неможливо видалити останнього адміністратора організації."
+
+#: users/forms.py:189
+msgid "You cannot delete your own account."
+msgstr "Ви не можете видалити власний обліковий запис."
+
+#: users/forms.py:193
+msgid "This user cannot be deleted while appointments are assigned to them. Reassign or delete those appointments first."
+msgstr "Користувача не можна видалити, доки за ним закріплені записи. Спочатку перепризначте або видаліть ці записи."
+
+#: users/forms.py:204
+msgid "Organization name or slug"
+msgstr "Назва або slug організації"
+
+#: users/forms.py:212
+msgid "name or slug"
+msgstr "назва або slug"
+
+#: users/forms.py:218
+msgid "The username does not match the current account."
+msgstr "Ім’я користувача не збігається з поточним обліковим записом."
+
+#: users/forms.py:228
+msgid "The organization name or slug does not match."
+msgstr "Назва або slug організації не збігається."
+
+#: users/forms.py:235 users/forms.py:239
+msgid "Password confirmation failed."
+msgstr "Пароль не підтверджено."
+
+#: users/forms.py:247
+msgid "You do not have permission to delete the organization."
+msgstr "У вас немає прав видаляти організацію."
+
+#: users/forms.py:294 users/forms.py:295
+msgid "Current password"
+msgstr "Поточний пароль"
+
+#: users/forms.py:297 users/forms.py:301
+msgid "New password"
+msgstr "Новий пароль"
+
+#: users/forms.py:303
+msgid "Confirm new password"
+msgstr "Підтвердження нового пароля"
+
+#: users/forms.py:304
+msgid "Enter the new password again."
+msgstr "Введіть новий пароль ще раз."
+
+#: users/forms.py:320
+msgid "This account is inactive."
+msgstr "Цей обліковий запис неактивний."
+
+#: users/forms.py:330
+msgid "slug or name"
+msgstr "slug або назва"
+
+#: users/models.py:7
+msgid "Administrator"
+msgstr "Адміністратор"
+
+#: users/models.py:8
+msgid "Manager"
+msgstr "Менеджер"
+
+#: users/models.py:22
+msgid "Organizations"
+msgstr "Організації"
+
+#: users/models.py:44
+msgid "Hide section subtitles"
+msgstr "Приховати підписи під заголовками"
+
+#: users/validators.py:17
+msgid "Your password must contain at least one uppercase letter (A–Z)."
+msgstr "Пароль повинен містити хоча б одну велику літеру (A–Z)."
+
+#: users/validators.py:19
+msgid "Your password must contain at least one lowercase letter (a–z)."
+msgstr "Пароль повинен містити хоча б одну малу літеру (a–z)."
+
+#: users/validators.py:21
+msgid "Your password must contain at least one digit (0–9)."
+msgstr "Пароль повинен містити хоча б одну цифру (0–9)."
+
+#: users/validators.py:23
+msgid "Your password must contain at least one special character (! @ # $ % ^ & * ( ) _ - + =)."
+msgstr "Пароль повинен містити хоча б один спецсимвол (! @ # $ % ^ & * ( ) _ - + =)."
+
+#: users/validators.py:29
+msgid "Your password must contain an uppercase letter, a lowercase letter, a digit and a special character (! @ # $ % ^ & * ( ) _ - + =)."
+msgstr "Пароль повинен містити: велику літеру, малу літеру, цифру та спецсимвол (! @ # $ % ^ & * ( ) _ - + =)."
+
+#: users/views.py:136
+msgid "Registration completed successfully."
+msgstr "Реєстрацію завершено успішно."
+
+#: users/views.py:165
+msgid "User created successfully."
+msgstr "Користувача успішно створено."
+
+#: users/views.py:187
+msgid "You cannot deactivate your own account."
+msgstr "Ви не можете деактивувати власний обліковий запис."
+
+#: users/views.py:194
+msgid "User activated successfully."
+msgstr "Користувача успішно активовано."
+
+#: users/views.py:196
+msgid "User deactivated successfully."
+msgstr "Користувача успішно деактивовано."
+
+#: users/views.py:218
+msgid "This user cannot be deleted while protected records are linked to them."
+msgstr "Користувача не можна видалити, доки з ним пов'язані захищені записи."
+
+#: users/views.py:221
+#, python-format
+msgid "User %(username)s deleted successfully."
+msgstr "Користувача %(username)s успішно видалено."
+
+#: users/views.py:253
+msgid "You cannot change your own administrator role."
+msgstr "Ви не можете змінити власну роль адміністратора."
+
+#: users/views.py:256
+msgid "User role updated successfully."
+msgstr "Роль користувача успішно оновлено."
+
+#: users/views.py:278
+msgid "Organization settings are available on a separate page."
+msgstr "Налаштування організації доступні на окремій сторінці."
+
+#: users/views.py:285
+msgid "Profile updated successfully."
+msgstr "Профіль успішно оновлено."
+
+#: users/views.py:312
+msgid "Password changed successfully."
+msgstr "Пароль успішно змінено."
+
+#: users/views.py:335
+msgid "Organization settings updated successfully."
+msgstr "Налаштування організації успішно оновлено."
+
+#: users/views.py:359
+#, python-format
+msgid "Organization \"%(organization)s\" deleted successfully."
+msgstr "Організацію \"%(organization)s\" успішно видалено."

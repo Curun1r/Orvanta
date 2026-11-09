@@ -1,23 +1,24 @@
 {% extends 'base.html' %}
+{% load i18n l10n %}
 
-{% block title %}Записи{% endblock %}
+{% block title %}{% translate "Appointments" %}{% endblock %}
 
 {% block content %}
 <div class="app-page wide">
     <header class="page-header">
         <div>
-            <h1>Записи</h1>
-            <p>Керуйте записами, статусами та фактичною вартістю.</p>
+            <h1>{% translate "Appointments" %}</h1>
+            <p>{% translate "Manage appointments, statuses and actual prices." %}</p>
         </div>
         <div class="page-actions">
             {% if request.user.role == 'admin' or request.user.role == 'manager' %}
-                <a href="{% url 'appointment_create' %}" class="btn btn-primary">Створити запис</a>
+                <a href="{% url 'appointment_create' %}" class="btn btn-primary">{% translate "Create appointment" %}</a>
             {% endif %}
             <a
                 href="{% url 'appointment_export_csv' %}{% if query_string %}?{{ query_string }}{% endif %}"
                 class="btn btn-outline-secondary"
             >
-                Експорт CSV
+                {% translate "Export CSV" %}
             </a>
         </div>
     </header>
@@ -25,8 +26,8 @@
     <section class="filter-card">
         <div class="filter-card-header">
             <div>
-                <h2 class="filter-card-title">Фільтрація</h2>
-                <p class="filter-card-subtitle">Звузьте список за датою, статусом або співробітником.</p>
+                <h2 class="filter-card-title">{% translate "Filters" %}</h2>
+                <p class="filter-card-subtitle">{% translate "Filter appointments by date, status or employee." %}</p>
             </div>
         </div>
 
@@ -52,8 +53,8 @@
             </p>
 
             <div class="filter-actions">
-                <button type="submit" class="btn btn-primary">Застосувати</button>
-                <a href="{% url 'appointment_list' %}" class="btn btn-outline-secondary">Скинути</a>
+                <button type="submit" class="btn btn-primary">{% translate "Apply" %}</button>
+                <a href="{% url 'appointment_list' %}" class="btn btn-outline-secondary">{% translate "Reset" %}</a>
             </div>
         </form>
     </section>
@@ -62,8 +63,8 @@
         <section class="table-card">
             <div class="table-card-header">
                 <div>
-                    <h2>Записи</h2>
-                    <p>Показано {{ page_obj.start_index }}–{{ page_obj.end_index }} із {{ page_obj.paginator.count }}</p>
+                    <h2>{% translate "Appointments" %}</h2>
+                    <p>{% translate "Showing" %} {{ page_obj.start_index }}–{{ page_obj.end_index }} {% translate "of" %} {{ page_obj.paginator.count }}</p>
                 </div>
             </div>
 
@@ -71,13 +72,13 @@
                 <table class="table app-table align-middle">
                     <thead>
                     <tr>
-                        <th>Клієнт</th>
-                        <th>Послуга</th>
-                        <th>Співробітник</th>
-                        <th>Дата і час</th>
-                        <th>Фактична вартість</th>
-                        <th>Статус</th>
-                        <th>Дії</th>
+                        <th>{% translate "Client" %}</th>
+                        <th>{% translate "Service" %}</th>
+                        <th>{% translate "Employee" %}</th>
+                        <th>{% translate "Date and time" %}</th>
+                        <th>{% translate "Actual price" %}</th>
+                        <th>{% translate "Status" %}</th>
+                        <th>{% translate "Actions" %}</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -87,7 +88,7 @@
                             <td>{{ appointment.service }}</td>
                             <td>{{ appointment.employee }}</td>
                             <td>
-                                <span class="cell-title">{{ appointment.appointment_date|date:'d.m.Y' }}</span>
+                                <span class="cell-title">{{ appointment.appointment_date|date:'SHORT_DATE_FORMAT' }}</span>
                                 <span class="cell-subtitle">{{ appointment.start_time|time:'H:i' }}–{{ appointment.end_time|time:'H:i' }}</span>
                             </td>
                             <td>
@@ -100,20 +101,20 @@
                                         {% csrf_token %}
                                         <input type="hidden" name="next" value="{{ request.get_full_path }}">
                                         <label for="actual-price-{{ appointment.pk }}" class="visually-hidden">
-                                            Фактична вартість
+                                            {% translate "Actual price" %}
                                         </label>
                                         <input
                                             id="actual-price-{{ appointment.pk }}"
                                             type="number"
                                             name="actual_price"
-                                            value="{{ appointment.actual_price|default_if_none:'' }}"
+                                            value="{{ appointment.actual_price|default_if_none:''|unlocalize }}"
                                             min="0"
                                             step="0.01"
                                             class="form-control form-control-sm actual-price-input"
                                             placeholder="0.00"
                                         >
                                         <button type="submit" class="btn btn-sm btn-outline-success btn-sm-action">
-                                            Зберегти
+                                            {% translate "Save" %}
                                         </button>
                                     </form>
                                 {% else %}
@@ -127,9 +128,9 @@
                             </td>
                             <td>
                                 <div class="table-actions">
-                                    <a href="{% url 'appointment_detail' appointment.pk %}" class="btn btn-sm btn-outline-secondary btn-sm-action">Перегляд</a>
+                                    <a href="{% url 'appointment_detail' appointment.pk %}" class="btn btn-sm btn-outline-secondary btn-sm-action">{% translate "View" %}</a>
                                     {% if request.user.role != 'employee' %}
-                                        <a href="{% url 'appointment_update' appointment.pk %}" class="btn btn-sm btn-outline-primary btn-sm-action">Редагувати</a>
+                                        <a href="{% url 'appointment_update' appointment.pk %}" class="btn btn-sm btn-outline-primary btn-sm-action">{% translate "Edit" %}</a>
                                     {% endif %}
 
                                     {% if request.user.role != 'employee' or appointment.employee_id == request.user.id %}
@@ -139,9 +140,9 @@
                                                 <button
                                                     type="submit"
                                                     class="btn btn-sm btn-outline-warning btn-sm-action"
-                                                    onclick="return confirm('Підтвердити цей запис?');"
+                                                    data-confirm="{% translate 'Confirm this appointment?' %}"
                                                 >
-                                                    Підтвердити
+                                                    {% translate "Confirm" %}
                                                 </button>
                                             </form>
                                         {% endif %}
@@ -152,9 +153,9 @@
                                                 <button
                                                     type="submit"
                                                     class="btn btn-sm btn-outline-danger btn-sm-action"
-                                                    onclick="return confirm('Скасувати цей запис?');"
+                                                    data-confirm="{% translate 'Cancel this appointment?' %}"
                                                 >
-                                                    Скасувати
+                                                    {% translate "Cancel" %}
                                                 </button>
                                             </form>
                                         {% endif %}
@@ -165,9 +166,9 @@
                                                 <button
                                                     type="submit"
                                                     class="btn btn-sm btn-outline-success btn-sm-action"
-                                                    onclick="return confirm('Позначити запис як виконаний?');"
+                                                    data-confirm="{% translate 'Mark this appointment as completed?' %}"
                                                 >
-                                                    Виконано
+                                                    {% translate "Completed" %}
                                                 </button>
                                             </form>
                                         {% endif %}
@@ -184,11 +185,11 @@
         </section>
     {% else %}
         <section class="table-empty-state">
-            <strong>Записів поки немає</strong>
-            <span>Створіть перший запис для клієнта або змініть фільтри.</span>
+            <strong>{% translate "No appointments yet" %}</strong>
+            <span>{% translate "Create the first appointment for a client or change the filters." %}</span>
             {% if request.user.role == 'admin' or request.user.role == 'manager' %}
                 <div class="empty-state-actions">
-                    <a href="{% url 'appointment_create' %}" class="btn btn-primary">Створити запис</a>
+                    <a href="{% url 'appointment_create' %}" class="btn btn-primary">{% translate "Create appointment" %}</a>
                 </div>
             {% endif %}
         </section>

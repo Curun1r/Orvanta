@@ -1,14 +1,15 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
-{% block title %}Створення користувача{% endblock %}
+{% block title %}{% translate "Create user" %}{% endblock %}
 
 {% block content %}
 <div class="form-page">
     <div class="form-page-header">
-        <h1 class="page-title">Створення користувача</h1>
-        <p class="form-page-subtitle">Обліковий запис буде створено в межах поточної організації.</p>
+        <h1 class="page-title">{% translate "Create user" %}</h1>
+        <p class="form-page-subtitle">{% translate "The account will be created in the current organization." %}</p>
         <div class="form-page-toolbar">
-            <a href="{% url 'user_list' %}" class="btn btn-outline-secondary">Назад до списку користувачів</a>
+            <a href="{% url 'user_list' %}" class="btn btn-outline-secondary">{% translate "Back to users" %}</a>
         </div>
     </div>
 
@@ -18,8 +19,8 @@
                 {% csrf_token %}
                 {% include 'includes/form_fields.html' with form=form %}
                 <div class="form-actions">
-                    <button type="submit" class="btn btn-primary">Створити користувача</button>
-                    <a href="{% url 'user_list' %}" class="btn btn-outline-secondary">Скасувати</a>
+                    <button type="submit" class="btn btn-primary">{% translate "Create user" %}</button>
+                    <a href="{% url 'user_list' %}" class="btn btn-outline-secondary">{% translate "Cancel" %}</a>
                 </div>
             </form>
         </div>

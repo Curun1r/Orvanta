@@ -1,3 +1,4 @@
+from django.utils.translation import gettext_lazy as _
 from django.conf import settings
 from django.db import models
 
@@ -5,21 +6,21 @@ from users.models import Organization
 
 
 class AuditActionType(models.TextChoices):
-    LOGIN = 'login', 'Вхід'
-    LOGOUT = 'logout', 'Вихід'
-    CREATE = 'create', 'Створення'
-    UPDATE = 'update', 'Оновлення'
-    DELETE = 'delete', 'Видалення'
-    CHANGE_STATUS = 'change_status', 'Зміна статусу'
-    ASSIGN_ROLE = 'assign_role', 'Призначення ролі'
+    LOGIN = 'login', _('Log in')
+    LOGOUT = 'logout', _('Log out')
+    CREATE = 'create', _('Creation')
+    UPDATE = 'update', _('Update')
+    DELETE = 'delete', _('Deletion')
+    CHANGE_STATUS = 'change_status', _('Status change')
+    ASSIGN_ROLE = 'assign_role', _('Role assignment')
 
 
 class AuditEntityType(models.TextChoices):
-    USER = 'user', 'Користувач'
-    CLIENT = 'client', 'Клієнт'
-    SERVICE = 'service', 'Послуга'
-    APPOINTMENT = 'appointment', 'Запис'
-    AUTH = 'auth', 'Автентифікація'
+    USER = 'user', _('User')
+    CLIENT = 'client', _('Client')
+    SERVICE = 'service', _('Service')
+    APPOINTMENT = 'appointment', _('Appointment')
+    AUTH = 'auth', _('Authentication')
 
 
 class AuditLog(models.Model):
@@ -46,8 +47,8 @@ class AuditLog(models.Model):
 
     class Meta:
         ordering = ['-created_at']
-        verbose_name = 'Запис аудиту'
-        verbose_name_plural = 'Журнал аудиту'
+        verbose_name = _('Audit entry')
+        verbose_name_plural = _('Audit log')
         indexes = [
             models.Index(fields=['organization', '-created_at'], name='audit_org_created_idx'),
             models.Index(fields=['organization', 'user', '-created_at'], name='audit_org_user_idx'),

@@ -1,16 +1,17 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
-{% block title %}Налаштування організації{% endblock %}
+{% block title %}{% translate "Organization settings" %}{% endblock %}
 
 {% block content %}
 <div class="app-page">
     <header class="page-header">
         <div>
-            <h1>Налаштування організації</h1>
-            <p>Керуйте базовими параметрами робочого простору вашої організації.</p>
+            <h1>{% translate "Organization settings" %}</h1>
+            <p>{% translate "Manage the basic settings of your organization workspace." %}</p>
         </div>
         <div class="page-actions">
-            <a href="{% url 'profile' %}" class="btn btn-outline-secondary">Назад до профілю</a>
+            <a href="{% url 'profile' %}" class="btn btn-outline-secondary">{% translate "Back to profile" %}</a>
         </div>
     </header>
 
@@ -18,14 +19,14 @@
         <section class="detail-card">
             <div class="table-card-header px-0 pt-0">
                 <div>
-                    <h2>Поточні дані</h2>
-                    <p>Slug використовується для входу й не змінюється автоматично.</p>
+                    <h2>{% translate "Current details" %}</h2>
+                    <p>{% translate "The organization slug is used to sign in and is not changed automatically." %}</p>
                 </div>
             </div>
 
             <div class="detail-grid">
                 <div class="detail-item">
-                    <span class="detail-label">Назва</span>
+                    <span class="detail-label">{% translate "Name" %}</span>
                     <span class="detail-value">{{ organization.name }}</span>
                 </div>
                 <div class="detail-item">
@@ -33,25 +34,25 @@
                     <span class="detail-value">{{ organization.slug }}</span>
                 </div>
                 <div class="detail-item">
-                    <span class="detail-label">Користувачів</span>
+                    <span class="detail-label">{% translate "Users" %}</span>
                     <span class="detail-value">{{ users_count }}</span>
                 </div>
                 <div class="detail-item">
-                    <span class="detail-label">Створено</span>
-                    <span class="detail-value">{{ organization.created_at|date:'d.m.Y H:i' }}</span>
+                    <span class="detail-label">{% translate "Created" %}</span>
+                    <span class="detail-value">{{ organization.created_at|date:'SHORT_DATETIME_FORMAT' }}</span>
                 </div>
             </div>
         </section>
 
         <section class="card form-card organization-settings-card">
             <div class="card-body">
-                <h2 class="h5 mb-3">Редагування</h2>
+                <h2 class="h5 mb-3">{% translate "Edit" %}</h2>
                 <form method="post" class="app-form">
                     {% csrf_token %}
                     {% include 'includes/form_fields.html' with form=form %}
                     <div class="form-actions">
-                        <button type="submit" class="btn btn-primary">Зберегти зміни</button>
-                        <a href="{% url 'profile' %}" class="btn btn-outline-secondary">Скасувати</a>
+                        <button type="submit" class="btn btn-primary">{% translate "Save changes" %}</button>
+                        <a href="{% url 'profile' %}" class="btn btn-outline-secondary">{% translate "Cancel" %}</a>
                     </div>
                 </form>
             </div>
@@ -61,7 +62,7 @@
             <div class="card-body">
                 <h2 class="h5 mb-2 text-danger">WARNING</h2>
                 <p class="text-muted">
-                    Видалення організації прибирає весь робочий простір і не може бути скасоване.
+                    {% translate "Deleting the organization removes the entire workspace and cannot be undone." %}
                 </p>
                 <button
                     type="button"
@@ -69,7 +70,7 @@
                     data-bs-toggle="modal"
                     data-bs-target="#deleteOrganizationModal"
                 >
-                    Видалити організацію
+                    {% translate "Delete organization" %}
                 </button>
             </div>
         </section>
@@ -80,8 +81,8 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title fs-5 text-danger" id="deleteOrganizationModalLabel">Видалення організації</h2>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрити"></button>
+                <h2 class="modal-title fs-5 text-danger" id="deleteOrganizationModalLabel">{% translate "Delete organization" %}</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{% translate 'Close' %}"></button>
             </div>
             <form method="post" action="{% url 'organization_delete' %}" data-disable-on-submit>
                 {% csrf_token %}
@@ -93,15 +94,15 @@
                     {% endif %}
 
                     <p class="fw-semibold text-danger">
-                        Ця дія назавжди видалить організацію та ВСІ пов'язані дані. Скасувати неможливо.
+                        {% translate "This will permanently delete the organization and ALL related data. It cannot be undone." %}
                     </p>
-                    <p class="mb-2">Наслідки видалення:</p>
+                    <p class="mb-2">{% translate "The following data will be deleted:" %}</p>
                     <ul class="mb-3">
-                        <li>користувачі</li>
-                        <li>клієнти</li>
-                        <li>послуги</li>
-                        <li>записи</li>
-                        <li>журнал аудиту</li>
+                        <li>{% translate "users" %}</li>
+                        <li>{% translate "clients" %}</li>
+                        <li>{% translate "services" %}</li>
+                        <li>{% translate "appointments" %}</li>
+                        <li>{% translate "audit log" %}</li>
                     </ul>
 
                     {% for field in delete_organization_form %}
@@ -118,8 +119,8 @@
                     {% endfor %}
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Скасувати</button>
-                    <button type="submit" class="btn btn-danger">Підтвердити видалення</button>
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{% translate "Cancel" %}</button>
+                    <button type="submit" class="btn btn-danger">{% translate "Confirm deletion" %}</button>
                 </div>
             </form>
         </div>

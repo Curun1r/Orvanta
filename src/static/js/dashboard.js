@@ -61,7 +61,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const lastUpdated = document.querySelector('[data-last-updated]');
             if (lastUpdated) {
                 const now = new Date();
-                lastUpdated.textContent = `Оновлено о ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
+                const formattedTime = new Intl.DateTimeFormat(document.documentElement.lang || 'en', {
+                    hour: '2-digit', minute: '2-digit',
+                }).format(now);
+                lastUpdated.textContent = window.interpolate(
+                    window.gettext('Updated at %(time)s'), { time: formattedTime }, true
+                );
             }
         } catch (e) {
             // Тихо ігноруємо — не ламаємо сторінку

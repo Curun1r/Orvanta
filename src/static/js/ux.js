@@ -25,6 +25,13 @@
 })();
 
 document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('click', (event) => {
+        const button = event.target.closest('[data-confirm]');
+        if (button && !window.confirm(button.dataset.confirm)) {
+            event.preventDefault();
+        }
+    });
+
 
     // ── 1. Кнопка × для очищення пошукових полів у filter-form ───────────────
 
@@ -37,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const btn = document.createElement('button');
         btn.type = 'button';
         btn.className = 'search-clear-btn';
-        btn.setAttribute('aria-label', 'Очистити');
+        btn.setAttribute('aria-label', window.gettext('Clear'));
         btn.innerHTML = '&times;';
         btn.style.display = input.value ? 'flex' : 'none';
         wrapper.appendChild(btn);

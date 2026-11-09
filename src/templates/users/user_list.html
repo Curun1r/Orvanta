@@ -1,17 +1,18 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
-{% block title %}Користувачі{% endblock %}
+{% block title %}{% translate "Users" %}{% endblock %}
 
 {% block content %}
 <div class="app-page">
     <header class="page-header">
         <div>
-            <h1>Користувачі</h1>
-            <p>Керуйте користувачами, ролями й активністю.</p>
+            <h1>{% translate "Users" %}</h1>
+            <p>{% translate "Manage users, roles and active status." %}</p>
         </div>
         {% if request.user.role == 'admin' %}
             <div class="page-actions">
-                <a href="{% url 'user_create' %}" class="btn btn-primary">Створити користувача</a>
+                <a href="{% url 'user_create' %}" class="btn btn-primary">{% translate "Create user" %}</a>
             </div>
         {% endif %}
     </header>
@@ -19,8 +20,8 @@
     <section class="filter-card">
         <div class="filter-card-header">
             <div>
-                <h2 class="filter-card-title">Пошук і фільтрація</h2>
-                <p class="filter-card-subtitle">Фільтруйте користувачів за ім’ям, роллю або активністю.</p>
+                <h2 class="filter-card-title">{% translate "Search and filters" %}</h2>
+                <p class="filter-card-subtitle">{% translate "Filter users by name, role or active status." %}</p>
             </div>
         </div>
 
@@ -41,8 +42,8 @@
             </p>
 
             <div class="filter-actions">
-                <button type="submit" class="btn btn-primary">Застосувати</button>
-                <a href="{% url 'user_list' %}" class="btn btn-outline-secondary">Скинути</a>
+                <button type="submit" class="btn btn-primary">{% translate "Apply" %}</button>
+                <a href="{% url 'user_list' %}" class="btn btn-outline-secondary">{% translate "Reset" %}</a>
             </div>
         </form>
     </section>
@@ -51,8 +52,8 @@
         <section class="table-card">
             <div class="table-card-header">
                 <div>
-                    <h2>Користувачі</h2>
-                    <p>Показано {{ page_obj.start_index }}–{{ page_obj.end_index }} із {{ page_obj.paginator.count }}</p>
+                    <h2>{% translate "Users" %}</h2>
+                    <p>{% translate "Showing" %} {{ page_obj.start_index }}–{{ page_obj.end_index }} {% translate "of" %} {{ page_obj.paginator.count }}</p>
                 </div>
             </div>
 
@@ -60,13 +61,13 @@
                 <table class="table app-table align-middle">
                     <thead>
                     <tr>
-                        <th>Користувач</th>
+                        <th>{% translate "User" %}</th>
                         <th>Email</th>
-                        <th>Роль</th>
-                        <th>Статус</th>
+                        <th>{% translate "Role" %}</th>
+                        <th>{% translate "Status" %}</th>
                         <th>Staff</th>
-                        <th>Дата реєстрації</th>
-                        <th>Дії</th>
+                        <th>{% translate "Registration date" %}</th>
+                        <th>{% translate "Actions" %}</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -81,33 +82,33 @@
                             </td>
                             <td>
                                 {% if user_obj.is_active %}
-                                    <span class="badge-soft badge-soft-success">Активний</span>
+                                    <span class="badge-soft badge-soft-success">{% translate "Active" %}</span>
                                 {% else %}
-                                    <span class="badge-soft badge-soft-muted">Неактивний</span>
+                                    <span class="badge-soft badge-soft-muted">{% translate "Inactive" %}</span>
                                 {% endif %}
                             </td>
                             <td>
                                 {% if user_obj.is_staff %}
-                                    <span class="badge-soft badge-soft-info">Так</span>
+                                    <span class="badge-soft badge-soft-info">{% translate "Yes" %}</span>
                                 {% else %}
-                                    <span class="badge-soft badge-soft-muted">Ні</span>
+                                    <span class="badge-soft badge-soft-muted">{% translate "No" %}</span>
                                 {% endif %}
                             </td>
-                            <td>{{ user_obj.date_joined|date:'d.m.Y H:i' }}</td>
+                            <td>{{ user_obj.date_joined|date:'SHORT_DATETIME_FORMAT' }}</td>
                             <td>
                                 <div class="table-actions">
-                                    <a href="{% url 'user_edit_role' user_obj.pk %}" class="btn btn-sm btn-outline-primary btn-sm-action">Змінити роль</a>
+                                    <a href="{% url 'user_edit_role' user_obj.pk %}" class="btn btn-sm btn-outline-primary btn-sm-action">{% translate "Change role" %}</a>
                                     <form method="post" action="{% url 'user_toggle_active' user_obj.pk %}">
                                         {% csrf_token %}
                                         {% if user_obj.is_active %}
-                                            <button type="submit" class="btn btn-sm btn-outline-danger btn-sm-action">Деактивувати</button>
+                                            <button type="submit" class="btn btn-sm btn-outline-danger btn-sm-action">{% translate "Deactivate" %}</button>
                                         {% else %}
-                                            <button type="submit" class="btn btn-sm btn-outline-success btn-sm-action">Активувати</button>
+                                            <button type="submit" class="btn btn-sm btn-outline-success btn-sm-action">{% translate "Activate" %}</button>
                                         {% endif %}
                                     </form>
                                     {% if request.user.role == 'admin' %}
                                         {% if user_obj.pk == request.user.pk %}
-                                            <button type="button" class="btn btn-sm btn-outline-danger btn-sm-action" disabled>Видалити</button>
+                                            <button type="button" class="btn btn-sm btn-outline-danger btn-sm-action" disabled>{% translate "Delete" %}</button>
                                         {% else %}
                                             <button
                                                 type="button"
@@ -115,7 +116,7 @@
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#deleteUserModal{{ user_obj.pk }}"
                                             >
-                                                Видалити
+                                                {% translate "Delete" %}
                                             </button>
                                         {% endif %}
                                     {% endif %}
@@ -126,8 +127,8 @@
                                         <div class="modal-dialog modal-dialog-centered">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h2 class="modal-title fs-5" id="deleteUserModalLabel{{ user_obj.pk }}">Видалення користувача</h2>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрити"></button>
+                                                    <h2 class="modal-title fs-5" id="deleteUserModalLabel{{ user_obj.pk }}">{% translate "Delete user" %}</h2>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{% translate 'Close' %}"></button>
                                                 </div>
                                                 <form method="post" action="{% url 'user_delete' user_obj.pk %}" data-disable-on-submit>
                                                     {% csrf_token %}
@@ -138,19 +139,17 @@
                                                                 {{ delete_user_form.non_field_errors }}
                                                             </div>
                                                         {% endif %}
-                                                        <p class="fw-semibold text-danger mb-2">Ця дія назавжди видалить користувача. Скасувати неможливо.</p>
+                                                        <p class="fw-semibold text-danger mb-2">{% translate "This will permanently delete the user. It cannot be undone." %}</p>
                                                         <p class="mb-2">
-                                                            Користувач: <strong>{{ user_obj.username }}</strong>
+                                                            {% translate "User:" %} <strong>{{ user_obj.username }}</strong>
                                                         </p>
                                                         <p class="mb-0 text-muted">
-                                                            Записи, у яких цей користувач призначений співробітником, блокують видалення.
-                                                            Журнал аудиту й записи, створені цим користувачем, залишаються; посилання на користувача
-                                                            очищується там, де це дозволяє модель даних.
+                                                            {% translate "Appointments assigned to this user prevent deletion. Audit logs and records created by this user are retained; references to the user are cleared where the data model allows it." %}
                                                         </p>
                                                     </div>
                                                     <div class="modal-footer">
-                                                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Скасувати</button>
-                                                        <button type="submit" class="btn btn-danger">Підтвердити видалення</button>
+                                                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{% translate "Cancel" %}</button>
+                                                        <button type="submit" class="btn btn-danger">{% translate "Confirm deletion" %}</button>
                                                     </div>
                                                 </form>
                                             </div>
@@ -168,10 +167,10 @@
         </section>
     {% else %}
         <section class="table-empty-state">
-            <strong>Користувачів не знайдено</strong>
-            <span>Змініть фільтри або створіть нового користувача організації.</span>
+            <strong>{% translate "No users found" %}</strong>
+            <span>{% translate "Change the filters or create a new organization user." %}</span>
             <div class="empty-state-actions">
-                <a href="{% url 'user_create' %}" class="btn btn-primary">Створити користувача</a>
+                <a href="{% url 'user_create' %}" class="btn btn-primary">{% translate "Create user" %}</a>
             </div>
         </section>
     {% endif %}

@@ -21,13 +21,13 @@ from users.models import Organization, User, UserRole
 DEMO_SLUG = 'orvanta-demo'
 DEMO_NAME = 'Orvanta Demo'
 DEMO_USERS = (
-    ('demo_admin', 'Адміністратор', 'Демо', UserRole.ADMIN),
-    ('demo_manager', 'Менеджер', 'Демо', UserRole.MANAGER),
-    ('demo_olena', 'Олена', 'Коваль', UserRole.EMPLOYEE),
-    ('demo_natalia', 'Наталія', 'Мельник', UserRole.EMPLOYEE),
-    ('demo_iryna', 'Ірина', 'Савченко', UserRole.EMPLOYEE),
-    ('demo_tetyana', 'Тетяна', 'Петренко', UserRole.EMPLOYEE),
-    ('demo_oksana', 'Оксана', 'Гончар', UserRole.EMPLOYEE),
+    ('demo_admin', 'Administrator', 'Demo', UserRole.ADMIN),
+    ('demo_manager', 'Manager', 'Demo', UserRole.MANAGER),
+    ('demo_olena', 'Olena', 'Koval', UserRole.EMPLOYEE),
+    ('demo_natalia', 'Nataliia', 'Melnyk', UserRole.EMPLOYEE),
+    ('demo_iryna', 'Iryna', 'Savchenko', UserRole.EMPLOYEE),
+    ('demo_tetyana', 'Tetiana', 'Petrenko', UserRole.EMPLOYEE),
+    ('demo_oksana', 'Oksana', 'Honchar', UserRole.EMPLOYEE),
 )
 
 
@@ -146,7 +146,7 @@ class Command(BaseCommand):
         for index, name in enumerate(CLIENT_NAMES):
             clients.append(Client.objects.create(
                 full_name=name, phone=f'+38099000{index:04d}',
-                email=f'client{index + 1}@example.test', notes='Вигаданий клієнт для демонстрації.',
+                email=f'client{index + 1}@example.test', notes='Fictional client for demonstration.',
                 organization=organization, created_by=admin,
             ))
 
@@ -179,9 +179,9 @@ class Command(BaseCommand):
                 organization=organization, client=clients[index % len(clients)], service=service,
                 employee=employee, created_by=admin, appointment_date=day,
                 start_time=start.time(), end_time=end.time(), status=status, actual_price=actual_price,
-                comment=f'Демонстраційний запис #{index + 1:03d}.',
+                comment=f'Demo appointment #{index + 1:03d}.',
             )
             AppointmentStatusHistory.objects.create(
                 appointment=appointment, organization=organization, old_status=AppointmentStatus.PLANNED,
-                new_status=status, changed_by=admin, comment='Демонстраційна історія статусу.',
+                new_status=status, changed_by=admin, comment='Demo status history.',
             )

@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
 {% block title %}{{ title }}{% endblock %}
 
@@ -6,9 +7,9 @@
 <div class="form-page">
     <div class="form-page-header">
         <h1 class="page-title">{{ title }}</h1>
-        <p class="form-page-subtitle">Контактні дані та службові примітки клієнта.</p>
+        <p class="form-page-subtitle">{% translate "Client contact details and internal notes." %}</p>
         <div class="form-page-toolbar">
-            <a href="{% url 'client_list' %}" class="btn btn-outline-secondary">Назад до списку клієнтів</a>
+            <a href="{% url 'client_list' %}" class="btn btn-outline-secondary">{% translate "Back to clients" %}</a>
         </div>
     </div>
 
@@ -18,8 +19,8 @@
                 {% csrf_token %}
                 {% include 'includes/form_fields.html' with form=form %}
                 <div class="form-actions">
-                    <button type="submit" class="btn btn-success">Зберегти</button>
-                    <a href="{% url 'client_list' %}" class="btn btn-outline-secondary">Скасувати</a>
+                    <button type="submit" class="btn btn-success">{% translate "Save" %}</button>
+                    <a href="{% url 'client_list' %}" class="btn btn-outline-secondary">{% translate "Cancel" %}</a>
                 </div>
             </form>
         </div>

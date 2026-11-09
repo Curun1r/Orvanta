@@ -226,6 +226,30 @@ orvanta/
 
 ---
 
+## Languages
+
+English is the default interface language on the first visit. Use the **EN / UK** language switcher to choose English or Ukrainian; the choice is remembered in a browser cookie and applies to pages, forms, validation messages, status labels, and interface controls. Existing application URLs stay the same when switching language.
+
+New demo workspaces use English sample service and client data. Existing demo workspaces remain unchanged on a normal `setup_demo` run; use the documented `--reset` option to replace only the managed demo workspace with fresh English fixtures.
+
+Names, notes, and other content entered by users are stored as entered. Changing the interface language does not rewrite user data or historical audit descriptions.
+
+### Maintaining translations
+
+English interface strings are the source messages; Ukrainian translations live in `src/locale/uk/LC_MESSAGES/`. Python/templates use the `django` catalog, while browser scripts use `djangojs`.
+
+The GNU gettext tools (`xgettext`, `msgmerge`, and `msgfmt`) are required for maintaining catalogs in a native development environment. The Docker build installs gettext and compiles the message catalogs.
+
+From the `src` directory, extract updated strings, edit the Ukrainian `.po` files, and compile them:
+
+```bash
+python manage.py makemessages -l uk --ignore=staticfiles --ignore='*/migrations/*'
+python manage.py makemessages -d djangojs -l uk --ignore=staticfiles --ignore=chart.umd.min.js
+python manage.py compilemessages
+```
+
+---
+
 ## Local Demo (Docker)
 
 ### Requirements
@@ -302,7 +326,7 @@ The legacy `python src/seed_salon.py` entry point runs the same demo setup comma
 ### Suggested walkthrough
 
 1. Sign in as `demo_admin` and inspect the dashboard, upcoming appointments, clients, and service catalog.
-2. Open **Фінанси** to inspect completed-appointment revenue and export a filtered CSV.
+2. Open **Finance** to inspect completed-appointment revenue and export a filtered CSV.
 3. Create an appointment, then attempt another appointment for the same employee at an overlapping time to see conflict validation.
 4. Sign in as `demo_olena`. Appointment lists, API responses, and client appointment history are limited to this employee's assigned records.
 5. Sign in as `demo_manager` to manage operational data; sign in as `demo_admin` to inspect user management and the audit log.

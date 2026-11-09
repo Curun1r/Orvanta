@@ -200,7 +200,7 @@ class ReadOnlyApiTests(APITestCase):
         self.assertEqual(Decimal(str(response.data['average_check'])), Decimal('0.00'))
         self.assertEqual(response.data['revenue_appointments_count'], 0)
 
-        self.assertEqual(response.data['status_counts'][0]['status'], 'Підтверджено')
+        self.assertEqual(response.data['status_counts'][0]['status'], 'Confirmed')
         self.assertEqual(response.data['status_counts'][0]['total'], 1)
         self.assertEqual(response.data['popular_services'][0]['service_name'], self.service.name)
         self.assertEqual(response.data['popular_services'][0]['total'], 1)
@@ -235,7 +235,7 @@ class ReadOnlyApiTests(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['appointments_count'], 1)
-        self.assertEqual(response.data['status_counts'][0]['status'], 'Підтверджено')
+        self.assertEqual(response.data['status_counts'][0]['status'], 'Confirmed')
         self.assertEqual(response.data['status_counts'][0]['total'], 1)
         self.assertEqual(response.data['employee_workload'][0]['employee_username'], self.employee.username)
 

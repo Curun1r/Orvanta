@@ -1,0 +1,46 @@
+msgid ""
+msgstr "Project-Id-Version: Orvanta\nLanguage: uk\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#: static/js/auth.js:17
+msgid "Hide"
+msgstr "Сховати"
+
+#: static/js/auth.js:17
+msgid "Show"
+msgstr "Показати"
+
+#: static/js/auth.js:20
+msgid "Hide password"
+msgstr "Приховати пароль"
+
+#: static/js/auth.js:20
+msgid "Show password"
+msgstr "Показати пароль"
+
+#: static/js/auth.js:42
+msgid "Please wait..."
+msgstr "Зачекайте..."
+
+#: static/js/dashboard.js:68
+msgid "Updated at %(time)s"
+msgstr "Оновлено о %(time)s"
+
+#: static/js/finance.js:47
+msgid "Revenue (UAH)"
+msgstr "Дохід (грн)"
+
+#: static/js/finance.js:67 static/js/finance.js:81
+msgid "UAH"
+msgstr "грн"
+
+#: static/js/finance.js:114
+msgid "All"
+msgstr "Всі"
+
+#: static/js/toasts.js:10
+msgid "Close"
+msgstr "Закрити"
+
+#: static/js/ux.js:47
+msgid "Clear"
+msgstr "Очистити"

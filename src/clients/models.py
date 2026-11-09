@@ -1,3 +1,4 @@
+from django.utils.translation import gettext_lazy as _
 from django.conf import settings
 from django.db import models
 
@@ -30,8 +31,8 @@ class Client(models.Model):
 
     class Meta:
         ordering = ['full_name']
-        verbose_name = 'Клієнт'
-        verbose_name_plural = 'Клієнти'
+        verbose_name = _('Client')
+        verbose_name_plural = _('Clients')
         indexes = [
             models.Index(fields=['organization', 'is_active'], name='client_org_active_idx'),
             models.Index(fields=['organization', 'full_name'], name='client_org_name_idx'),

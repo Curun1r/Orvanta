@@ -1,3 +1,4 @@
+from django.utils.translation import gettext_lazy as _
 from django.db import models
 
 from users.models import Organization
@@ -16,8 +17,8 @@ class ServiceCategory(models.Model):
 
     class Meta:
         ordering = ['name']
-        verbose_name = 'Категорія послуг'
-        verbose_name_plural = 'Категорії послуг'
+        verbose_name = _('Service category')
+        verbose_name_plural = _('Service categories')
         indexes = [
             models.Index(fields=['organization', 'name'], name='svc_cat_org_name_idx'),
         ]
@@ -57,8 +58,8 @@ class Service(models.Model):
 
     class Meta:
         ordering = ['name']
-        verbose_name = 'Послуга'
-        verbose_name_plural = 'Послуги'
+        verbose_name = _('Service')
+        verbose_name_plural = _('Services')
         indexes = [
             models.Index(fields=['organization', 'is_active'], name='svc_org_active_idx'),
             models.Index(fields=['organization', 'category'], name='svc_org_category_idx'),

@@ -1,14 +1,15 @@
+{% load i18n %}
 <section class="dashboard-card onboarding-card">
     <div class="onboarding-card-body">
         <div class="onboarding-header">
             <div>
-                <h2 class="h4 mb-1">Початкове налаштування організації</h2>
+                <h2 class="h4 mb-1">{% translate "Set up your organization" %}</h2>
                 <p>
-                    Виконайте кілька кроків, щоб підготувати робочий простір до використання.
+                    {% translate "Complete these steps to get your workspace ready." %}
                 </p>
             </div>
             <span class="badge text-bg-primary">
-                {{ onboarding.steps|length }} кроків
+                {{ onboarding.steps|length }} {% translate "steps" %}
             </span>
         </div>
 
@@ -17,15 +18,15 @@
                 <div class="onboarding-step">
                     <div class="onboarding-step-main">
                         {% if step.is_done %}
-                            <span class="badge text-bg-success">Виконано</span>
+                            <span class="badge text-bg-success">{% translate "Completed" %}</span>
                         {% else %}
-                            <span class="badge text-bg-secondary">Очікує</span>
+                            <span class="badge text-bg-secondary">{% translate "Pending" %}</span>
                         {% endif %}
                         <span>{{ step.label }}</span>
                     </div>
 
                     {% if step.is_done %}
-                        <span class="onboarding-done">Готово</span>
+                        <span class="onboarding-done">{% translate "Done" %}</span>
                     {% else %}
                         <a href="{{ step.url }}" class="btn btn-sm btn-outline-primary">
                             {{ step.action_label }}

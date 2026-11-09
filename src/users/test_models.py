@@ -35,7 +35,7 @@ class UserModelTests(TestCase):
 
     def test_str_shows_username_and_role(self):
         user = User(username='john', role=UserRole.ADMIN)
-        self.assertEqual(str(user), 'john (Адміністратор)')
+        self.assertEqual(str(user), 'john (Administrator)')
 
     def test_default_role_is_employee(self):
         user = User.objects.create_user(username='emp', password='pass123')
@@ -63,8 +63,8 @@ class UserModelTests(TestCase):
 
     def test_str_manager_role(self):
         user = User(username='mgr', role=UserRole.MANAGER)
-        self.assertEqual(str(user), 'mgr (Менеджер)')
+        self.assertEqual(str(user), 'mgr (Manager)')
 
     def test_str_employee_role(self):
         user = User(username='emp', role=UserRole.EMPLOYEE)
-        self.assertEqual(str(user), 'emp (Співробітник)')
+        self.assertEqual(str(user), 'emp (Employee)')

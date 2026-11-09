@@ -1,3 +1,4 @@
+from django.utils.translation import gettext as _
 from functools import wraps
 
 from django.contrib import messages
@@ -14,7 +15,7 @@ def role_required(allowed_roles):
         @wraps(view_func)
         def wrapper(request, *args, **kwargs):
             if request.user.role not in allowed_roles:
-                messages.error(request, 'У вас немає прав доступу до цієї сторінки.')
+                messages.error(request, _('You do not have permission to access this page.'))
                 return redirect('home')
             return view_func(request, *args, **kwargs)
         return wrapper
@@ -35,7 +36,7 @@ def organization_required(view_func):
     @wraps(view_func)
     def wrapper(request, *args, **kwargs):
         if not hasattr(request.user, 'organization') or request.user.organization is None:
-            messages.error(request, 'Ваш користувач не прив\'язаний до організації.')
+            messages.error(request, _('Your account is not linked to an organization.'))
             return redirect('home')
         return view_func(request, *args, **kwargs)
     return wrapper

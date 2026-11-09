@@ -137,7 +137,7 @@ class ClientExportCsvTests(TestCase):
                 'attachment; filename="clients_export_',
             )
         )
-        self.assertIn('ID;ПІБ;Телефон;Email;Активний;Дата створення;Дата оновлення', csv_text)
+        self.assertIn('ID;Full name;Phone;Email;Active;Created at;Updated at', csv_text)
         self.assertIn('Іван Петренко', csv_text)
         self.assertIn('ivan@example.com', csv_text)
         self.assertNotIn('Чужий Клієнт', csv_text)

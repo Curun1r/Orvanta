@@ -1,21 +1,22 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
-{% block title %}Журнал аудиту{% endblock %}
+{% block title %}{% translate "Audit log" %}{% endblock %}
 
 {% block content %}
 <div class="app-page wide">
     <header class="page-header">
         <div>
-            <h1>Журнал аудиту</h1>
-            <p>Переглядайте службові події вашої організації.</p>
+            <h1>{% translate "Audit log" %}</h1>
+            <p>{% translate "Review activity in your organization." %}</p>
         </div>
     </header>
 
     <section class="filter-card">
         <div class="filter-card-header">
             <div>
-                <h2 class="filter-card-title">Фільтрація</h2>
-                <p class="filter-card-subtitle">Звузьте журнал за користувачем, дією, сутністю або датою.</p>
+                <h2 class="filter-card-title">{% translate "Filters" %}</h2>
+                <p class="filter-card-subtitle">{% translate "Filter the log by user, action, entity or date." %}</p>
             </div>
         </div>
 
@@ -46,8 +47,8 @@
             </p>
 
             <div class="filter-actions">
-                <button type="submit" class="btn btn-primary">Застосувати</button>
-                <a href="{% url 'audit_log_list' %}" class="btn btn-outline-secondary">Скинути</a>
+                <button type="submit" class="btn btn-primary">{% translate "Apply" %}</button>
+                <a href="{% url 'audit_log_list' %}" class="btn btn-outline-secondary">{% translate "Reset" %}</a>
             </div>
         </form>
     </section>
@@ -56,8 +57,8 @@
         <section class="table-card">
             <div class="table-card-header">
                 <div>
-                    <h2>Події</h2>
-                    <p>Показано {{ page_obj.start_index }}–{{ page_obj.end_index }} із {{ page_obj.paginator.count }}</p>
+                    <h2>{% translate "Events" %}</h2>
+                    <p>{% translate "Showing" %} {{ page_obj.start_index }}–{{ page_obj.end_index }} {% translate "of" %} {{ page_obj.paginator.count }}</p>
                 </div>
             </div>
 
@@ -65,13 +66,13 @@
                 <table class="table app-table align-middle">
                     <thead>
                     <tr>
-                        <th>Користувач</th>
-                        <th>Тип дії</th>
-                        <th>Сутність</th>
+                        <th>{% translate "User" %}</th>
+                        <th>{% translate "Action type" %}</th>
+                        <th>{% translate "Entity" %}</th>
                         <th>ID</th>
-                        <th>Опис</th>
-                        <th>IP-адреса</th>
-                        <th>Дата і час</th>
+                        <th>{% translate "Description" %}</th>
+                        <th>{% translate "IP address" %}</th>
+                        <th>{% translate "Date and time" %}</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -87,7 +88,7 @@
                             <td>{{ log.entity_id|default:'—' }}</td>
                             <td>{{ log.description }}</td>
                             <td>{{ log.ip_address|default:'—' }}</td>
-                            <td>{{ log.created_at|date:'d.m.Y H:i' }}</td>
+                            <td>{{ log.created_at|date:'SHORT_DATETIME_FORMAT' }}</td>
                         </tr>
                     {% endfor %}
                     </tbody>
@@ -98,8 +99,8 @@
         </section>
     {% else %}
         <section class="table-empty-state">
-            <strong>Записів журналу аудиту не знайдено</strong>
-            <span>Події з’являться тут після дій користувачів у системі.</span>
+            <strong>{% translate "No audit records found" %}</strong>
+            <span>{% translate "Events will appear here after users take actions in the application." %}</span>
         </section>
     {% endif %}
 </div>

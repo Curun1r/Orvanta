@@ -1,25 +1,26 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
-{% block title %}Послуги{% endblock %}
+{% block title %}{% translate "Services" %}{% endblock %}
 
 {% block content %}
 <div class="app-page">
     <header class="page-header">
         <div>
-            <h1>Послуги</h1>
-            <p>Структуруйте перелік послуг і базову вартість.</p>
+            <h1>{% translate "Services" %}</h1>
+            <p>{% translate "Organize your services and their base prices." %}</p>
         </div>
         <div class="page-actions">
             {% if request.user.role == 'admin' or request.user.role == 'manager' %}
-                <a href="{% url 'service_create' %}" class="btn btn-primary">Додати послугу</a>
-                <a href="{% url 'category_create' %}" class="btn btn-outline-secondary">Додати категорію</a>
+                <a href="{% url 'service_create' %}" class="btn btn-primary">{% translate "Add service" %}</a>
+                <a href="{% url 'category_create' %}" class="btn btn-outline-secondary">{% translate "Add category" %}</a>
             {% endif %}
-            <a href="{% url 'category_list' %}" class="btn btn-outline-secondary">Категорії</a>
+            <a href="{% url 'category_list' %}" class="btn btn-outline-secondary">{% translate "Categories" %}</a>
             <a
                 href="{% url 'service_export_csv' %}{% if query_string %}?{{ query_string }}{% endif %}"
                 class="btn btn-outline-secondary"
             >
-                Експорт CSV
+                {% translate "Export CSV" %}
             </a>
         </div>
     </header>
@@ -27,8 +28,8 @@
     <section class="filter-card">
         <div class="filter-card-header">
             <div>
-                <h2 class="filter-card-title">Пошук і фільтрація</h2>
-                <p class="filter-card-subtitle">Знайдіть послугу за назвою, категорією або активністю.</p>
+                <h2 class="filter-card-title">{% translate "Search and filters" %}</h2>
+                <p class="filter-card-subtitle">{% translate "Find a service by name, category or active status." %}</p>
             </div>
         </div>
 
@@ -49,8 +50,8 @@
             </p>
 
             <div class="filter-actions">
-                <button type="submit" class="btn btn-primary">Застосувати</button>
-                <a href="{% url 'service_list' %}" class="btn btn-outline-secondary">Скинути</a>
+                <button type="submit" class="btn btn-primary">{% translate "Apply" %}</button>
+                <a href="{% url 'service_list' %}" class="btn btn-outline-secondary">{% translate "Reset" %}</a>
             </div>
         </form>
     </section>
@@ -59,8 +60,8 @@
         <section class="table-card">
             <div class="table-card-header">
                 <div>
-                    <h2>Послуги</h2>
-                    <p>Показано {{ page_obj.start_index }}–{{ page_obj.end_index }} із {{ page_obj.paginator.count }}</p>
+                    <h2>{% translate "Services" %}</h2>
+                    <p>{% translate "Showing" %} {{ page_obj.start_index }}–{{ page_obj.end_index }} {% translate "of" %} {{ page_obj.paginator.count }}</p>
                 </div>
             </div>
 
@@ -68,12 +69,12 @@
                 <table class="table app-table align-middle">
                     <thead>
                     <tr>
-                        <th>Назва</th>
-                        <th>Категорія</th>
-                        <th>Базова вартість</th>
-                        <th>Тривалість</th>
-                        <th>Статус</th>
-                        <th>Дії</th>
+                        <th>{% translate "Name" %}</th>
+                        <th>{% translate "Category" %}</th>
+                        <th>{% translate "Base price" %}</th>
+                        <th>{% translate "Duration" %}</th>
+                        <th>{% translate "Status" %}</th>
+                        <th>{% translate "Actions" %}</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -86,27 +87,27 @@
                                 {% endif %}
                             </td>
                             <td>{{ service.category|default:'—' }}</td>
-                            <td>{{ service.price|floatformat:2 }} грн</td>
-                            <td>{{ service.duration_minutes }} хв</td>
+                            <td>{{ service.price|floatformat:2 }} {% translate "UAH" %}</td>
+                            <td>{{ service.duration_minutes }} {% translate "min" %}</td>
                             <td>
                                 {% if service.is_active %}
-                                    <span class="badge-soft badge-soft-success">Активна</span>
+                                    <span class="badge-soft badge-soft-success">{% translate "Active" context "service status" %}</span>
                                 {% else %}
-                                    <span class="badge-soft badge-soft-muted">Неактивна</span>
+                                    <span class="badge-soft badge-soft-muted">{% translate "Inactive" context "service status" %}</span>
                                 {% endif %}
                             </td>
                             <td>
                                 <div class="table-actions">
-                                    <a href="{% url 'service_detail' service.pk %}" class="btn btn-sm btn-outline-secondary btn-sm-action">Перегляд</a>
+                                    <a href="{% url 'service_detail' service.pk %}" class="btn btn-sm btn-outline-secondary btn-sm-action">{% translate "View" %}</a>
                                     {% if request.user.role == 'admin' or request.user.role == 'manager' %}
-                                        <a href="{% url 'service_update' service.pk %}" class="btn btn-sm btn-outline-primary btn-sm-action">Редагувати</a>
+                                        <a href="{% url 'service_update' service.pk %}" class="btn btn-sm btn-outline-primary btn-sm-action">{% translate "Edit" %}</a>
 
                                         <form method="post" action="{% url 'service_toggle_active' service.pk %}">
                                             {% csrf_token %}
                                             {% if service.is_active %}
-                                                <button type="submit" class="btn btn-sm btn-outline-danger btn-sm-action">Деактивувати</button>
+                                                <button type="submit" class="btn btn-sm btn-outline-danger btn-sm-action">{% translate "Deactivate" %}</button>
                                             {% else %}
-                                                <button type="submit" class="btn btn-sm btn-outline-success btn-sm-action">Активувати</button>
+                                                <button type="submit" class="btn btn-sm btn-outline-success btn-sm-action">{% translate "Activate" %}</button>
                                             {% endif %}
                                         </form>
                                     {% endif %}
@@ -122,12 +123,12 @@
         </section>
     {% else %}
         <section class="table-empty-state">
-            <strong>Послуг поки немає</strong>
-            <span>Створіть послугу або категорію для початку роботи.</span>
+            <strong>{% translate "No services yet" %}</strong>
+            <span>{% translate "Create a service or category to get started." %}</span>
             {% if request.user.role == 'admin' or request.user.role == 'manager' %}
                 <div class="empty-state-actions">
-                    <a href="{% url 'service_create' %}" class="btn btn-primary">Додати послугу</a>
-                    <a href="{% url 'category_create' %}" class="btn btn-outline-secondary">Додати категорію</a>
+                    <a href="{% url 'service_create' %}" class="btn btn-primary">{% translate "Add service" %}</a>
+                    <a href="{% url 'category_create' %}" class="btn btn-outline-secondary">{% translate "Add category" %}</a>
                 </div>
             {% endif %}
         </section>

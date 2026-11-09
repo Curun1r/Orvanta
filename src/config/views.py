@@ -1,3 +1,4 @@
+from django.utils.translation import gettext as _
 import csv
 import json
 from datetime import timedelta
@@ -75,38 +76,38 @@ def get_onboarding_status(user):
     steps = [
         {
             'key': 'service_category',
-            'label': 'Створіть першу категорію послуг',
+            'label': _('Create your first service category'),
             'is_done': has_service_category,
             'url': reverse('category_create'),
-            'action_label': 'Створити категорію',
+            'action_label': _('Create category'),
         },
         {
             'key': 'service',
-            'label': 'Створіть першу послугу',
+            'label': _('Create your first service'),
             'is_done': has_service,
             'url': reverse('service_create'),
-            'action_label': 'Створити послугу',
+            'action_label': _('Create service'),
         },
         {
             'key': 'employee',
-            'label': 'Додайте співробітника',
+            'label': _('Add an employee'),
             'is_done': has_employee,
             'url': reverse('user_create'),
-            'action_label': 'Додати співробітника',
+            'action_label': _('Add employee'),
         },
         {
             'key': 'client',
-            'label': 'Додайте клієнта',
+            'label': _('Add a client'),
             'is_done': has_client,
             'url': reverse('client_create'),
-            'action_label': 'Додати клієнта',
+            'action_label': _('Add client'),
         },
         {
             'key': 'appointment',
-            'label': 'Створіть перший запис',
+            'label': _('Create your first appointment'),
             'is_done': has_appointment,
             'url': reverse('appointment_create'),
-            'action_label': 'Створити запис',
+            'action_label': _('Create appointment'),
         },
     ]
 
@@ -279,15 +280,15 @@ def get_month_comparison(user):
     previous = _month_revenue(base_qs, prev_year, prev_month)
 
     import calendar
-    MONTHS_UK = {
-        1: 'Січень', 2: 'Лютий', 3: 'Березень', 4: 'Квітень',
-        5: 'Травень', 6: 'Червень', 7: 'Липень', 8: 'Серпень',
-        9: 'Вересень', 10: 'Жовтень', 11: 'Листопад', 12: 'Грудень',
+    MONTH_NAMES = {
+        1: _('January'), 2: _('February'), 3: _('March'), 4: _('April'),
+        5: _('May'), 6: _('June'), 7: _('July'), 8: _('August'),
+        9: _('September'), 10: _('October'), 11: _('November'), 12: _('December'),
     }
 
     return {
-        'current_label': f"{MONTHS_UK[cur_month]} {cur_year}",
-        'previous_label': f"{MONTHS_UK[prev_month]} {prev_year}",
+        'current_label': f"{MONTH_NAMES[cur_month]} {cur_year}",
+        'previous_label': f"{MONTH_NAMES[prev_month]} {prev_year}",
         'current': current,
         'previous': previous,
         'revenue_change': _pct_change(current['total_revenue'], previous['total_revenue']),
@@ -473,17 +474,17 @@ def home_view(request):
     if can_manage_data:
         quick_actions.extend([
             {
-                'label': 'Створити запис',
+                'label': _('Create appointment'),
                 'url': reverse('appointment_create'),
                 'style': 'primary',
             },
             {
-                'label': 'Додати клієнта',
+                'label': _('Add client'),
                 'url': reverse('client_create'),
                 'style': 'outline-primary',
             },
             {
-                'label': 'Додати послугу',
+                'label': _('Add service'),
                 'url': reverse('service_create'),
                 'style': 'outline-secondary',
             },
@@ -491,7 +492,7 @@ def home_view(request):
 
     if can_manage_users:
         quick_actions.append({
-            'label': 'Додати співробітника',
+            'label': _('Add employee'),
             'url': reverse('user_create'),
             'style': 'outline-secondary',
         })
@@ -565,23 +566,23 @@ def finance_analytics_export_csv_view(request):
     response.write('\ufeff')
 
     writer = csv.writer(response, delimiter=';')
-    writer.writerow(['Показник', 'Значення'])
-    writer.writerow(['Загальний дохід', analytics['total_revenue']])
-    writer.writerow(['Середній чек', analytics['average_check']])
-    writer.writerow(['Кількість записів з оплатою', analytics['revenue_appointments_count']])
+    writer.writerow([_('Metric'), _('Value')])
+    writer.writerow([_('Total revenue'), analytics['total_revenue']])
+    writer.writerow([_('Average transaction value'), analytics['average_check']])
+    writer.writerow([_('Paid appointments'), analytics['revenue_appointments_count']])
     writer.writerow([
-        'Кількість виконаних без фактичної вартості',
+        _('Completed appointments without an actual price'),
         analytics['completed_without_price_count'],
     ])
     writer.writerow([])
     writer.writerow([
-        'Дата',
-        'Клієнт',
-        'Послуга',
-        'Співробітник',
-        'Статус',
-        'Базова вартість послуги',
-        'Фактична вартість запису',
+        _('Date'),
+        _('Client'),
+        _('Service'),
+        _('Employee'),
+        _('Status'),
+        _('Service base price'),
+        _('Appointment actual price'),
     ])
 
     for appointment in analytics['paid_appointments']:

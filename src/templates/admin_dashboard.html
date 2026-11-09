@@ -1,29 +1,30 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
-{% block title %}Адмін-панель{% endblock %}
+{% block title %}{% translate "Admin dashboard" %}{% endblock %}
 
 {% block content %}
 <div class="app-page wide">
     <header class="page-header">
         <div>
-            <h1>Адмін-панель</h1>
-            <p>Здоров'я системи, безпека та адмін-дії організації.</p>
+            <h1>{% translate "Admin dashboard" %}</h1>
+            <p>{% translate "System health, security and organization administration." %}</p>
         </div>
         <div class="page-actions">
-            <a href="{% url 'user_list' %}" class="btn btn-outline-secondary">Користувачі</a>
-            <a href="{% url 'audit_log_list' %}" class="btn btn-outline-primary">Журнал аудиту</a>
+            <a href="{% url 'user_list' %}" class="btn btn-outline-secondary">{% translate "Users" %}</a>
+            <a href="{% url 'audit_log_list' %}" class="btn btn-outline-primary">{% translate "Audit log" %}</a>
         </div>
     </header>
 
     {# ── Попередження ── #}
     {% if inactive_users_count or never_logged_in_count or completed_without_price %}
-    <section class="admin-alerts" aria-label="Попередження">
-        <h2 class="admin-section-title">⚠ Потребує уваги</h2>
+    <section class="admin-alerts" aria-label="{% translate 'Alerts' %}">
+        <h2 class="admin-section-title">{% translate "⚠ Needs attention" %}</h2>
         <div class="admin-alert-grid">
             {% if never_logged_in_count %}
             <div class="admin-alert-card alert-warning">
                 <div class="admin-alert-count">{{ never_logged_in_count }}</div>
-                <div class="admin-alert-label">Користувач{{ never_logged_in_count|pluralize:"ів,ів" }} ніколи не входили</div>
+                <div class="admin-alert-label">{% translate "Users who have never signed in" %}</div>
                 <ul class="admin-alert-list">
                     {% for u in never_logged_in %}
                         <li>{{ u.username }} · {{ u.get_role_display }}</li>
@@ -35,10 +36,10 @@
             {% if inactive_users_count %}
             <div class="admin-alert-card alert-warning">
                 <div class="admin-alert-count">{{ inactive_users_count }}</div>
-                <div class="admin-alert-label">Неактивних 30+ днів</div>
+                <div class="admin-alert-label">{% translate "Inactive for 30+ days" %}</div>
                 <ul class="admin-alert-list">
                     {% for u in inactive_users %}
-                        <li>{{ u.username }} · {{ u.last_login|date:'d.m.Y' }}</li>
+                        <li>{{ u.username }} · {{ u.last_login|date:'SHORT_DATE_FORMAT' }}</li>
                     {% endfor %}
                 </ul>
             </div>
@@ -47,9 +48,9 @@
             {% if completed_without_price %}
             <div class="admin-alert-card alert-info">
                 <div class="admin-alert-count">{{ completed_without_price }}</div>
-                <div class="admin-alert-label">Виконаних записів без фактичної вартості</div>
+                <div class="admin-alert-label">{% translate "Completed appointments without an actual price" %}</div>
                 <div class="admin-alert-action">
-                    <a href="{% url 'finance_analytics' %}" class="btn btn-sm btn-outline-secondary">Перейти до фінансів</a>
+                    <a href="{% url 'finance_analytics' %}" class="btn btn-sm btn-outline-secondary">{% translate "View finances" %}</a>
                 </div>
             </div>
             {% endif %}
@@ -59,31 +60,31 @@
 
     {# ── Безпека ── #}
     <section class="admin-section">
-        <h2 class="admin-section-title">Безпека — останні 7 днів</h2>
+        <h2 class="admin-section-title">{% translate "Security — last 7 days" %}</h2>
         <div class="admin-two-col">
 
             <div class="table-card">
                 <div class="table-card-header">
                     <div>
-                        <h3>Активність входів</h3>
+                        <h3>{% translate "Sign-in activity" %}</h3>
                     </div>
                 </div>
                 <div class="admin-security-stats">
                     <div class="admin-security-stat">
                         <span class="admin-security-num">{{ login_count_7d }}</span>
-                        <span class="admin-security-label">входів за 7 днів</span>
+                        <span class="admin-security-label">{% translate "sign-ins in 7 days" %}</span>
                     </div>
                     <div class="admin-security-stat">
                         <span class="admin-security-num">{{ unique_ips_7d }}</span>
-                        <span class="admin-security-label">унікальних IP</span>
+                        <span class="admin-security-label">{% translate "unique IP addresses" %}</span>
                     </div>
                     <div class="admin-security-stat">
                         <span class="admin-security-num">{{ active_users_count }}</span>
-                        <span class="admin-security-label">активних акаунтів</span>
+                        <span class="admin-security-label">{% translate "active accounts" %}</span>
                     </div>
                 </div>
                 <div class="admin-role-list">
-                    <p class="admin-role-title">Розподіл ролей</p>
+                    <p class="admin-role-title">{% translate "Role distribution" %}</p>
                     {% for item in role_stats %}
                     <div class="admin-role-row">
                         <span>{{ item.role }}</span>
@@ -95,16 +96,16 @@
 
             <div class="table-card">
                 <div class="table-card-header">
-                    <h3>Останні входи / виходи</h3>
+                    <h3>{% translate "Recent sign-ins / sign-outs" %}</h3>
                 </div>
                 <div class="table-responsive">
                     <table class="table app-table align-middle mb-0">
                         <thead>
                             <tr>
-                                <th>Подія</th>
-                                <th>Користувач</th>
+                                <th>{% translate "Event" %}</th>
+                                <th>{% translate "User" %}</th>
                                 <th>IP</th>
-                                <th>Час</th>
+                                <th>{% translate "Time" %}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -117,10 +118,10 @@
                                 </td>
                                 <td>{{ log.user.username|default:"—" }}</td>
                                 <td class="text-muted" style="font-size:0.85rem">{{ log.ip_address|default:"—" }}</td>
-                                <td class="text-muted" style="font-size:0.85rem">{{ log.created_at|date:'d.m.Y H:i' }}</td>
+                                <td class="text-muted" style="font-size:0.85rem">{{ log.created_at|date:'SHORT_DATETIME_FORMAT' }}</td>
                             </tr>
                         {% empty %}
-                            <tr><td colspan="4" class="text-muted">Немає подій.</td></tr>
+                            <tr><td colspan="4" class="text-muted">{% translate "No events yet." %}</td></tr>
                         {% endfor %}
                         </tbody>
                     </table>
@@ -132,16 +133,16 @@
 
     {# ── Адмін-дії ── #}
     <section class="admin-section">
-        <h2 class="admin-section-title">Останні адмін-дії з користувачами</h2>
+        <h2 class="admin-section-title">{% translate "Recent user administration actions" %}</h2>
         <div class="table-card">
             <div class="table-responsive">
                 <table class="table app-table align-middle mb-0">
                     <thead>
                         <tr>
-                            <th>Дія</th>
-                            <th>Виконав</th>
-                            <th>Опис</th>
-                            <th>Час</th>
+                            <th>{% translate "Action" %}</th>
+                            <th>{% translate "Performed by" %}</th>
+                            <th>{% translate "Description" %}</th>
+                            <th>{% translate "Time" %}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -154,10 +155,10 @@
                             </td>
                             <td>{{ log.user.username|default:"—" }}</td>
                             <td>{{ log.description }}</td>
-                            <td class="text-muted" style="font-size:0.85rem">{{ log.created_at|date:'d.m.Y H:i' }}</td>
+                            <td class="text-muted" style="font-size:0.85rem">{{ log.created_at|date:'SHORT_DATETIME_FORMAT' }}</td>
                         </tr>
                     {% empty %}
-                        <tr><td colspan="4" class="text-muted">Адмін-дії відсутні.</td></tr>
+                        <tr><td colspan="4" class="text-muted">{% translate "No administrative actions yet." %}</td></tr>
                     {% endfor %}
                     </tbody>
                 </table>

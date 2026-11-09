@@ -80,7 +80,7 @@ class OnboardingStatusTests(TestCase):
         response = self.client.get(reverse('home'))
 
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'Початкове налаштування організації')
+        self.assertContains(response, 'Set up your organization')
         self.assertContains(response, reverse('category_create'))
         self.assertFalse(response.context['onboarding']['is_complete'])
 
@@ -99,7 +99,7 @@ class OnboardingStatusTests(TestCase):
 
             self.assertEqual(response.status_code, 200)
             self.assertIsNone(response.context['onboarding'])
-            self.assertNotContains(response, 'Початкове налаштування організації')
+            self.assertNotContains(response, 'Set up your organization')
 
     def test_complete_workspace_hides_onboarding_block(self):
         self._create_complete_workspace(self.organization)
@@ -109,7 +109,7 @@ class OnboardingStatusTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertTrue(response.context['onboarding']['is_complete'])
-        self.assertNotContains(response, 'Початкове налаштування організації')
+        self.assertNotContains(response, 'Set up your organization')
 
     def test_onboarding_uses_only_current_organization_data(self):
         self._create_complete_workspace(
@@ -208,7 +208,7 @@ class OnboardingStatusTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertIsNone(response.context['onboarding'])
-        self.assertNotContains(response, 'Початкове налаштування організації')
+        self.assertNotContains(response, 'Set up your organization')
 
 
 class DashboardRevenueAnalyticsTests(TestCase):
@@ -426,11 +426,11 @@ class DashboardFinancialVisibilityTests(TestCase):
             self.assertEqual(response.status_code, 200)
             self.assertTrue(response.context['can_view_financials'])
             self.assertEqual(response.context['today_revenue'], Decimal('125.00'))
-            self.assertContains(response, 'Дохід за сьогодні')
+            self.assertContains(response, 'Revenue today')
             self.assertContains(response, reverse('finance_analytics'))
-            self.assertContains(response, 'Фінанси')
-            self.assertNotContains(response, 'Середній чек')
-            self.assertNotContains(response, 'Записів з оплатою')
+            self.assertContains(response, 'Finance')
+            self.assertNotContains(response, 'Average appointment value')
+            self.assertNotContains(response, 'Priced appointments')
 
     def test_employee_does_not_see_financial_analytics(self):
         self.client.force_login(self.employee)
@@ -439,10 +439,10 @@ class DashboardFinancialVisibilityTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertFalse(response.context['can_view_financials'])
-        self.assertNotContains(response, 'Дохід за сьогодні')
-        self.assertNotContains(response, 'Фінанси')
-        self.assertNotContains(response, 'Середній чек')
-        self.assertNotContains(response, 'Записів з оплатою')
+        self.assertNotContains(response, 'Revenue today')
+        self.assertNotContains(response, 'Finance')
+        self.assertNotContains(response, 'Average appointment value')
+        self.assertNotContains(response, 'Priced appointments')
         self.assertNotIn('total_revenue', response.context)
         self.assertNotIn('average_check', response.context)
         self.assertNotIn('revenue_appointments_count', response.context)
@@ -610,8 +610,8 @@ class FinanceAnalyticsTests(TestCase):
             response = self.client.get(reverse('finance_analytics'))
 
             self.assertEqual(response.status_code, 200)
-            self.assertContains(response, 'Фінансова аналітика')
-            self.assertContains(response, 'Загальний дохід')
+            self.assertContains(response, 'Financial analytics')
+            self.assertContains(response, 'Total revenue')
             self.assertContains(response, 'Finance Service A')
             self.assertContains(response, 'Finance Service B')
             self.assertNotContains(response, 'Other Finance Service')
@@ -690,8 +690,8 @@ class FinanceAnalyticsTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response['Content-Type'], 'text/csv; charset=utf-8')
         csv_text = response.content.decode('utf-8-sig')
-        self.assertIn('Загальний дохід', csv_text)
-        self.assertIn('Дата;Клієнт;Послуга;Співробітник;Статус', csv_text)
+        self.assertIn('Total revenue', csv_text)
+        self.assertIn('Date;Client;Service;Employee;Status', csv_text)
         self.assertIn('Finance Service A', csv_text)
         self.assertNotIn('Finance Service B', csv_text)
         self.assertNotIn('Other Finance Client', csv_text)

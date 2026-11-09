@@ -1,3 +1,4 @@
+from django.utils.translation import gettext as _
 from django.contrib import messages
 from django.core.exceptions import ValidationError
 from django.db import models, transaction
@@ -96,18 +97,18 @@ def appointment_export_csv_view(request):
     filename = f'appointments_export_{timezone.localdate():%Y%m%d}.csv'
     headers = [
         'ID',
-        'Клієнт',
-        'Послуга',
-        'Базова вартість послуги',
-        'Фактична вартість запису',
-        'Співробітник',
-        'Дата',
-        'Час початку',
-        'Час завершення',
-        'Статус',
-        'Коментар',
-        'Дата створення',
-        'Дата оновлення',
+        _('Client'),
+        _('Service'),
+        _('Service base price'),
+        _('Appointment actual price'),
+        _('Employee'),
+        _('Date'),
+        _('Start time'),
+        _('End time'),
+        _('Status'),
+        _('Comment'),
+        _('Created at'),
+        _('Updated at'),
     ]
     rows = (
         [
@@ -144,9 +145,9 @@ def appointment_actual_price_update_view(request, pk):
     if form.is_valid():
         appointment = form.save(commit=False)
         appointment.save(update_fields=['actual_price', 'updated_at'])
-        messages.success(request, 'Фактичну вартість запису оновлено.')
+        messages.success(request, _('Appointment actual price updated.'))
     else:
-        messages.error(request, 'Перевірте фактичну вартість запису.')
+        messages.error(request, _('Check the appointment actual price.'))
 
     return _redirect_back_to_appointments(request)
 
@@ -172,11 +173,11 @@ def appointment_create_view(request):
                 old_status=appointment.status,
                 new_status=appointment.status,
                 changed_by=request.user,
-                comment='Початковий статус запису.',
+                comment=_('Initial appointment status.'),
                 organization=appointment.organization,
             )
 
-            messages.success(request, 'Запис успішно створено.')
+            messages.success(request, _('Appointment created successfully.'))
             return redirect('appointment_list')
     else:
         form = AppointmentForm(organization=request.user.organization)
@@ -186,7 +187,7 @@ def appointment_create_view(request):
         'appointments/appointment_form.html',
         {
             'form': form,
-            'title': 'Створення запису',
+            'title': _('Create appointment'),
         },
     )
 
@@ -221,11 +222,11 @@ def appointment_update_view(request, pk):
                     old_status=old_status,
                     new_status=updated_appointment.status,
                     changed_by=request.user,
-                    comment='Статус змінено через форму редагування запису.',
+                    comment=_('Status changed through the appointment edit form.'),
                     organization=updated_appointment.organization,
                 )
 
-            messages.success(request, 'Запис успішно оновлено.')
+            messages.success(request, _('Appointment updated successfully.'))
             return redirect('appointment_list')
     else:
         form = AppointmentForm(
@@ -238,7 +239,7 @@ def appointment_update_view(request, pk):
         'appointments/appointment_form.html',
         {
             'form': form,
-            'title': 'Редагування запису',
+            'title': _('Edit appointment'),
         },
     )
 
@@ -282,11 +283,11 @@ def appointment_quick_status_update_view(request, pk, new_status):
     }
 
     if new_status not in allowed_statuses:
-        messages.error(request, 'Невірна дія для зміни статусу.')
+        messages.error(request, _('Invalid status change action.'))
         return redirect('appointment_list')
 
     if appointment.status == new_status:
-        messages.error(request, 'Запис уже має цей статус.')
+        messages.error(request, _('The appointment already has this status.'))
         return redirect('appointment_list')
 
     try:
@@ -312,11 +313,11 @@ def appointment_quick_status_update_view(request, pk, new_status):
         old_status=old_status,
         new_status=new_status,
         changed_by=request.user,
-        comment='Статус змінено швидкою дією зі списку записів.',
+        comment=_('Status changed using a quick action in the appointment list.'),
         organization=appointment.organization,
     )
 
-    messages.success(request, 'Статус запису успішно оновлено.')
+    messages.success(request, _('Appointment status updated successfully.'))
     return redirect('appointment_list')
 
 
@@ -324,7 +325,7 @@ def appointment_quick_status_update_view(request, pk, new_status):
 @require_POST
 def appointment_delete_view(request, pk):
     if request.user.role != UserRole.ADMIN:
-        messages.error(request, 'Видаляти записи може лише адміністратор.')
+        messages.error(request, _('Only an administrator can delete appointments.'))
         return redirect('appointment_detail', pk=pk)
 
     appointment = get_object_or_404(
@@ -333,15 +334,17 @@ def appointment_delete_view(request, pk):
         organization=request.user.organization,
     )
 
-    description = (
-        f'Видалено запис #{appointment.pk}: '
-        f'{appointment.client.full_name} — {appointment.service.name}, '
-        f'{appointment.appointment_date:%d.%m.%Y}, '
-        f'статус: {appointment.get_status_display()}'
-    )
+    description = _(
+        'Deleted appointment #%(id)s: %(client)s — %(service)s, %(date)s, status: %(status)s'
+    ) % {
+        'id': appointment.pk, 'client': appointment.client.full_name,
+        'service': appointment.service.name,
+        'date': appointment.appointment_date.strftime('%Y-%m-%d'),
+        'status': appointment.get_status_display(),
+    }
 
     with audit_context(description=description):
         appointment.delete()
 
-    messages.success(request, 'Запис успішно видалено.')
+    messages.success(request, _('Appointment deleted successfully.'))
     return redirect('appointment_list')

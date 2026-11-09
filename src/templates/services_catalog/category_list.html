@@ -1,19 +1,20 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
-{% block title %}Категорії послуг{% endblock %}
+{% block title %}{% translate "Service categories" %}{% endblock %}
 
 {% block content %}
 <div class="app-page">
     <header class="page-header">
         <div>
-            <h1>Категорії послуг</h1>
-            <p>Групуйте послуги для зручнішого каталогу та фільтрації.</p>
+            <h1>{% translate "Service categories" %}</h1>
+            <p>{% translate "Group services to organize the catalog and simplify filtering." %}</p>
         </div>
         <div class="page-actions">
             {% if request.user.role == 'admin' or request.user.role == 'manager' %}
-                <a href="{% url 'category_create' %}" class="btn btn-primary">Додати категорію</a>
+                <a href="{% url 'category_create' %}" class="btn btn-primary">{% translate "Add category" %}</a>
             {% endif %}
-            <a href="{% url 'service_list' %}" class="btn btn-outline-secondary">До списку послуг</a>
+            <a href="{% url 'service_list' %}" class="btn btn-outline-secondary">{% translate "View services" %}</a>
         </div>
     </header>
 
@@ -21,8 +22,8 @@
         <section class="table-card">
             <div class="table-card-header">
                 <div>
-                    <h2>Категорії</h2>
-                    <p>Список категорій поточної організації.</p>
+                    <h2>{% translate "Categories" %}</h2>
+                    <p>{% translate "Categories in the current organization." %}</p>
                 </div>
             </div>
 
@@ -30,9 +31,9 @@
                 <table class="table app-table align-middle">
                     <thead>
                     <tr>
-                        <th>Назва</th>
-                        <th>Опис</th>
-                        <th>Дії</th>
+                        <th>{% translate "Name" %}</th>
+                        <th>{% translate "Description" %}</th>
+                        <th>{% translate "Actions" %}</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -43,7 +44,7 @@
                             <td>
                                 {% if request.user.role == 'admin' or request.user.role == 'manager' %}
                                     <div class="table-actions">
-                                        <a href="{% url 'category_update' category.pk %}" class="btn btn-sm btn-outline-primary btn-sm-action">Редагувати</a>
+                                        <a href="{% url 'category_update' category.pk %}" class="btn btn-sm btn-outline-primary btn-sm-action">{% translate "Edit" %}</a>
                                     </div>
                                 {% else %}
                                     <span class="text-muted">—</span>
@@ -57,11 +58,11 @@
         </section>
     {% else %}
         <section class="table-empty-state">
-            <strong>Категорії ще не створено</strong>
-            <span>Додайте категорію, щоб структурувати каталог послуг.</span>
+            <strong>{% translate "No categories yet" %}</strong>
+            <span>{% translate "Add a category to organize your service catalog." %}</span>
             {% if request.user.role == 'admin' or request.user.role == 'manager' %}
                 <div class="empty-state-actions">
-                    <a href="{% url 'category_create' %}" class="btn btn-primary">Додати категорію</a>
+                    <a href="{% url 'category_create' %}" class="btn btn-primary">{% translate "Add category" %}</a>
                 </div>
             {% endif %}
         </section>

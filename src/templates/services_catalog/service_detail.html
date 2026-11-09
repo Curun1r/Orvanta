@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
 {% block title %}{{ service.name }}{% endblock %}
 
@@ -7,12 +8,12 @@
     <header class="page-header">
         <div>
             <h1>{{ service.name }}</h1>
-            <p>Базова вартість і тривалість виконання.</p>
+            <p>{% translate "Base price and service duration." %}</p>
         </div>
         <div class="page-actions">
-            <a href="{% url 'service_list' %}" class="btn btn-outline-secondary">Назад до списку послуг</a>
+            <a href="{% url 'service_list' %}" class="btn btn-outline-secondary">{% translate "Back to services" %}</a>
             {% if request.user.role == 'admin' or request.user.role == 'manager' %}
-                <a href="{% url 'service_update' service.pk %}" class="btn btn-primary">Редагувати послугу</a>
+                <a href="{% url 'service_update' service.pk %}" class="btn btn-primary">{% translate "Edit service" %}</a>
             {% endif %}
         </div>
     </header>
@@ -20,39 +21,39 @@
     <section class="detail-card">
         <div class="detail-grid">
             <div class="detail-item">
-                <span class="detail-label">Назва</span>
+                <span class="detail-label">{% translate "Name" %}</span>
                 <span class="detail-value">{{ service.name }}</span>
             </div>
             <div class="detail-item">
-                <span class="detail-label">Категорія</span>
+                <span class="detail-label">{% translate "Category" %}</span>
                 <span class="detail-value">{{ service.category|default:'—' }}</span>
             </div>
             <div class="detail-item">
-                <span class="detail-label">Базова вартість</span>
-                <span class="detail-value">{{ service.price|floatformat:2 }} грн</span>
+                <span class="detail-label">{% translate "Base price" %}</span>
+                <span class="detail-value">{{ service.price|floatformat:2 }} {% translate "UAH" %}</span>
             </div>
             <div class="detail-item">
-                <span class="detail-label">Тривалість</span>
-                <span class="detail-value">{{ service.duration_minutes }} хв</span>
+                <span class="detail-label">{% translate "Duration" %}</span>
+                <span class="detail-value">{{ service.duration_minutes }} {% translate "min" %}</span>
             </div>
             <div class="detail-item">
-                <span class="detail-label">Статус</span>
+                <span class="detail-label">{% translate "Status" %}</span>
                 {% if service.is_active %}
-                    <span class="badge-soft badge-soft-success">Активна</span>
+                    <span class="badge-soft badge-soft-success">{% translate "Active" context "service status" %}</span>
                 {% else %}
-                    <span class="badge-soft badge-soft-muted">Неактивна</span>
+                    <span class="badge-soft badge-soft-muted">{% translate "Inactive" context "service status" %}</span>
                 {% endif %}
             </div>
             <div class="detail-item">
-                <span class="detail-label">Створено</span>
-                <span class="detail-value">{{ service.created_at|date:'d.m.Y H:i' }}</span>
+                <span class="detail-label">{% translate "Created" %}</span>
+                <span class="detail-value">{{ service.created_at|date:'SHORT_DATETIME_FORMAT' }}</span>
             </div>
             <div class="detail-item">
-                <span class="detail-label">Оновлено</span>
-                <span class="detail-value">{{ service.updated_at|date:'d.m.Y H:i' }}</span>
+                <span class="detail-label">{% translate "Updated" %}</span>
+                <span class="detail-value">{{ service.updated_at|date:'SHORT_DATETIME_FORMAT' }}</span>
             </div>
             <div class="detail-item full">
-                <span class="detail-label">Опис</span>
+                <span class="detail-label">{% translate "Description" %}</span>
                 <span class="detail-value">{{ service.description|default:'—' }}</span>
             </div>
         </div>

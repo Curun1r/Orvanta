@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const closeBtn = document.createElement('button');
         closeBtn.type = 'button';
         closeBtn.className = 'toast-close';
-        closeBtn.setAttribute('aria-label', 'Закрити');
+        closeBtn.setAttribute('aria-label', window.gettext('Close'));
         closeBtn.innerHTML = '&times;';
         closeBtn.addEventListener('click', () => dismiss(alert));
         alert.appendChild(closeBtn);

@@ -1,10 +1,11 @@
+from django.utils.translation import gettext_lazy as _
 from django.apps import AppConfig
 
 
 class AuditConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
     name = "audit"
-    verbose_name = "Аудит"
+    verbose_name = _('Audit')
 
     def ready(self):
         from django.db.models.signals import post_delete, post_save

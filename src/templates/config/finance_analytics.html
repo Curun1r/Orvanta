@@ -1,18 +1,18 @@
 {% extends 'base.html' %}
-{% load static %}
+{% load static i18n %}
 
-{% block title %}Фінансова аналітика{% endblock %}
+{% block title %}{% translate "Financial analytics" %}{% endblock %}
 
 {% block content %}
 <div class="app-page wide finance-page">
     <header class="page-header">
         <div>
-            <h1>Фінансова аналітика</h1>
-            <p>Аналізуйте дохід за періодами, послугами та співробітниками.</p>
+            <h1>{% translate "Financial analytics" %}</h1>
+            <p>{% translate "Analyze revenue by period, service and employee." %}</p>
         </div>
         <div class="page-actions">
             <a href="{% url 'finance_analytics_export_csv' %}{% if query_string %}?{{ query_string }}{% endif %}" class="btn btn-outline-secondary">
-                Експорт CSV
+                {% translate "Export CSV" %}
             </a>
         </div>
     </header>
@@ -20,14 +20,14 @@
     <section class="filter-card finance-filter-card">
         <div class="filter-card-header">
             <div>
-                <h2 class="filter-card-title">Фільтри</h2>
-                <p class="filter-card-subtitle">Дані рахуються за записами з фактичною вартістю.</p>
+                <h2 class="filter-card-title">{% translate "Filters" %}</h2>
+                <p class="filter-card-subtitle">{% translate "Figures are calculated from appointments with an actual price." %}</p>
             </div>
         </div>
 
         {% if filter_form.errors %}
             <div class="alert alert-danger" role="alert">
-                Перевірте значення фільтрів.
+                {% translate "Check the filter values." %}
             </div>
         {% endif %}
 
@@ -43,65 +43,65 @@
             {% endfor %}
 
             <div class="finance-filter-actions">
-                <button type="submit" class="btn btn-primary">Застосувати</button>
-                <a href="{% url 'finance_analytics' %}" class="btn btn-outline-secondary">Скинути</a>
+                <button type="submit" class="btn btn-primary">{% translate "Apply" %}</button>
+                <a href="{% url 'finance_analytics' %}" class="btn btn-outline-secondary">{% translate "Reset" %}</a>
             </div>
         </form>
     </section>
 
-    <section class="metric-grid finance-kpi-grid" aria-label="Фінансові показники">
+    <section class="metric-grid finance-kpi-grid" aria-label="{% translate 'Financial metrics' %}">
         <article class="metric-card">
-            <div class="metric-card-label">Загальний дохід</div>
-            <div class="metric-card-value">{{ total_revenue|floatformat:2 }} грн</div>
-            <div class="metric-card-description">За поточними фільтрами</div>
+            <div class="metric-card-label">{% translate "Total revenue" %}</div>
+            <div class="metric-card-value">{{ total_revenue|floatformat:2 }} {% translate "UAH" %}</div>
+            <div class="metric-card-description">{% translate "For the current filters" %}</div>
         </article>
 
         <article class="metric-card">
-            <div class="metric-card-label">Середній чек</div>
-            <div class="metric-card-value">{{ average_check|floatformat:2 }} грн</div>
-            <div class="metric-card-description">За записами з фактичною вартістю</div>
+            <div class="metric-card-label">{% translate "Average appointment value" %}</div>
+            <div class="metric-card-value">{{ average_check|floatformat:2 }} {% translate "UAH" %}</div>
+            <div class="metric-card-description">{% translate "For appointments with an actual price" %}</div>
         </article>
 
         <article class="metric-card">
-            <div class="metric-card-label">Записів з оплатою</div>
+            <div class="metric-card-label">{% translate "Priced appointments" %}</div>
             <div class="metric-card-value">{{ revenue_appointments_count }}</div>
-            <div class="metric-card-description">Фактична вартість заповнена</div>
+            <div class="metric-card-description">{% translate "Actual price entered" %}</div>
         </article>
 
         <article class="metric-card">
-            <div class="metric-card-label">Виконані без вартості</div>
+            <div class="metric-card-label">{% translate "Completed without a price" %}</div>
             <div class="metric-card-value">{{ completed_without_price_count }}</div>
-            <div class="metric-card-description">Потребують заповнення фактичної вартості</div>
+            <div class="metric-card-description">{% translate "Actual price needs to be entered" %}</div>
         </article>
 
         <article class="metric-card">
-            <div class="metric-card-label">Мінімальна сума</div>
-            <div class="metric-card-value">{{ min_actual_price|floatformat:2 }} грн</div>
-            <div class="metric-card-description">Серед записів з оплатою</div>
+            <div class="metric-card-label">{% translate "Minimum amount" %}</div>
+            <div class="metric-card-value">{{ min_actual_price|floatformat:2 }} {% translate "UAH" %}</div>
+            <div class="metric-card-description">{% translate "Among priced appointments" %}</div>
         </article>
 
         <article class="metric-card">
-            <div class="metric-card-label">Максимальна сума</div>
-            <div class="metric-card-value">{{ max_actual_price|floatformat:2 }} грн</div>
-            <div class="metric-card-description">Серед записів з оплатою</div>
+            <div class="metric-card-label">{% translate "Maximum amount" %}</div>
+            <div class="metric-card-value">{{ max_actual_price|floatformat:2 }} {% translate "UAH" %}</div>
+            <div class="metric-card-description">{% translate "Among priced appointments" %}</div>
         </article>
     </section>
 
     {% if date_revenue %}
-    <section class="table-card finance-chart-card" aria-label="Графік доходу">
+    <section class="table-card finance-chart-card" aria-label="{% translate 'Revenue chart' %}">
         <div class="table-card-header">
             <div>
-                <h2>Дохід за датами</h2>
-                <p>Динаміка доходу по днях за поточними фільтрами.</p>
+                <h2>{% translate "Revenue by date" %}</h2>
+                <p>{% translate "Daily revenue for the current filters." %}</p>
             </div>
             <div class="chart-type-toggle">
-                <button class="btn btn-sm btn-outline-secondary chart-toggle-btn active" data-chart-type="bar">Стовпчики</button>
-                <button class="btn btn-sm btn-outline-secondary chart-toggle-btn" data-chart-type="line">Лінія</button>
+                <button class="btn btn-sm btn-outline-secondary chart-toggle-btn active" data-chart-type="bar">{% translate "Bars" %}</button>
+                <button class="btn btn-sm btn-outline-secondary chart-toggle-btn" data-chart-type="line">{% translate "Line" %}</button>
             </div>
         </div>
         <div id="chart-month-filter" class="chart-month-filter"></div>
         <div class="finance-chart-wrap">
-            <canvas id="revenueChart" width="800" height="260" aria-label="Графік доходу за датами"></canvas>
+            <canvas id="revenueChart" width="800" height="260" aria-label="{% translate 'Revenue by date chart' %}"></canvas>
         </div>
         <script id="revenueChartData" type="application/json">
             {{ date_revenue_json|safe }}
@@ -110,21 +110,21 @@
     {% endif %}
 
     {% if month_comparison %}
-    <section class="table-card month-comparison-card" aria-label="Порівняння місяць-до-місяця">
+    <section class="table-card month-comparison-card" aria-label="{% translate 'Month-over-month comparison' %}">
         <div class="table-card-header">
             <div>
-                <h2>Порівняння місяць-до-місяця</h2>
+                <h2>{% translate "Month-over-month comparison" %}</h2>
                 <p>{{ month_comparison.previous_label }} → {{ month_comparison.current_label }}</p>
             </div>
         </div>
         <div class="month-comparison-grid">
 
             <div class="month-cmp-item">
-                <div class="month-cmp-label">Дохід</div>
+                <div class="month-cmp-label">{% translate "Revenue" %}</div>
                 <div class="month-cmp-row">
-                    <span class="month-cmp-prev">{{ month_comparison.previous.total_revenue|floatformat:2 }} грн</span>
+                    <span class="month-cmp-prev">{{ month_comparison.previous.total_revenue|floatformat:2 }} {% translate "UAH" %}</span>
                     <span class="month-cmp-arrow">→</span>
-                    <span class="month-cmp-curr">{{ month_comparison.current.total_revenue|floatformat:2 }} грн</span>
+                    <span class="month-cmp-curr">{{ month_comparison.current.total_revenue|floatformat:2 }} {% translate "UAH" %}</span>
                 </div>
                 {% if month_comparison.revenue_change is not None %}
                     <div class="month-cmp-delta {% if month_comparison.revenue_change >= 0 %}delta-up{% else %}delta-down{% endif %}">
@@ -132,16 +132,16 @@
                         {{ month_comparison.revenue_change|floatformat:1 }}%
                     </div>
                 {% else %}
-                    <div class="month-cmp-delta delta-neutral">— немає даних за попередній місяць</div>
+                    <div class="month-cmp-delta delta-neutral">{% translate "— no data for the previous month" %}</div>
                 {% endif %}
             </div>
 
             <div class="month-cmp-item">
-                <div class="month-cmp-label">Середній чек</div>
+                <div class="month-cmp-label">{% translate "Average appointment value" %}</div>
                 <div class="month-cmp-row">
-                    <span class="month-cmp-prev">{{ month_comparison.previous.average_check|floatformat:2 }} грн</span>
+                    <span class="month-cmp-prev">{{ month_comparison.previous.average_check|floatformat:2 }} {% translate "UAH" %}</span>
                     <span class="month-cmp-arrow">→</span>
-                    <span class="month-cmp-curr">{{ month_comparison.current.average_check|floatformat:2 }} грн</span>
+                    <span class="month-cmp-curr">{{ month_comparison.current.average_check|floatformat:2 }} {% translate "UAH" %}</span>
                 </div>
                 {% if month_comparison.avg_check_change is not None %}
                     <div class="month-cmp-delta {% if month_comparison.avg_check_change >= 0 %}delta-up{% else %}delta-down{% endif %}">
@@ -149,12 +149,12 @@
                         {{ month_comparison.avg_check_change|floatformat:1 }}%
                     </div>
                 {% else %}
-                    <div class="month-cmp-delta delta-neutral">— немає даних за попередній місяць</div>
+                    <div class="month-cmp-delta delta-neutral">{% translate "— no data for the previous month" %}</div>
                 {% endif %}
             </div>
 
             <div class="month-cmp-item">
-                <div class="month-cmp-label">Кількість записів</div>
+                <div class="month-cmp-label">{% translate "Appointment count" %}</div>
                 <div class="month-cmp-row">
                     <span class="month-cmp-prev">{{ month_comparison.previous.count }}</span>
                     <span class="month-cmp-arrow">→</span>
@@ -166,7 +166,7 @@
                         {{ month_comparison.count_change|floatformat:1 }}%
                     </div>
                 {% else %}
-                    <div class="month-cmp-delta delta-neutral">— немає даних за попередній місяць</div>
+                    <div class="month-cmp-delta delta-neutral">{% translate "— no data for the previous month" %}</div>
                 {% endif %}
             </div>
 
@@ -177,16 +177,16 @@
     <section class="finance-analytics-grid">
         <article class="table-card">
             <div class="table-card-header">
-                <h2>Дохід за послугами</h2>
+                <h2>{% translate "Revenue by service" %}</h2>
             </div>
             <div class="table-responsive">
                 <table class="table app-table finance-table align-middle">
                     <thead>
                     <tr>
-                        <th>Послуга</th>
-                        <th class="text-end">Записи</th>
-                        <th class="text-end">Дохід</th>
-                        <th class="text-end">Середній чек</th>
+                        <th>{% translate "Service" %}</th>
+                        <th class="text-end">{% translate "Appointments" %}</th>
+                        <th class="text-end">{% translate "Revenue" %}</th>
+                        <th class="text-end">{% translate "Average appointment value" %}</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -194,12 +194,12 @@
                         <tr>
                             <td>{{ item.service__name }}</td>
                             <td class="text-end">{{ item.appointments_count }}</td>
-                            <td class="text-end">{{ item.revenue|floatformat:2 }} грн</td>
-                            <td class="text-end">{{ item.average_check|floatformat:2 }} грн</td>
+                            <td class="text-end">{{ item.revenue|floatformat:2 }} {% translate "UAH" %}</td>
+                            <td class="text-end">{{ item.average_check|floatformat:2 }} {% translate "UAH" %}</td>
                         </tr>
                     {% empty %}
                         <tr>
-                            <td colspan="4" class="text-muted">Поки немає даних.</td>
+                            <td colspan="4" class="text-muted">{% translate "No data yet." %}</td>
                         </tr>
                     {% endfor %}
                     </tbody>
@@ -209,16 +209,16 @@
 
         <article class="table-card">
             <div class="table-card-header">
-                <h2>Дохід за співробітниками</h2>
+                <h2>{% translate "Revenue by employee" %}</h2>
             </div>
             <div class="table-responsive">
                 <table class="table app-table finance-table align-middle">
                     <thead>
                     <tr>
-                        <th>Співробітник</th>
-                        <th class="text-end">Записи</th>
-                        <th class="text-end">Дохід</th>
-                        <th class="text-end">Середній чек</th>
+                        <th>{% translate "Employee" %}</th>
+                        <th class="text-end">{% translate "Appointments" %}</th>
+                        <th class="text-end">{% translate "Revenue" %}</th>
+                        <th class="text-end">{% translate "Average appointment value" %}</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -226,12 +226,12 @@
                         <tr>
                             <td>{{ item.employee__username }}</td>
                             <td class="text-end">{{ item.appointments_count }}</td>
-                            <td class="text-end">{{ item.revenue|floatformat:2 }} грн</td>
-                            <td class="text-end">{{ item.average_check|floatformat:2 }} грн</td>
+                            <td class="text-end">{{ item.revenue|floatformat:2 }} {% translate "UAH" %}</td>
+                            <td class="text-end">{{ item.average_check|floatformat:2 }} {% translate "UAH" %}</td>
                         </tr>
                     {% empty %}
                         <tr>
-                            <td colspan="4" class="text-muted">Поки немає даних.</td>
+                            <td colspan="4" class="text-muted">{% translate "No data yet." %}</td>
                         </tr>
                     {% endfor %}
                     </tbody>
@@ -244,8 +244,8 @@
     <section class="table-card finance-detail-card">
         <div class="table-card-header">
             <div>
-                <h2>Деталізація записів</h2>
-                <p>Показані записи з фактичною вартістю за поточними фільтрами.</p>
+                <h2>{% translate "Appointment breakdown" %}</h2>
+                <p>{% translate "Appointments with an actual price for the current filters." %}</p>
             </div>
         </div>
 
@@ -253,19 +253,19 @@
             <table class="table app-table finance-table align-middle">
                 <thead>
                 <tr>
-                    <th>Дата</th>
-                    <th>Клієнт</th>
-                    <th>Послуга</th>
-                    <th>Співробітник</th>
-                    <th>Статус</th>
-                    <th class="text-end">Базова вартість</th>
-                    <th class="text-end">Фактична вартість</th>
+                    <th>{% translate "Date" %}</th>
+                    <th>{% translate "Client" %}</th>
+                    <th>{% translate "Service" %}</th>
+                    <th>{% translate "Employee" %}</th>
+                    <th>{% translate "Status" %}</th>
+                    <th class="text-end">{% translate "Base price" %}</th>
+                    <th class="text-end">{% translate "Actual price" %}</th>
                 </tr>
                 </thead>
                 <tbody>
                 {% for appointment in page_obj %}
                     <tr>
-                        <td>{{ appointment.appointment_date|date:'d.m.Y' }}</td>
+                        <td>{{ appointment.appointment_date|date:'SHORT_DATE_FORMAT' }}</td>
                         <td>{{ appointment.client.full_name }}</td>
                         <td>{{ appointment.service.name }}</td>
                         <td>{{ appointment.employee.get_full_name|default:appointment.employee.username }}</td>
@@ -274,12 +274,12 @@
                                 {{ appointment.get_status_display }}
                             </span>
                         </td>
-                        <td class="text-end">{{ appointment.service.price|floatformat:2 }} грн</td>
-                        <td class="text-end">{{ appointment.actual_price|floatformat:2 }} грн</td>
+                        <td class="text-end">{{ appointment.service.price|floatformat:2 }} {% translate "UAH" %}</td>
+                        <td class="text-end">{{ appointment.actual_price|floatformat:2 }} {% translate "UAH" %}</td>
                     </tr>
                 {% empty %}
                     <tr>
-                        <td colspan="7" class="text-muted">Поки немає записів з фактичною вартістю.</td>
+                        <td colspan="7" class="text-muted">{% translate "No appointments with an actual price yet." %}</td>
                     </tr>
                 {% endfor %}
                 </tbody>
@@ -292,142 +292,7 @@
 {% endblock %}
 
 {% block extra_js %}
-<script>
-window._revenueChartInit = function () {
-    const canvas = document.getElementById('revenueChart');
-    if (!canvas) return;
 
-    const dataEl = document.getElementById('revenueChartData');
-    if (!dataEl) return;
-
-    let raw;
-    try { raw = JSON.parse(dataEl.textContent); } catch (e) { return; }
-    if (!raw || !raw.length) return;
-
-    raw.sort((a, b) => a.appointment_date.localeCompare(b.appointment_date));
-
-    const UA_MONTHS = ['Січень','Лютий','Березень','Квітень','Травень','Червень',
-                       'Липень','Серпень','Вересень','Жовтень','Листопад','Грудень'];
-
-    // Унікальні місяці у порядку зростання
-    const monthKeys = [...new Set(raw.map(d => d.appointment_date.slice(0, 7)))].sort();
-
-    const isDark = localStorage.getItem('orvanta-dark') === '1';
-    const accent    = isDark ? '#60a5fa' : '#6366f1';
-    const gridColor = isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.08)';
-    const tickColor = isDark ? '#94a3b8' : '#6b7280';
-
-    let activeMonth = null; // null = всі
-    let activeType  = 'bar';
-
-    function getFiltered() {
-        if (!activeMonth) return raw;
-        return raw.filter(d => d.appointment_date.startsWith(activeMonth));
-    }
-
-    function buildConfig(type, data) {
-        const labels = data.map(d => {
-            const [y, m, day] = d.appointment_date.split('-');
-            return `${day}.${m}.${y}`;
-        });
-        const values = data.map(d => parseFloat(d.revenue) || 0);
-        const isLine = type === 'line';
-        return {
-            type,
-            data: {
-                labels,
-                datasets: [{
-                    label: 'Дохід (грн)',
-                    data: values,
-                    backgroundColor: isLine ? accent + '33' : accent + 'bb',
-                    borderColor: accent,
-                    borderWidth: isLine ? 2 : 0,
-                    borderRadius: isLine ? 0 : 6,
-                    fill: isLine,
-                    tension: 0.35,
-                    pointRadius: isLine ? 4 : 0,
-                    pointBackgroundColor: accent,
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                animation: { duration: 300 },
-                plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                        callbacks: {
-                            label: ctx => ` ${ctx.parsed.y.toFixed(2)} грн`
-                        }
-                    }
-                },
-                scales: {
-                    x: {
-                        grid: { color: gridColor },
-                        ticks: { maxTicksLimit: 14, font: { size: 12 }, color: tickColor }
-                    },
-                    y: {
-                        grid: { color: gridColor },
-                        ticks: {
-                            font: { size: 12 },
-                            color: tickColor,
-                            callback: v => v.toLocaleString('uk-UA') + ' грн'
-                        },
-                        beginAtZero: true
-                    }
-                }
-            }
-        };
-    }
-
-    function redraw() {
-        chart.destroy();
-        chart = new Chart(canvas, buildConfig(activeType, getFiltered()));
-    }
-
-    let chart = new Chart(canvas, buildConfig('bar', raw));
-
-    // Перемикач тип графіку
-    document.querySelectorAll('.chart-toggle-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            document.querySelectorAll('.chart-toggle-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            activeType = btn.dataset.chartType;
-            redraw();
-        });
-    });
-
-    // Кнопки місяців
-    if (monthKeys.length > 1) {
-        const filterWrap = document.getElementById('chart-month-filter');
-        if (!filterWrap) return;
-
-        const allBtn = document.createElement('button');
-        allBtn.className = 'btn btn-sm btn-outline-secondary chart-month-btn active';
-        allBtn.textContent = 'Всі';
-        allBtn.dataset.month = '';
-        filterWrap.appendChild(allBtn);
-
-        monthKeys.forEach(key => {
-            const [y, m] = key.split('-');
-            const btn = document.createElement('button');
-            btn.className = 'btn btn-sm btn-outline-secondary chart-month-btn';
-            btn.textContent = `${UA_MONTHS[parseInt(m, 10) - 1]} ${y}`;
-            btn.dataset.month = key;
-            filterWrap.appendChild(btn);
-        });
-
-        filterWrap.addEventListener('click', e => {
-            const btn = e.target.closest('.chart-month-btn');
-            if (!btn) return;
-            filterWrap.querySelectorAll('.chart-month-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            activeMonth = btn.dataset.month || null;
-            redraw();
-        });
-    }
-};
-</script>
 <script src="{% static 'js/chart.umd.min.js' %}"></script>
-<script>window._revenueChartInit();</script>
+<script src="{% static 'js/finance.js' %}"></script>
 {% endblock %}

@@ -1,3 +1,4 @@
+from django.utils.translation import gettext as _
 import csv
 
 from django.http import HttpResponse
@@ -17,7 +18,7 @@ def build_csv_response(filename, headers, rows):
 
 
 def format_csv_bool(value):
-    return 'Так' if value else 'Ні'
+    return _('Yes') if value else _('No')
 
 
 def format_csv_date(value):

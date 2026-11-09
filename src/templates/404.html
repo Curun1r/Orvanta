@@ -1,15 +1,16 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
-{% block title %}Сторінку не знайдено{% endblock %}
+{% block title %}{% translate "Page not found" %}{% endblock %}
 
 {% block content %}
 <div class="error-page">
     <div class="error-page-code">404</div>
-    <h1 class="error-page-title">Сторінку не знайдено</h1>
+    <h1 class="error-page-title">{% translate "Page not found" %}</h1>
     <p class="error-page-text">
-        Схоже, ця сторінка не існує або була переміщена.<br>
-        Перевірте адресу або поверніться на головну.
+        {% translate "This page does not exist or has been moved." %}<br>
+        {% translate "Check the address or return to the home page." %}
     </p>
-    <a href="{% url 'home' %}" class="btn btn-primary">На головну</a>
+    <a href="{% url 'home' %}" class="btn btn-primary">{% translate "Back to home" %}</a>
 </div>
 {% endblock %}
