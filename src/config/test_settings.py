@@ -9,3 +9,11 @@ DATABASES = {
 
 # Disable ratelimit in tests
 RATELIMIT_ENABLE = False
+
+# Page tests don't run collectstatic; production storage is covered separately.
+STORAGES = {
+    **STORAGES,
+    'staticfiles': {
+        'BACKEND': 'django.contrib.staticfiles.storage.StaticFilesStorage',
+    },
+}

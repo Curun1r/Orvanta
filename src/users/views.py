@@ -7,6 +7,8 @@ from django.db.models import ProtectedError
 from django.db import transaction
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
+from django.utils.http import url_has_allowed_host_and_scheme
 from django.utils.text import slugify
 from django.views.decorators.http import require_POST
 
@@ -377,4 +379,11 @@ def toggle_compact_ui_view(request):
     user = request.user
     user.hide_section_subtitles = not user.hide_section_subtitles
     user.save(update_fields=['hide_section_subtitles'])
-    return redirect(request.POST.get('next', 'profile'))
+    next_url = request.POST.get('next', '').strip()
+    if not url_has_allowed_host_and_scheme(
+        next_url,
+        allowed_hosts={request.get_host()},
+        require_https=request.is_secure(),
+    ):
+        next_url = reverse('profile')
+    return redirect(next_url)

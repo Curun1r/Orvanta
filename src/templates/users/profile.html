@@ -146,7 +146,7 @@
                     </div>
                     <form method="post" action="{% url 'toggle_compact_ui' %}" style="margin-top: 0.75rem;">
                         {% csrf_token %}
-                        <input type="hidden" name="next" value="profile">
+                        <input type="hidden" name="next" value="{{ request.get_full_path }}">
                         <button type="submit" class="btn {% if request.user.hide_section_subtitles %}btn-primary{% else %}btn-outline-secondary{% endif %}">
                             {% if request.user.hide_section_subtitles %}{% translate "Compact mode: on" %}{% else %}{% translate "Compact mode: off" %}{% endif %}
                         </button>
