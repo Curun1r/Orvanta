@@ -1,26 +1,14 @@
-# Orvanta — Web-Oriented Information System for Service Business Management
+# Orvanta
 
-A multi-tenant SaaS platform for managing service businesses — appointments, clients, staff, and revenue analytics. Built as a bachelor's thesis project.
+[![CI](https://github.com/Curun1r/Orvanta/actions/workflows/ci.yml/badge.svg)](https://github.com/Curun1r/Orvanta/actions/workflows/ci.yml)
+
+A Django application for service businesses: appointments, clients, staff, and financial analytics in separate organization workspaces. Built as a bachelor's thesis project, with particular attention to access control, consistent booking, and traceable changes.
 
 > **Stack:** Python · Django · PostgreSQL · Bootstrap 5 · Chart.js · Django REST Framework · Railway
 
-[Run the local demo](#local-demo-docker) to explore the application with generated sample data and accounts for all three roles.
+[Run the local demo](#local-demo-docker) · [Read the backend case study](docs/portfolio-case-study.md) · [Explore the tests](#tests)
 
----
-
-## Screenshots
-
-**Dashboard**
-![Dashboard](docs/screenshots/dashboard.png)
-
-**Financial Analytics**
-![Finance](docs/screenshots/finance.png)
-
-**Client Management**
-![Clients](docs/screenshots/clients.png)
-
-**Dark Mode**
-![Dark Mode](docs/screenshots/dark-mode.png)
+The demo uses generated data and accounts for Admin, Manager, and Employee. It can be reproduced locally with Docker.
 
 ---
 
@@ -47,6 +35,59 @@ The system supports:
 
 ---
 
+## Backend Design
+
+| Concern | Implementation |
+|---|---|
+| Organization and role boundaries | [Shared appointment query](src/appointments/querysets.py) applies the same visibility rules to pages, client history, exports, dashboard queries, and the appointment API. |
+| Concurrent bookings | [Scheduling helpers](src/appointments/scheduling.py) lock the organization row inside a transaction, then check overlapping appointments before creation, rescheduling, or reactivation. |
+| Audit attribution | [Request context](src/audit/context.py) carries the acting user to model signals and is reset after each request or explicit operation. |
+| Read-only API | [DRF views](src/api/views.py) expose organization-scoped records; appointment visibility also respects employee assignments. |
+| Reproducible verification | [GitHub Actions](.github/workflows/ci.yml) runs the test suite with PostgreSQL, checks migrations, compiles translations, and collects production static files. |
+
+The [case study](docs/portfolio-case-study.md) explains the booking and audit decisions, the tests behind them, and the current tradeoffs.
+
+---
+
+## Screenshots
+
+<details>
+<summary>Dashboard</summary>
+
+![Dashboard](docs/screenshots/dashboard.jpg)
+
+</details>
+
+<details>
+<summary>Financial analytics</summary>
+
+![Financial analytics](docs/screenshots/finance.jpg)
+
+</details>
+
+<details>
+<summary>Client management</summary>
+
+![Client management](docs/screenshots/clients.jpg)
+
+</details>
+
+<details>
+<summary>Dark mode</summary>
+
+![Dark mode](docs/screenshots/dark-mode.jpg)
+
+</details>
+
+<details>
+<summary>Sign in</summary>
+
+![Sign in](docs/screenshots/sign-in.jpg)
+
+</details>
+
+---
+
 ## Main Features
 
 ### Multi-Tenant Architecture
@@ -70,7 +111,7 @@ The system supports three main roles:
 | Manager | Manages operational data: clients, services, appointments, and financial analytics |
 | Employee | Works with assigned appointments |
 
-Role-based access is enforced across the web interface and business logic using custom decorators.
+Role-based access is enforced in views and querysets, as well as in the visible navigation. Hiding a button is not the access boundary.
 
 ---
 
@@ -105,7 +146,7 @@ The service catalog allows users to manage:
 - create appointments with client, service, employee, date, and time
 - quick status changes from the appointment list
 - inline editing of actual appointment price
-- appointment conflict validation per employee
+- appointment conflict validation per employee, repeated under a PostgreSQL row lock for booking changes
 - appointment deletion (Admin only) with confirmation modal and audit log entry
 - filtering, search, and pagination
 
@@ -228,7 +269,9 @@ orvanta/
 
 ## Languages
 
-English is the default interface language on the first visit. Use the **EN / UK** language switcher to choose English or Ukrainian; the choice is remembered in a browser cookie and applies to pages, forms, validation messages, status labels, and interface controls. Existing application URLs stay the same when switching language.
+English is the default interface language on the first visit. Use **EN / UK** on the sign-in and signup forms. After signing in, administrators can change the language in **Organization settings**; managers and employees can use **Profile → Interface**. The choice is personal to the current browser, even when the control appears in organization settings.
+
+The language is remembered in a browser cookie and applies to pages, forms, validation messages, status labels, and interface controls. Existing application URLs stay the same when switching language.
 
 New demo workspaces use English sample service and client data. Existing demo workspaces remain unchanged on a normal `setup_demo` run; use the documented `--reset` option to replace only the managed demo workspace with fresh English fixtures.
 
@@ -352,7 +395,9 @@ Stopping the services preserves PostgreSQL data. Starting them again with `docke
 
 ### Tests
 
-Run the suite with the in-memory SQLite test settings:
+The [CI workflow](.github/workflows/ci.yml) runs the full suite on PostgreSQL 18 with Python 3.14, including the concurrent booking tests. It also checks for missing migrations, compiles translation catalogs, and collects production static files.
+
+For a local run with in-memory SQLite:
 
 ```bash
 docker compose exec --workdir /app/src web python manage.py test --settings=config.test_settings
@@ -365,7 +410,31 @@ cd src
 python manage.py test --settings=config.test_settings
 ```
 
-PostgreSQL-specific concurrency tests require PostgreSQL and are skipped with SQLite.
+SQLite skips the three PostgreSQL-specific concurrency tests; it does not verify row-locking behavior.
+
+To run the complete suite locally, use a disposable PostgreSQL instance. For example, start a separate container with test-only credentials and check that it is ready:
+
+```bash
+docker run --detach --rm --name orvanta-test-db \
+  -e POSTGRES_DB=orvanta_ci \
+  -e POSTGRES_USER=orvanta_ci \
+  -e POSTGRES_PASSWORD=orvanta_ci \
+  -p 127.0.0.1:5434:5432 postgres:18
+docker exec orvanta-test-db pg_isready -U orvanta_ci -d orvanta_ci
+```
+
+Once PostgreSQL is ready, run from `src` in an environment with the project dependencies and compiled translations:
+
+```bash
+DATABASE_URL=postgresql://orvanta_ci:orvanta_ci@localhost:5434/orvanta_ci \
+  python manage.py test --settings=config.test_postgres_settings --noinput
+```
+
+These settings require an explicit PostgreSQL `DATABASE_URL` and use the dedicated test database `test_orvanta_ci`. Use the disposable server above, not a production database. Stop it after testing:
+
+```bash
+docker stop orvanta-test-db
+```
 
 ---
 
