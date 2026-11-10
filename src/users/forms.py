@@ -76,7 +76,7 @@ class SignupForm(BootstrapFormMixin, UserCreationForm):
         self.fields['password1'].widget.attrs['placeholder'] = 'A–Z, a–z, 0–9, ! @ # $ % ^ & * ( ) _ - + ='
         self.fields['organization_name'].widget.attrs.setdefault(
             'placeholder',
-            _('e.g. Orvanta Demo'),
+            _('Enter your organization name'),
         )
 
     def clean_email(self):

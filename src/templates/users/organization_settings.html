@@ -60,6 +60,14 @@
 
         <section class="card form-card organization-settings-card">
             <div class="card-body">
+                <h2 class="h5 mb-2">{% translate "Language" %}</h2>
+                <p class="text-muted mb-3">{% translate "Choose the interface language for this browser." %}</p>
+                {% include 'includes/language_switcher.html' %}
+            </div>
+        </section>
+
+        <section class="card form-card organization-settings-card">
+            <div class="card-body">
                 <h2 class="h5 mb-2 text-danger">WARNING</h2>
                 <p class="text-muted">
                     {% translate "Deleting the organization removes the entire workspace and cannot be undone." %}

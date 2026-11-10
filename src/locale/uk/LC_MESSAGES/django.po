@@ -1456,6 +1456,10 @@ msgstr "Показати"
 msgid "Language"
 msgstr "Мова"
 
+#: templates/users/organization_settings.html templates/users/profile.html
+msgid "Choose the interface language for this browser."
+msgstr "Оберіть мову інтерфейсу для цього браузера."
+
 #: templates/includes/onboarding.html:6
 msgid "Set up your organization"
 msgstr "Початкове налаштування організації"
@@ -1956,8 +1960,8 @@ msgid "Enter the same password again."
 msgstr "Введіть той самий пароль ще раз."
 
 #: users/forms.py:79
-msgid "e.g. Orvanta Demo"
-msgstr "напр. Orvanta Demo"
+msgid "Enter your organization name"
+msgstr "Введіть назву організації"
 
 #: users/forms.py:85 users/forms.py:112 users/forms.py:136
 msgid "A user with this email address already exists."
