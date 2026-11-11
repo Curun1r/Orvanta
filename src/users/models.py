@@ -9,10 +9,21 @@ class UserRole(models.TextChoices):
     EMPLOYEE = 'employee', _('Employee')
 
 
+class OrganizationTimeFormat(models.TextChoices):
+    TWENTY_FOUR_HOUR = '24', _('24-hour (14:30)')
+    TWELVE_HOUR = '12', _('12-hour (2:30 PM)')
+
+
 class Organization(models.Model):
     name = models.CharField(max_length=255, unique=True)
     slug = models.SlugField(max_length=100, unique=True)
     is_demo = models.BooleanField(default=False)
+    time_format = models.CharField(
+        max_length=2,
+        choices=OrganizationTimeFormat.choices,
+        default=OrganizationTimeFormat.TWENTY_FOUR_HOUR,
+        verbose_name=_('Time format'),
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

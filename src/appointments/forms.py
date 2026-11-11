@@ -56,8 +56,17 @@ class AppointmentForm(BootstrapFormMixin, forms.ModelForm):
     def __init__(self, *args, organization=None, **kwargs):
         super().__init__(*args, **kwargs)
         self.organization = organization
+        self._original_service_currency = (
+            self.instance.service.currency if self.instance.pk else None
+        )
         self.fields['client'].empty_label = _('Select a client')
         self.fields['service'].empty_label = _('Select a service')
+        self.fields['service'].label_from_instance = (
+            lambda service: f'{service.name} — {service.price:.2f} {service.currency}'
+        )
+        self.fields['actual_price'].help_text = _(
+            'Use the currency shown beside the selected service. Amounts are not converted.'
+        )
         self.fields['employee'].empty_label = _('Select an employee')
 
         if organization is None:
@@ -77,6 +86,19 @@ class AppointmentForm(BootstrapFormMixin, forms.ModelForm):
                 organization=organization,
             ).order_by('username')
 
+        service_id = (
+            self.data.get(self.add_prefix('service')) if self.is_bound
+            else self.initial.get('service')
+        )
+        try:
+            selected_service = self.fields['service'].queryset.filter(pk=service_id).first() if service_id else None
+        except (TypeError, ValueError):
+            selected_service = None
+        if selected_service:
+            self.fields['actual_price'].label = _('Actual price (%(currency)s)') % {
+                'currency': selected_service.currency,
+            }
+
     def clean(self):
         cleaned_data = super().clean()
         client = cleaned_data.get('client')
@@ -86,6 +108,15 @@ class AppointmentForm(BootstrapFormMixin, forms.ModelForm):
         start_time = cleaned_data.get('start_time')
         end_time = cleaned_data.get('end_time')
         status = cleaned_data.get('status')
+
+        if (
+            service and self._original_service_currency
+            and service.currency != self._original_service_currency
+            and cleaned_data.get('actual_price') is not None
+        ):
+            self.add_error('service', _(
+                'Clear the actual price before choosing a service in another currency.'
+            ))
 
         if self.organization:
             if client and client.organization_id != self.organization.id:

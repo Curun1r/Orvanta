@@ -24,11 +24,11 @@ class DemoSetupTests(TestCase):
     usernames = {
         'demo_admin': UserRole.ADMIN,
         'demo_manager': UserRole.MANAGER,
-        'demo_olena': UserRole.EMPLOYEE,
-        'demo_natalia': UserRole.EMPLOYEE,
-        'demo_iryna': UserRole.EMPLOYEE,
-        'demo_tetyana': UserRole.EMPLOYEE,
-        'demo_oksana': UserRole.EMPLOYEE,
+        'demo_emma': UserRole.EMPLOYEE,
+        'demo_olivia': UserRole.EMPLOYEE,
+        'demo_james': UserRole.EMPLOYEE,
+        'demo_sophie': UserRole.EMPLOYEE,
+        'demo_daniel': UserRole.EMPLOYEE,
     }
 
     def _setup_demo(self, **options):
@@ -100,7 +100,7 @@ class DemoSetupTests(TestCase):
                 self.assertEqual(user.role, role)
                 self.assertTrue(user.check_password(self.password))
 
-        for username in ('demo_admin', 'demo_manager', 'demo_olena'):
+        for username in ('demo_admin', 'demo_manager', 'demo_emma'):
             with self.subTest(login=username):
                 self.client.logout()
                 response = self.client.post(reverse('login'), {
@@ -134,6 +134,22 @@ class DemoSetupTests(TestCase):
             for previous, following in zip(ordered, ordered[1:]):
                 with self.subTest(employee_date=key, appointments=(previous.pk, following.pk)):
                     self.assertLessEqual(previous.end_time, following.start_time)
+
+    def test_default_demo_uses_english_names_and_euro_prices(self):
+        self._setup_demo()
+        self.assertTrue(Client.objects.filter(full_name='Emily Carter').exists())
+        self.assertEqual(User.objects.get(username='demo_emma').get_full_name(), 'Emma Wilson')
+        self.assertEqual(set(Service.objects.values_list('currency', flat=True)), {'EUR'})
+        haircut = Service.objects.get(name="Women's haircut")
+        self.assertEqual(haircut.price, 55)
+
+    def test_currency_option_creates_independent_dollar_price_list(self):
+        self._setup_demo(currency='USD')
+        self.assertEqual(set(Service.objects.values_list('currency', flat=True)), {'USD'})
+        self.assertEqual(Service.objects.get(name="Women's haircut").price, 60)
+        before = self._snapshot()
+        self._setup_demo(currency='EUR')
+        self.assertEqual(self._snapshot(), before)
 
     def test_rerun_preserves_existing_rows_edits_and_passwords(self):
         self._setup_demo()
@@ -188,7 +204,7 @@ class DemoSetupTests(TestCase):
 
     def test_reserved_username_in_another_organization_aborts_without_partial_demo(self):
         other_org = Organization.objects.create(name='Other Org', slug='other-org')
-        owner = User.objects.create_user(username='demo_olena', organization=other_org)
+        owner = User.objects.create_user(username='demo_emma', organization=other_org)
         before = self._snapshot()
 
         with self.assertRaises(CommandError):
@@ -229,7 +245,7 @@ class DemoSetupTests(TestCase):
         other_org, owner, employee, client, service, _ = self._other_workspace()
         demo_client = Client.objects.filter(organization__is_demo=True).first()
         demo_service = Service.objects.filter(organization__is_demo=True).first()
-        demo_employee = User.objects.get(username='demo_olena')
+        demo_employee = User.objects.get(username='demo_emma')
         demo_admin = User.objects.get(username='demo_admin')
 
         for overrides in (
@@ -273,11 +289,11 @@ class DemoSetupTests(TestCase):
         password = match.group(1)
         self.assertNotEqual(password, self.password)
         self.assertTrue(User.objects.get(username='demo_admin').check_password(password))
-        self.assertTrue(User.objects.get(username='demo_olena').check_password(password))
+        self.assertTrue(User.objects.get(username='demo_emma').check_password(password))
         self.assertNotIn(password, self._setup_demo())
 
     def test_population_failure_rolls_back_new_setup_and_destructive_reset(self):
-        def fail_after_writing(command, organization, password, today):
+        def fail_after_writing(command, organization, password, today, currency):
             Client.objects.create(
                 full_name='Partially written client', phone='+380501000003',
                 organization=organization,

@@ -14,7 +14,8 @@ from audit.context import audit_context
 from audit.models import AuditLog
 from clients.models import Client
 from services_catalog.models import Service, ServiceCategory
-from users.demo_data import CATEGORIES_AND_SERVICES, CLIENT_NAMES
+from users.demo_data import CATEGORIES_AND_SERVICES, CLIENT_NAMES, DEMO_PRICE_BOOKS
+from services_catalog.currencies import Currency
 from users.models import Organization, User, UserRole
 
 
@@ -23,11 +24,11 @@ DEMO_NAME = 'Orvanta Demo'
 DEMO_USERS = (
     ('demo_admin', 'Administrator', 'Demo', UserRole.ADMIN),
     ('demo_manager', 'Manager', 'Demo', UserRole.MANAGER),
-    ('demo_olena', 'Olena', 'Koval', UserRole.EMPLOYEE),
-    ('demo_natalia', 'Nataliia', 'Melnyk', UserRole.EMPLOYEE),
-    ('demo_iryna', 'Iryna', 'Savchenko', UserRole.EMPLOYEE),
-    ('demo_tetyana', 'Tetiana', 'Petrenko', UserRole.EMPLOYEE),
-    ('demo_oksana', 'Oksana', 'Honchar', UserRole.EMPLOYEE),
+    ('demo_emma', 'Emma', 'Wilson', UserRole.EMPLOYEE),
+    ('demo_olivia', 'Olivia', 'Taylor', UserRole.EMPLOYEE),
+    ('demo_james', 'James', 'Brown', UserRole.EMPLOYEE),
+    ('demo_sophie', 'Sophie', 'Evans', UserRole.EMPLOYEE),
+    ('demo_daniel', 'Daniel', 'Morgan', UserRole.EMPLOYEE),
 )
 
 
@@ -36,6 +37,10 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('--password', help='Initial password shared by the demo accounts.')
+        parser.add_argument(
+            '--currency', choices=Currency.values, default=Currency.EUR,
+            help='Currency for newly created demo services (default: EUR). No conversion.',
+        )
         parser.add_argument(
             '--reset', action='store_true',
             help='Replace data and passwords only in the marked demo workspace.',
@@ -81,7 +86,7 @@ class Command(BaseCommand):
                     self._check_external_references(organization)
                     self._clear_demo(organization)
 
-                self._populate(organization, password, timezone.localdate())
+                self._populate(organization, password, timezone.localdate(), options['currency'])
         except IntegrityError as error:
             raise CommandError('Demo setup conflicted with existing data. No data changed; retry after checking the workspace.') from error
 
@@ -90,6 +95,7 @@ class Command(BaseCommand):
         self.stdout.write('Accounts: ' + ', '.join(usernames))
         self.stdout.write(f'Password: {password}')
         self.stdout.write('35 clients, 30 services, 5 employees and 180 appointments.')
+        self.stdout.write(f"Service currency: {options['currency']} (fictional prices; no conversion).")
         self.stdout.write('This password is shared by the demo accounts only. Reruns do not change it.')
 
     def _check_external_references(self, organization):
@@ -123,7 +129,7 @@ class Command(BaseCommand):
         User.objects.filter(organization=organization).delete()
         AuditLog.objects.filter(organization=organization).delete()
 
-    def _populate(self, organization, password, today):
+    def _populate(self, organization, password, today, currency):
         users = []
         for username, first_name, last_name, role in DEMO_USERS:
             users.append(User.objects.create_user(
@@ -134,18 +140,21 @@ class Command(BaseCommand):
         admin, _manager, *employees = users
 
         services = []
+        price_book = DEMO_PRICE_BOOKS.get(currency)
         for category_name, items in CATEGORIES_AND_SERVICES.items():
             category = ServiceCategory.objects.create(name=category_name, organization=organization)
             for name, price, duration in items:
+                if price_book is not None:
+                    price = price_book[len(services)]
                 services.append(Service.objects.create(
-                    name=name, category=category, price=Decimal(price), duration_minutes=duration,
+                    name=name, category=category, price=Decimal(price), currency=currency, duration_minutes=duration,
                     organization=organization,
                 ))
 
         clients = []
         for index, name in enumerate(CLIENT_NAMES):
             clients.append(Client.objects.create(
-                full_name=name, phone=f'+38099000{index:04d}',
+                full_name=name, phone=f'+447700900{index:03d}',
                 email=f'client{index + 1}@example.test', notes='Fictional client for demonstration.',
                 organization=organization, created_by=admin,
             ))

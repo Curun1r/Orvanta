@@ -109,6 +109,7 @@ def appointment_export_csv_view(request):
         _('Comment'),
         _('Created at'),
         _('Updated at'),
+        _('Currency'),
     ]
     rows = (
         [
@@ -125,6 +126,7 @@ def appointment_export_csv_view(request):
             appointment.comment,
             format_csv_datetime(appointment.created_at),
             format_csv_datetime(appointment.updated_at),
+            appointment.service.currency,
         ]
         for appointment in appointments
     )

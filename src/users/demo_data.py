@@ -43,14 +43,29 @@ CATEGORIES_AND_SERVICES = {
     ],
 }
 
+# Fictional English-language names for public screenshots.
 CLIENT_NAMES = [
-    'Alina Bondarenko', 'Viktoriia Kravchenko', 'Maryna Shevchenko', 'Yuliia Lysenko',
-    'Olena Rudenko', 'Kateryna Moroz', 'Iryna Bilyk', 'Nataliia Zakharenko',
-    'Tetiana Dmytrenko', 'Liudmyla Yaremenko', 'Oksana Kyrychenko', 'Anna Kolomiiets',
-    'Daryna Hnatenko', 'Polina Tymchenko', 'Svitlana Ponomarenko', 'Halyna Tkachenko',
-    'Nadiia Vasylenko', 'Olesia Panchenko', 'Khrystyna Martynenko', 'Valentyna Klymenko',
-    'Sofiia Lytvynenko', 'Antonina Zinchenko', 'Zhanna Havryliuk', 'Larysa Pavlenko',
-    'Hanna Stets', 'Viktoriia Diachenko', 'Mariia Vlasenko', 'Taisiia Fedorenko',
-    'Karyna Shvets', 'Yevheniia Musiienko', 'Olena Serdiuk', 'Ruslana Pylypenko',
-    'Anastasiia Kulyk', 'Yana Radchenko', 'Valeriia Boichenko',
+    'Emily Carter', 'Oliver Bennett', 'Charlotte Hughes', 'Amelia Brooks',
+    'Henry Mitchell', 'Isla Thompson', 'George Parker', 'Mia Collins',
+    'Arthur Reed', 'Grace Foster', 'Noah Walker', 'Lily Harrison',
+    'Oscar Turner', 'Freya Edwards', 'Leo Richardson', 'Ava Cooper',
+    'Jack Anderson', 'Ella Stevens', 'William Hayes', 'Evie Morris',
+    'Thomas Clarke', 'Sophia Bailey', 'Charlie Robinson', 'Alice Green',
+    'Jacob Ward', 'Florence Hill', 'Archie Lewis', 'Ruby Scott',
+    'Joshua Adams', 'Matilda King', 'James Wright', 'Poppy Allen',
+    'Lucas Wood', 'Daisy Young', 'Benjamin Hall',
 ]
+
+# Independent fictional price lists, not exchange rates or converted amounts.
+DEMO_PRICE_BOOKS = {
+    'EUR': [55, 30, 20, 95, 120, 180, 45, 60,
+            35, 45, 40, 65, 45, 55,
+            70, 65, 100, 200, 55,
+            55, 85, 65, 70, 35,
+            20, 15, 45, 80, 55, 220],
+    'USD': [60, 35, 25, 110, 140, 210, 50, 65,
+            40, 50, 45, 75, 50, 65,
+            80, 75, 120, 230, 60,
+            65, 100, 75, 80, 40,
+            25, 20, 55, 90, 65, 250],
+}

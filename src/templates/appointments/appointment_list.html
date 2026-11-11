@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load i18n l10n %}
+{% load i18n l10n workspace_formats %}
 
 {% block title %}{% translate "Appointments" %}{% endblock %}
 
@@ -89,7 +89,7 @@
                             <td>{{ appointment.employee }}</td>
                             <td>
                                 <span class="cell-title">{{ appointment.appointment_date|date:'SHORT_DATE_FORMAT' }}</span>
-                                <span class="cell-subtitle">{{ appointment.start_time|time:'H:i' }}–{{ appointment.end_time|time:'H:i' }}</span>
+                                <span class="cell-subtitle">{{ appointment.start_time|workspace_time:workspace_time_format }}–{{ appointment.end_time|workspace_time:workspace_time_format }}</span>
                             </td>
                             <td>
                                 {% if request.user.role != 'employee' %}
@@ -113,12 +113,13 @@
                                             class="form-control form-control-sm actual-price-input"
                                             placeholder="0.00"
                                         >
+                                        <span class="text-muted small">{{ appointment.service.currency }}</span>
                                         <button type="submit" class="btn btn-sm btn-outline-success btn-sm-action">
                                             {% translate "Save" %}
                                         </button>
                                     </form>
                                 {% else %}
-                                    {{ appointment.actual_price|default:'—' }}
+                                    {% if appointment.actual_price is not None %}{{ appointment.actual_price|floatformat:2 }} {{ appointment.service.currency }}{% else %}—{% endif %}
                                 {% endif %}
                             </td>
                             <td>

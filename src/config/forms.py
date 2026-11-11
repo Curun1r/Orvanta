@@ -3,11 +3,20 @@ from django import forms
 
 from appointments.models import AppointmentStatus
 from config.form_ui import BootstrapFormMixin
+from services_catalog.currencies import Currency
 from services_catalog.models import Service
 from users.models import User, UserRole
 
 
+def default_currency_for(organization):
+    if organization is None:
+        return Currency.UAH
+    available = set(Service.objects.filter(organization=organization).values_list('currency', flat=True))
+    return next((code for code in Currency.values if code in available), Currency.UAH)
+
+
 class FinanceAnalyticsFilterForm(BootstrapFormMixin, forms.Form):
+    currency = forms.ChoiceField(label=_('Currency'), choices=Currency.choices, required=False)
     date_from = forms.DateField(
         required=False,
         label=_('Date from'),
@@ -38,6 +47,11 @@ class FinanceAnalyticsFilterForm(BootstrapFormMixin, forms.Form):
 
     def __init__(self, *args, organization=None, **kwargs):
         super().__init__(*args, **kwargs)
+        self.default_currency = default_currency_for(organization)
+        self.fields['currency'].initial = self.default_currency
+        if self.is_bound and not self.data.get('currency'):
+            self.data = self.data.copy()
+            self.data['currency'] = self.default_currency
         self.fields['status'].initial = AppointmentStatus.COMPLETED
 
         if organization is None:

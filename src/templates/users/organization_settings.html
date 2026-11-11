@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load i18n %}
+{% load i18n workspace_formats %}
 
 {% block title %}{% translate "Organization settings" %}{% endblock %}
 
@@ -39,7 +39,7 @@
                 </div>
                 <div class="detail-item">
                     <span class="detail-label">{% translate "Created" %}</span>
-                    <span class="detail-value">{{ organization.created_at|date:'SHORT_DATETIME_FORMAT' }}</span>
+                    <span class="detail-value">{{ organization.created_at|workspace_datetime:workspace_time_format }}</span>
                 </div>
             </div>
         </section>

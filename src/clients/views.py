@@ -165,10 +165,14 @@ def client_detail_view(request, pk):
     # Статистика за всіма доступними записами клієнта, без фільтрів сторінки.
     total_count      = all_appointments.count()
     completed_count  = all_appointments.filter(status=AppointmentStatus.COMPLETED).count()
-    total_spent      = all_appointments.filter(
+    total_spent_by_currency = [
+        {'currency': item['service__currency'], 'amount': item['amount']}
+        for item in all_appointments.filter(
         status=AppointmentStatus.COMPLETED,
         actual_price__isnull=False,
-    ).aggregate(s=Sum('actual_price'))['s'] or 0
+        ).values('service__currency').annotate(amount=Sum('actual_price')).order_by('service__currency')
+    ]
+    total_spent = total_spent_by_currency[0]['amount'] if len(total_spent_by_currency) == 1 else (None if total_spent_by_currency else 0)
     last_visit = (
         all_appointments
         .filter(status=AppointmentStatus.COMPLETED)
@@ -189,6 +193,7 @@ def client_detail_view(request, pk):
         'total_count':     total_count,
         'completed_count': completed_count,
         'total_spent':     total_spent,
+        'total_spent_by_currency': total_spent_by_currency,
         'last_visit':      last_visit,
     })
 

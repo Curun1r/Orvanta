@@ -44,3 +44,6 @@ msgstr "Закрити"
 #: static/js/ux.js:47
 msgid "Clear"
 msgstr "Очистити"
+
+msgid "Revenue"
+msgstr "Дохід"

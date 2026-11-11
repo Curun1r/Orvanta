@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load i18n %}
+{% load i18n workspace_formats %}
 
 {% block title %}{{ client.full_name }}{% endblock %}
 
@@ -46,11 +46,11 @@
             </div>
             <div class="detail-item">
                 <span class="detail-label">{% translate "Created" %}</span>
-                <span class="detail-value">{{ client.created_at|date:'SHORT_DATETIME_FORMAT' }}</span>
+                <span class="detail-value">{{ client.created_at|workspace_datetime:workspace_time_format }}</span>
             </div>
             <div class="detail-item">
                 <span class="detail-label">{% translate "Updated" %}</span>
-                <span class="detail-value">{{ client.updated_at|date:'SHORT_DATETIME_FORMAT' }}</span>
+                <span class="detail-value">{{ client.updated_at|workspace_datetime:workspace_time_format }}</span>
             </div>
             <div class="detail-item full">
                 <span class="detail-label">{% translate "Notes" %}</span>
@@ -71,7 +71,11 @@
         </div>
         <div class="client-stat-card">
             <span class="client-stat-label">{% translate "Total spent" %}</span>
-            <span class="client-stat-value">{{ total_spent|floatformat:2 }} {% translate "UAH" %}</span>
+            {% for total in total_spent_by_currency %}
+                <span class="client-stat-value">{{ total.amount|floatformat:2 }} {{ total.currency }}</span>
+            {% empty %}
+                <span class="client-stat-value">0.00</span>
+            {% endfor %}
         </div>
         <div class="client-stat-card">
             <span class="client-stat-label">{% translate "Last visit" %}</span>
@@ -133,7 +137,7 @@
                                 </td>
                                 <td>{{ appt.service.name }}</td>
                                 <td>{{ appt.employee }}</td>
-                                <td>{{ appt.start_time|time:'H:i' }}–{{ appt.end_time|time:'H:i' }}</td>
+                                <td>{{ appt.start_time|workspace_time:workspace_time_format }}–{{ appt.end_time|workspace_time:workspace_time_format }}</td>
                                 <td>
                                     <span class="status-badge status-{{ appt.status }}">
                                         {{ appt.get_status_display }}
@@ -141,7 +145,7 @@
                                 </td>
                                 <td>
                                     {% if appt.actual_price is not None %}
-                                        {{ appt.actual_price|floatformat:2 }} {% translate "UAH" %}
+                                        {{ appt.actual_price|floatformat:2 }} {{ appt.service.currency }}
                                     {% else %}
                                         <span class="text-muted">—</span>
                                     {% endif %}

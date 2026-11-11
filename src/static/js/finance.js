@@ -1,6 +1,7 @@
 window._revenueChartInit = function () {
     const canvas = document.getElementById('revenueChart');
     if (!canvas) return;
+    const currency = canvas.dataset.currency || 'UAH';
 
     const dataEl = document.getElementById('revenueChartData');
     if (!dataEl) return;
@@ -44,7 +45,7 @@ window._revenueChartInit = function () {
             data: {
                 labels,
                 datasets: [{
-                    label: gettext('Revenue (UAH)'),
+                    label: gettext('Revenue') + ' (' + currency + ')',
                     data: values,
                     backgroundColor: isLine ? accent + '33' : accent + 'bb',
                     borderColor: accent,
@@ -64,7 +65,7 @@ window._revenueChartInit = function () {
                     legend: { display: false },
                     tooltip: {
                         callbacks: {
-                            label: ctx => ` ${money.format(ctx.parsed.y)} ${gettext('UAH')}`
+                            label: ctx => ` ${money.format(ctx.parsed.y)} ${currency}`
                         }
                     }
                 },
@@ -78,7 +79,7 @@ window._revenueChartInit = function () {
                         ticks: {
                             font: { size: 12 },
                             color: tickColor,
-                            callback: v => Number(v).toLocaleString(locale) + ' ' + gettext('UAH')
+                            callback: v => Number(v).toLocaleString(locale) + ' ' + currency
                         },
                         beginAtZero: true
                     }

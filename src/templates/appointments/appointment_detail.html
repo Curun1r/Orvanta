@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load i18n %}
+{% load i18n workspace_formats %}
 
 {% block title %}{{ appointment.client }} — {{ appointment.appointment_date|date:'SHORT_DATE_FORMAT' }}{% endblock %}
 
@@ -8,7 +8,7 @@
     <header class="page-header">
         <div>
             <h1>{{ appointment.client }}</h1>
-            <p>{{ appointment.service }} · {{ appointment.appointment_date|date:'SHORT_DATE_FORMAT' }} · {{ appointment.start_time|time:'H:i' }}–{{ appointment.end_time|time:'H:i' }}</p>
+            <p>{{ appointment.service }} · {{ appointment.appointment_date|date:'SHORT_DATE_FORMAT' }} · {{ appointment.start_time|workspace_time:workspace_time_format }}–{{ appointment.end_time|workspace_time:workspace_time_format }}</p>
         </div>
         <div class="page-actions">
             <a href="{% url 'appointment_list' %}" class="btn btn-outline-secondary">{% translate "Back to list" %}</a>
@@ -53,13 +53,13 @@
             </div>
             <div class="detail-item">
                 <span class="detail-label">{% translate "Service base price" %}</span>
-                <span class="detail-value">{{ appointment.service.price|floatformat:2 }} {% translate "UAH" %}</span>
+                <span class="detail-value">{{ appointment.service.price|floatformat:2 }} {{ appointment.service.currency }}</span>
             </div>
             <div class="detail-item">
                 <span class="detail-label">{% translate "Appointment actual price" %}</span>
                 <span class="detail-value">
                     {% if appointment.actual_price is not None %}
-                        {{ appointment.actual_price|floatformat:2 }} {% translate "UAH" %}
+                        {{ appointment.actual_price|floatformat:2 }} {{ appointment.service.currency }}
                     {% else %}
                         —
                     {% endif %}
@@ -75,7 +75,7 @@
             </div>
             <div class="detail-item">
                 <span class="detail-label">{% translate "Time" %}</span>
-                <span class="detail-value">{{ appointment.start_time|time:'H:i' }}–{{ appointment.end_time|time:'H:i' }}</span>
+                <span class="detail-value">{{ appointment.start_time|workspace_time:workspace_time_format }}–{{ appointment.end_time|workspace_time:workspace_time_format }}</span>
             </div>
             <div class="detail-item">
                 <span class="detail-label">{% translate "Status" %}</span>
@@ -124,7 +124,7 @@
                                 </span>
                             </td>
                             <td>{{ item.changed_by|default:'—' }}</td>
-                            <td>{{ item.changed_at|date:'SHORT_DATETIME_FORMAT' }}</td>
+                            <td>{{ item.changed_at|workspace_datetime:workspace_time_format }}</td>
                             <td>{{ item.comment|default:'—' }}</td>
                         </tr>
                     {% endfor %}

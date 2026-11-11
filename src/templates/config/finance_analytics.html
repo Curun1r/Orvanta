@@ -52,13 +52,13 @@
     <section class="metric-grid finance-kpi-grid" aria-label="{% translate 'Financial metrics' %}">
         <article class="metric-card">
             <div class="metric-card-label">{% translate "Total revenue" %}</div>
-            <div class="metric-card-value">{{ total_revenue|floatformat:2 }} {% translate "UAH" %}</div>
+            <div class="metric-card-value">{{ total_revenue|floatformat:2 }} {{ currency }}</div>
             <div class="metric-card-description">{% translate "For the current filters" %}</div>
         </article>
 
         <article class="metric-card">
             <div class="metric-card-label">{% translate "Average appointment value" %}</div>
-            <div class="metric-card-value">{{ average_check|floatformat:2 }} {% translate "UAH" %}</div>
+            <div class="metric-card-value">{{ average_check|floatformat:2 }} {{ currency }}</div>
             <div class="metric-card-description">{% translate "For appointments with an actual price" %}</div>
         </article>
 
@@ -76,13 +76,13 @@
 
         <article class="metric-card">
             <div class="metric-card-label">{% translate "Minimum amount" %}</div>
-            <div class="metric-card-value">{{ min_actual_price|floatformat:2 }} {% translate "UAH" %}</div>
+            <div class="metric-card-value">{{ min_actual_price|floatformat:2 }} {{ currency }}</div>
             <div class="metric-card-description">{% translate "Among priced appointments" %}</div>
         </article>
 
         <article class="metric-card">
             <div class="metric-card-label">{% translate "Maximum amount" %}</div>
-            <div class="metric-card-value">{{ max_actual_price|floatformat:2 }} {% translate "UAH" %}</div>
+            <div class="metric-card-value">{{ max_actual_price|floatformat:2 }} {{ currency }}</div>
             <div class="metric-card-description">{% translate "Among priced appointments" %}</div>
         </article>
     </section>
@@ -101,7 +101,7 @@
         </div>
         <div id="chart-month-filter" class="chart-month-filter"></div>
         <div class="finance-chart-wrap">
-            <canvas id="revenueChart" width="800" height="260" aria-label="{% translate 'Revenue by date chart' %}"></canvas>
+            <canvas id="revenueChart" data-currency="{{ currency }}" width="800" height="260" aria-label="{% translate 'Revenue by date chart' %}"></canvas>
         </div>
         <script id="revenueChartData" type="application/json">
             {{ date_revenue_json|safe }}
@@ -122,9 +122,9 @@
             <div class="month-cmp-item">
                 <div class="month-cmp-label">{% translate "Revenue" %}</div>
                 <div class="month-cmp-row">
-                    <span class="month-cmp-prev">{{ month_comparison.previous.total_revenue|floatformat:2 }} {% translate "UAH" %}</span>
+                    <span class="month-cmp-prev">{{ month_comparison.previous.total_revenue|floatformat:2 }} {{ currency }}</span>
                     <span class="month-cmp-arrow">→</span>
-                    <span class="month-cmp-curr">{{ month_comparison.current.total_revenue|floatformat:2 }} {% translate "UAH" %}</span>
+                    <span class="month-cmp-curr">{{ month_comparison.current.total_revenue|floatformat:2 }} {{ currency }}</span>
                 </div>
                 {% if month_comparison.revenue_change is not None %}
                     <div class="month-cmp-delta {% if month_comparison.revenue_change >= 0 %}delta-up{% else %}delta-down{% endif %}">
@@ -139,9 +139,9 @@
             <div class="month-cmp-item">
                 <div class="month-cmp-label">{% translate "Average appointment value" %}</div>
                 <div class="month-cmp-row">
-                    <span class="month-cmp-prev">{{ month_comparison.previous.average_check|floatformat:2 }} {% translate "UAH" %}</span>
+                    <span class="month-cmp-prev">{{ month_comparison.previous.average_check|floatformat:2 }} {{ currency }}</span>
                     <span class="month-cmp-arrow">→</span>
-                    <span class="month-cmp-curr">{{ month_comparison.current.average_check|floatformat:2 }} {% translate "UAH" %}</span>
+                    <span class="month-cmp-curr">{{ month_comparison.current.average_check|floatformat:2 }} {{ currency }}</span>
                 </div>
                 {% if month_comparison.avg_check_change is not None %}
                     <div class="month-cmp-delta {% if month_comparison.avg_check_change >= 0 %}delta-up{% else %}delta-down{% endif %}">
@@ -194,8 +194,8 @@
                         <tr>
                             <td>{{ item.service__name }}</td>
                             <td class="text-end">{{ item.appointments_count }}</td>
-                            <td class="text-end">{{ item.revenue|floatformat:2 }} {% translate "UAH" %}</td>
-                            <td class="text-end">{{ item.average_check|floatformat:2 }} {% translate "UAH" %}</td>
+                            <td class="text-end">{{ item.revenue|floatformat:2 }} {{ currency }}</td>
+                            <td class="text-end">{{ item.average_check|floatformat:2 }} {{ currency }}</td>
                         </tr>
                     {% empty %}
                         <tr>
@@ -226,8 +226,8 @@
                         <tr>
                             <td>{{ item.employee__username }}</td>
                             <td class="text-end">{{ item.appointments_count }}</td>
-                            <td class="text-end">{{ item.revenue|floatformat:2 }} {% translate "UAH" %}</td>
-                            <td class="text-end">{{ item.average_check|floatformat:2 }} {% translate "UAH" %}</td>
+                            <td class="text-end">{{ item.revenue|floatformat:2 }} {{ currency }}</td>
+                            <td class="text-end">{{ item.average_check|floatformat:2 }} {{ currency }}</td>
                         </tr>
                     {% empty %}
                         <tr>
@@ -274,8 +274,8 @@
                                 {{ appointment.get_status_display }}
                             </span>
                         </td>
-                        <td class="text-end">{{ appointment.service.price|floatformat:2 }} {% translate "UAH" %}</td>
-                        <td class="text-end">{{ appointment.actual_price|floatformat:2 }} {% translate "UAH" %}</td>
+                        <td class="text-end">{{ appointment.service.price|floatformat:2 }} {{ currency }}</td>
+                        <td class="text-end">{{ appointment.actual_price|floatformat:2 }} {{ currency }}</td>
                     </tr>
                 {% empty %}
                     <tr>

@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load i18n %}
+{% load i18n workspace_formats %}
 
 {% block title %}{% translate "Users" %}{% endblock %}
 
@@ -94,7 +94,7 @@
                                     <span class="badge-soft badge-soft-muted">{% translate "No" %}</span>
                                 {% endif %}
                             </td>
-                            <td>{{ user_obj.date_joined|date:'SHORT_DATETIME_FORMAT' }}</td>
+                            <td>{{ user_obj.date_joined|workspace_datetime:workspace_time_format }}</td>
                             <td>
                                 <div class="table-actions">
                                     <a href="{% url 'user_edit_role' user_obj.pk %}" class="btn btn-sm btn-outline-primary btn-sm-action">{% translate "Change role" %}</a>

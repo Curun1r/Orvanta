@@ -5,7 +5,7 @@ from datetime import timedelta
 from decimal import Decimal
 
 from django.contrib.auth.decorators import login_required
-from django.db.models import Avg, Case, Count, DecimalField, Exists, IntegerField, Max, Min, OuterRef, Sum, When
+from django.db.models import Avg, Case, Count, Exists, IntegerField, Max, Min, OuterRef, Sum, When
 from django.http import HttpResponse, JsonResponse
 from django.core.paginator import Paginator
 from django.shortcuts import render
@@ -17,7 +17,7 @@ from appointments.querysets import appointments_visible_to
 from audit.models import AuditLog, AuditActionType, AuditEntityType
 from clients.models import Client
 from config.csv_export import format_csv_date
-from config.forms import FinanceAnalyticsFilterForm
+from config.forms import FinanceAnalyticsFilterForm, default_currency_for
 from services_catalog.models import Service, ServiceCategory
 from users.decorators import admin_required, manager_or_admin_required
 from users.models import User, UserRole
@@ -150,14 +150,6 @@ def get_dashboard_analytics(user):
             When(status=AppointmentStatus.COMPLETED, actual_price__isnull=False, then=1),
             output_field=IntegerField(),
         )),
-        total_revenue=Sum(Case(
-            When(status=AppointmentStatus.COMPLETED, actual_price__isnull=False, then='actual_price'),
-            output_field=DecimalField(),
-        )),
-        average_check=Avg(Case(
-            When(status=AppointmentStatus.COMPLETED, actual_price__isnull=False, then='actual_price'),
-            output_field=DecimalField(),
-        )),
     )
 
     appointments_total = stats['total']
@@ -190,8 +182,25 @@ def get_dashboard_analytics(user):
     else:
         max_workload = 0
 
-    total_revenue = (stats['total_revenue'] or Decimal('0.00')).quantize(Decimal('0.01'))
-    average_check = (stats['average_check'] or Decimal('0.00')).quantize(Decimal('0.01'))
+    revenue_by_currency = [
+        {
+            'currency': row['service__currency'],
+            'total_revenue': _decimal_or_zero(row['total_revenue']),
+            'average_check': _decimal_or_zero(row['average_check']),
+            'revenue_appointments_count': row['count'],
+        }
+        for row in appointments.filter(
+            status=AppointmentStatus.COMPLETED, actual_price__isnull=False,
+        ).values('service__currency').annotate(
+            total_revenue=Sum('actual_price'), average_check=Avg('actual_price'), count=Count('id'),
+        ).order_by('service__currency')
+    ]
+    # Preserve scalar API values for a single currency, never add unlike units.
+    single_revenue = revenue_by_currency[0] if len(revenue_by_currency) == 1 else None
+    mixed_currencies = len(revenue_by_currency) > 1
+    total_revenue = single_revenue['total_revenue'] if single_revenue else (None if mixed_currencies else Decimal('0.00'))
+    average_check = single_revenue['average_check'] if single_revenue else (None if mixed_currencies else Decimal('0.00'))
+    currency = single_revenue['currency'] if single_revenue else (None if mixed_currencies else default_currency_for(user_organization))
 
     # Один запит замість 4 окремих COUNT для клієнтів та послуг
     client_stats = Client.objects.filter(organization=user_organization).aggregate(
@@ -221,6 +230,8 @@ def get_dashboard_analytics(user):
         'completed_without_price_count': stats['completed_without_price'],
         'total_revenue': total_revenue,
         'average_check': average_check,
+        'currency': currency,
+        'revenue_by_currency': revenue_by_currency,
         'revenue_appointments_count': stats['revenue_count'],
         'status_counts': status_counts,
         'popular_services': popular_services,
@@ -262,7 +273,7 @@ def _pct_change(current, previous):
     return change
 
 
-def get_month_comparison(user):
+def get_month_comparison(user, currency=None):
     if user.organization_id is None:
         return None
 
@@ -275,7 +286,8 @@ def get_month_comparison(user):
     else:
         prev_year, prev_month = cur_year, cur_month - 1
 
-    base_qs = _base_finance_queryset(user)
+    currency = currency or default_currency_for(user.organization)
+    base_qs = _base_finance_queryset(user).filter(service__currency=currency)
     current = _month_revenue(base_qs, cur_year, cur_month)
     previous = _month_revenue(base_qs, prev_year, prev_month)
 
@@ -287,6 +299,7 @@ def get_month_comparison(user):
     }
 
     return {
+        'currency': currency,
         'current_label': f"{MONTH_NAMES[cur_month]} {cur_year}",
         'previous_label': f"{MONTH_NAMES[prev_month]} {prev_year}",
         'current': current,
@@ -326,7 +339,10 @@ def _apply_finance_filters(queryset, cleaned_data, *, include_status=True):
     service = cleaned_data.get('service')
     employee = cleaned_data.get('employee')
     status = cleaned_data.get('status')
+    currency = cleaned_data.get('currency')
 
+    if currency:
+        queryset = queryset.filter(service__currency=currency)
     if date_from:
         queryset = queryset.filter(appointment_date__gte=date_from)
     if date_to:
@@ -345,6 +361,7 @@ def get_finance_analytics(user, filter_form):
     if not filter_form.is_valid():
         empty_queryset = Appointment.objects.none()
         return {
+            'currency': filter_form.default_currency,
             'paid_appointments': empty_queryset,
             'total_revenue': Decimal('0.00'),
             'average_check': Decimal('0.00'),
@@ -409,6 +426,7 @@ def get_finance_analytics(user, filter_form):
     )
 
     return {
+        'currency': filter_form.cleaned_data['currency'],
         'paid_appointments': paid_appointments.order_by(
             '-appointment_date',
             '-start_time',
@@ -433,20 +451,27 @@ def home_view(request):
     onboarding = get_onboarding_status(request.user)
     can_view_financials = request.user.role in {UserRole.ADMIN, UserRole.MANAGER}
     today_revenue = Decimal('0.00')
+    today_revenue_by_currency = []
 
     if not can_view_financials:
         analytics.pop('total_revenue', None)
         analytics.pop('average_check', None)
         analytics.pop('revenue_appointments_count', None)
+        analytics.pop('revenue_by_currency', None)
     elif request.user.organization_id is not None:
-        today_revenue = _decimal_or_zero(
-            Appointment.objects.filter(
+        today_revenue_by_currency = [
+            {'currency': item['service__currency'], 'amount': _decimal_or_zero(item['total'])}
+            for item in Appointment.objects.filter(
                 organization=request.user.organization,
                 appointment_date=timezone.localdate(),
                 status=AppointmentStatus.COMPLETED,
                 actual_price__isnull=False,
-            ).aggregate(total=Sum('actual_price'))['total'],
-        )
+            ).values('service__currency').annotate(total=Sum('actual_price')).order_by('service__currency')
+        ]
+        if len(today_revenue_by_currency) == 1:
+            today_revenue = today_revenue_by_currency[0]['amount']
+        elif today_revenue_by_currency:
+            today_revenue = None
 
     nearest_appointments = (
         appointments.exclude(status=AppointmentStatus.CANCELLED)
@@ -506,6 +531,8 @@ def home_view(request):
         'header_quick_actions': quick_actions[:2],
         'can_view_financials': can_view_financials,
         'today_revenue': today_revenue,
+        'today_revenue_by_currency': today_revenue_by_currency,
+        'default_currency': default_currency_for(request.user.organization),
     }
     return render(request, 'home.html', context)
 
@@ -519,7 +546,7 @@ def finance_analytics_view(request):
     )
     analytics = get_finance_analytics(request.user, filter_form)
 
-    query_params = filter_data.copy()
+    query_params = filter_form.data.copy()
     query_params.pop('page', None)
     query_string = query_params.urlencode()
 
@@ -545,7 +572,7 @@ def finance_analytics_view(request):
             'filter_form': filter_form,
             'query_string': query_string,
             'page_obj': page_obj,
-            'month_comparison': get_month_comparison(request.user),
+            'month_comparison': get_month_comparison(request.user, analytics['currency']),
             'date_revenue_json': date_revenue_json,
             **analytics,
         },
@@ -566,9 +593,9 @@ def finance_analytics_export_csv_view(request):
     response.write('\ufeff')
 
     writer = csv.writer(response, delimiter=';')
-    writer.writerow([_('Metric'), _('Value')])
-    writer.writerow([_('Total revenue'), analytics['total_revenue']])
-    writer.writerow([_('Average transaction value'), analytics['average_check']])
+    writer.writerow([_('Metric'), _('Value'), _('Currency')])
+    writer.writerow([_('Total revenue'), analytics['total_revenue'], analytics['currency']])
+    writer.writerow([_('Average transaction value'), analytics['average_check'], analytics['currency']])
     writer.writerow([_('Paid appointments'), analytics['revenue_appointments_count']])
     writer.writerow([
         _('Completed appointments without an actual price'),
@@ -583,6 +610,7 @@ def finance_analytics_export_csv_view(request):
         _('Status'),
         _('Service base price'),
         _('Appointment actual price'),
+        _('Currency'),
     ])
 
     for appointment in analytics['paid_appointments']:
@@ -594,6 +622,7 @@ def finance_analytics_export_csv_view(request):
             appointment.get_status_display(),
             appointment.service.price,
             appointment.actual_price,
+            appointment.service.currency,
         ])
 
     return response

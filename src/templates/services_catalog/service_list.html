@@ -87,7 +87,7 @@
                                 {% endif %}
                             </td>
                             <td>{{ service.category|default:'—' }}</td>
-                            <td>{{ service.price|floatformat:2 }} {% translate "UAH" %}</td>
+                            <td>{{ service.price|floatformat:2 }} {{ service.currency }}</td>
                             <td>{{ service.duration_minutes }} {% translate "min" %}</td>
                             <td>
                                 {% if service.is_active %}

@@ -42,7 +42,7 @@ The test suite exercises organization isolation, role permissions, API responses
 
 GitHub Actions runs the suite against PostgreSQL, checks for missing migrations, compiles translation catalogs, and collects production static files. A separate integration test verifies hashed assets, gzip responses, cache headers, and authentication page rendering with `DEBUG=False`.
 
-The Docker demo generates synthetic clients, services, and appointments around the current date. It includes accounts for all three roles. Repeating setup preserves existing data; an explicit reset refreshes only the managed demo workspace. English is the default interface language, with Ukrainian available as a browser preference.
+The Docker demo generates synthetic clients, services, and appointments around the current date. It includes accounts for all three roles. Repeating setup preserves existing data; an explicit reset refreshes only the managed demo workspace. English is the default interface language, with Ukrainian available as a browser preference. The screenshot fixtures use fictional English names and EUR prices. Services choose their currency before pricing; reporting separates currencies without conversion. Each organization can select a 12-hour or 24-hour display.
 
 ## Scope and outcome
 

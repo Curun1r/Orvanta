@@ -1739,6 +1739,14 @@ body {
     font-size: 1.16rem;
 }
 
+html[data-time-format="12"] .appointment-item {
+    grid-template-columns: minmax(6.5rem, max-content) minmax(0, 1fr);
+}
+
+html[data-time-format="12"] .appointment-time strong {
+    white-space: nowrap;
+}
+
 .appointment-content {
     min-width: 0;
 }
@@ -2024,6 +2032,10 @@ body {
     }
 
     .appointment-item {
+        grid-template-columns: 1fr;
+    }
+
+    html[data-time-format="12"] .appointment-item {
         grid-template-columns: 1fr;
     }
 

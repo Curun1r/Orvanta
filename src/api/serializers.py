@@ -33,6 +33,7 @@ class ServiceCategorySerializer(serializers.ModelSerializer):
 
 class ServiceSerializer(serializers.ModelSerializer):
     category_name = serializers.CharField(source='category.name', read_only=True)
+    currency = serializers.CharField(read_only=True)
 
     class Meta:
         model = Service
@@ -47,6 +48,7 @@ class ServiceSerializer(serializers.ModelSerializer):
             'category_name',
             'created_at',
             'updated_at',
+            'currency',
         ]
 
 
@@ -54,6 +56,7 @@ class AppointmentSerializer(serializers.ModelSerializer):
     client_full_name = serializers.CharField(source='client.full_name', read_only=True)
     service_name = serializers.CharField(source='service.name', read_only=True)
     employee_username = serializers.CharField(source='employee.username', read_only=True)
+    currency = serializers.CharField(source='service.currency', read_only=True)
 
     class Meta:
         model = Appointment
@@ -73,4 +76,5 @@ class AppointmentSerializer(serializers.ModelSerializer):
             'comment',
             'created_at',
             'updated_at',
+            'currency',
         ]

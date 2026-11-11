@@ -132,6 +132,7 @@ def service_export_csv_view(request):
         pgettext('service status', 'Active'),
         _('Created at'),
         _('Updated at'),
+        _('Currency'),
     ]
     rows = (
         [
@@ -144,6 +145,7 @@ def service_export_csv_view(request):
             format_csv_bool(service.is_active),
             format_csv_datetime(service.created_at),
             format_csv_datetime(service.updated_at),
+            service.currency,
         ]
         for service in services
     )

@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load i18n %}
+{% load i18n workspace_formats %}
 
 {% block title %}{% translate "Profile" %}{% endblock %}
 
@@ -31,7 +31,7 @@
         </div>
         <div class="profile-joined">
             <span>{% translate "Registration date" %}</span>
-            <strong>{{ request.user.date_joined|date:'SHORT_DATETIME_FORMAT' }}</strong>
+            <strong>{{ request.user.date_joined|workspace_datetime:workspace_time_format }}</strong>
         </div>
     </section>
 
@@ -68,7 +68,7 @@
                     <div class="profile-detail-list">
                         <div class="profile-detail-row">
                             <span>{% translate "Last sign-in" %}</span>
-                            <strong>{{ request.user.last_login|date:'SHORT_DATETIME_FORMAT'|default:'—' }}</strong>
+                            <strong>{{ request.user.last_login|workspace_datetime:workspace_time_format|default:'—' }}</strong>
                         </div>
                         <div class="profile-detail-row">
                             <span>{% translate "Activity" %}</span>

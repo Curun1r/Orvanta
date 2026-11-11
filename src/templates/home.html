@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load i18n %}
+{% load i18n workspace_formats %}
 
 {% block title %}{% translate "Home" %}{% endblock %}
 
@@ -88,7 +88,7 @@
                         <a href="{% url 'appointment_detail' appointment.pk %}" class="appointment-item">
                             <div class="appointment-time">
                                 <span>{{ appointment.appointment_date|date:'SHORT_DATE_FORMAT' }}</span>
-                                <strong>{{ appointment.start_time|time:'H:i' }}</strong>
+                                <strong>{{ appointment.start_time|workspace_time:workspace_time_format }}</strong>
                             </div>
                             <div class="appointment-content">
                                 <div class="appointment-main-row">
@@ -99,7 +99,7 @@
                                 </div>
                                 <div class="appointment-service">{{ appointment.service.name }}</div>
                                 {% if appointment.actual_price is not None %}
-                                    <div class="appointment-meta">{% translate "Actual price:" %} {{ appointment.actual_price|floatformat:2 }} {% translate "UAH" %}</div>
+                                    <div class="appointment-meta">{% translate "Actual price:" %} {{ appointment.actual_price|floatformat:2 }} {{ appointment.service.currency }}</div>
                                 {% endif %}
                             </div>
                         </a>
@@ -184,7 +184,11 @@
                     </div>
 
                     <div class="today-revenue-card">
-                        <strong>{{ today_revenue|floatformat:2 }} {% translate "UAH" %}</strong>
+                        {% for total in today_revenue_by_currency %}
+                            <strong>{{ total.amount|floatformat:2 }} {{ total.currency }}</strong>
+                        {% empty %}
+                            <strong>0.00 {{ default_currency }}</strong>
+                        {% endfor %}
                         <span>{% translate "Completed appointments with an actual price today." %}</span>
                         <a href="{% url 'finance_analytics' %}" class="metric-card-link">{% translate "View details →" %}</a>
                     </div>
@@ -254,7 +258,7 @@
                                     <span>→</span>
                                     <span class="status-pill status-{{ item.new_status }}">{{ item.get_new_status_display }}</span>
                                 </div>
-                                <time>{{ item.changed_at|date:'SHORT_DATETIME_FORMAT' }}</time>
+                                <time>{{ item.changed_at|workspace_datetime:workspace_time_format }}</time>
                             </div>
                         {% endfor %}
                     </div>

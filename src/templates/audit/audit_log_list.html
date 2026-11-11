@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load i18n %}
+{% load i18n workspace_formats %}
 
 {% block title %}{% translate "Audit log" %}{% endblock %}
 
@@ -88,7 +88,7 @@
                             <td>{{ log.entity_id|default:'—' }}</td>
                             <td>{{ log.description }}</td>
                             <td>{{ log.ip_address|default:'—' }}</td>
-                            <td>{{ log.created_at|date:'SHORT_DATETIME_FORMAT' }}</td>
+                            <td>{{ log.created_at|workspace_datetime:workspace_time_format }}</td>
                         </tr>
                     {% endfor %}
                     </tbody>

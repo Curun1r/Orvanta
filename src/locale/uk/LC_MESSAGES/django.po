@@ -2148,3 +2148,46 @@ msgstr "Налаштування організації успішно онов�
 #, python-format
 msgid "Organization \"%(organization)s\" deleted successfully."
 msgstr "Організацію \"%(organization)s\" успішно видалено."
+
+msgid "Use the currency shown beside the selected service. Amounts are not converted."
+msgstr "Використовуйте валюту, вказану поруч із вибраною послугою. Суми не конвертуються."
+
+msgid "Clear the actual price before choosing a service in another currency."
+msgstr "Очистьте фактичну вартість, перш ніж вибрати послугу в іншій валюті."
+
+#, python-format
+msgid "Actual price (%(currency)s)"
+msgstr "Фактична вартість (%(currency)s)"
+
+msgid "Currency"
+msgstr "Валюта"
+
+msgid "Ukrainian hryvnia (UAH)"
+msgstr "Українська гривня (UAH)"
+
+msgid "Euro (EUR)"
+msgstr "Євро (EUR)"
+
+msgid "US dollar (USD)"
+msgstr "Долар США (USD)"
+
+msgid "Currency is fixed when a service is created. Create a new service to use another currency."
+msgstr "Валюта фіксується під час створення послуги. Для іншої валюти створіть нову послугу."
+
+msgid "Choose the currency before entering the price. Amounts are not converted."
+msgstr "Оберіть валюту перед введенням ціни. Суми не конвертуються."
+
+msgid "Select a supported currency."
+msgstr "Оберіть підтримувану валюту."
+
+msgid "Time format"
+msgstr "Формат часу"
+
+msgid "Choose how times are displayed in this workspace. Stored dates and times stay unchanged."
+msgstr "Оберіть формат відображення часу в цій організації. Збережені дати й час не змінюються."
+
+msgid "24-hour (14:30)"
+msgstr "24-годинний (14:30)"
+
+msgid "12-hour (2:30 PM)"
+msgstr "12-годинний (2:30 PM)"

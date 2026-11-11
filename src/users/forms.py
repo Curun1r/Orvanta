@@ -7,7 +7,7 @@ from django.db.models import Q
 
 from config.form_ui import BootstrapFormMixin
 
-from .models import Organization, User, UserRole
+from .models import Organization, OrganizationTimeFormat, User, UserRole
 
 SAFE_CREATE_ROLE_CHOICES = [
     (UserRole.MANAGER, dict(UserRole.choices)[UserRole.MANAGER]),
@@ -140,16 +140,28 @@ class UserProfileForm(BootstrapFormMixin, forms.ModelForm):
 class OrganizationSettingsForm(BootstrapFormMixin, forms.ModelForm):
     class Meta:
         model = Organization
-        fields = ['name']
+        fields = ['name', 'time_format']
         labels = {
             'name': _('Organization name'),
+            'time_format': _('Time format'),
         }
         help_texts = {
             'name': _('The organization slug is used to sign in and does not change automatically.'),
+            'time_format': _('Choose how times are displayed in this workspace. Stored dates and times stay unchanged.'),
         }
         widgets = {
             'name': forms.TextInput(attrs={'placeholder': _('Organization name')}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['time_format'].required = False
+
+    def clean_time_format(self):
+        # Preserve the preference when an older settings form submits only a name.
+        return self.cleaned_data.get('time_format') or (
+            self.instance.time_format or OrganizationTimeFormat.TWENTY_FOUR_HOUR
+        )
 
 
 class ConfirmDeleteUserForm(forms.Form):

@@ -55,6 +55,8 @@ class DashboardAnalyticsApiView(APIView):
                 'cancelled_count': analytics['cancelled_count'],
                 'total_revenue': analytics['total_revenue'],
                 'average_check': analytics['average_check'],
+                'currency': analytics['currency'],
+                'revenue_by_currency': analytics['revenue_by_currency'],
                 'revenue_appointments_count': analytics['revenue_appointments_count'],
                 'status_counts': [
                     {

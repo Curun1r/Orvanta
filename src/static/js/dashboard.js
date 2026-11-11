@@ -63,6 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const now = new Date();
                 const formattedTime = new Intl.DateTimeFormat(document.documentElement.lang || 'en', {
                     hour: '2-digit', minute: '2-digit',
+                    hourCycle: document.documentElement.dataset.timeFormat === '12' ? 'h12' : 'h23',
                 }).format(now);
                 lastUpdated.textContent = window.interpolate(
                     window.gettext('Updated at %(time)s'), { time: formattedTime }, true

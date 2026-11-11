@@ -175,6 +175,8 @@ class ReadOnlyApiTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         expected_keys = {
+            'currency',
+            'revenue_by_currency',
             'clients_count',
             'active_clients_count',
             'services_count',

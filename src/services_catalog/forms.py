@@ -4,6 +4,7 @@ from django import forms
 from config.form_ui import BootstrapFormMixin
 
 from .models import Service, ServiceCategory
+from .currencies import Currency
 
 
 class ServiceCategoryForm(BootstrapFormMixin, forms.ModelForm):
@@ -26,12 +27,13 @@ class ServiceCategoryForm(BootstrapFormMixin, forms.ModelForm):
 class ServiceForm(BootstrapFormMixin, forms.ModelForm):
     class Meta:
         model = Service
-        fields = ['category', 'name', 'description', 'price', 'duration_minutes', 'is_active']
+        fields = ['category', 'name', 'description', 'currency', 'price', 'duration_minutes', 'is_active']
         labels = {
             'category': _('Category'),
             'name': _('Name'),
             'description': _('Description'),
             'price': _('Base price'),
+            'currency': _('Currency'),
             'duration_minutes': _('Duration, min'),
             'is_active': pgettext_lazy('service status', 'Active'),
         }
@@ -55,6 +57,20 @@ class ServiceForm(BootstrapFormMixin, forms.ModelForm):
 
     def __init__(self, *args, organization=None, **kwargs):
         super().__init__(*args, **kwargs)
+        if self.is_bound and self.add_prefix('currency') not in self.data and self.instance._state.adding:
+            # Keep older clients compatible; the visible creation form always submits its selection.
+            self.data = self.data.copy()
+            self.data[self.add_prefix('currency')] = Currency.UAH
+        if not self.instance._state.adding:
+            self.fields['currency'].disabled = True
+            self.fields['currency'].help_text = _(
+                'Currency is fixed when a service is created. '
+                'Create a new service to use another currency.'
+            )
+        else:
+            self.fields['currency'].help_text = _(
+                'Choose the currency before entering the price. Amounts are not converted.'
+            )
         self.fields['category'].empty_label = _('Uncategorized')
         if organization is None:
             self.fields['category'].queryset = ServiceCategory.objects.none()

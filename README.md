@@ -51,8 +51,10 @@ The [case study](docs/portfolio-case-study.md) explains the booking and audit de
 
 ## Screenshots
 
+![English demo dashboard with EUR prices](docs/screenshots/dashboard-preview.jpg)
+
 <details>
-<summary>Dashboard</summary>
+<summary>Full dashboard</summary>
 
 ![Dashboard](docs/screenshots/dashboard.jpg)
 
@@ -80,11 +82,35 @@ The [case study](docs/portfolio-case-study.md) explains the booking and audit de
 </details>
 
 <details>
+<summary>Service currency selection</summary>
+
+![Currency selected before the base price](docs/screenshots/service-currency.jpg)
+
+</details>
+
+<details>
+<summary>Organization time format</summary>
+
+![Organization settings with 12-hour display selected](docs/screenshots/time-format.jpg)
+
+</details>
+
+<details>
 <summary>Sign in</summary>
 
 ![Sign in](docs/screenshots/sign-in.jpg)
 
 </details>
+
+---
+
+## Prices, currencies, and time display
+
+Choose **UAH**, **EUR**, or **USD** when creating a service, before entering its price. Each service keeps that currency; appointments use the service currency. Amounts are never converted. Create a new service if you need another currency.
+
+Financial analytics filters by currency. Dashboard revenue and client spending show separate currency totals, and CSV exports and API prices include their currency code. Different currencies are never added into a single revenue figure.
+
+Administrators can choose a **12-hour** or **24-hour** display in **Organization settings**. The choice applies across workspace pages and does not change stored times, the time zone, or the ISO formats used in API responses and CSV exports. Native date/time inputs follow the browser's own controls.
 
 ---
 
@@ -332,7 +358,7 @@ PostgreSQL must pass its health check before the web service starts. The web sta
 docker compose exec web python src/manage.py setup_demo
 ```
 
-This command creates **Orvanta Demo** (`orvanta-demo`), accounts for all three roles, 35 sample clients, 30 services, and 180 appointments around the current date. Past completed appointments populate financial analytics; upcoming appointments populate the dashboard.
+This command creates an English-language demo with fictional client and staff names and **EUR** service prices. It creates **Orvanta Demo** (`orvanta-demo`), accounts for all three roles, 35 sample clients, 30 services, and 180 appointments around the current date. Past completed appointments populate financial analytics; upcoming appointments populate the dashboard.
 
 A shared password is generated and printed when the demo accounts are created. Save it for the following logins:
 
@@ -340,9 +366,9 @@ A shared password is generated and printed when the demo accounts are created. S
 |---|---|---|
 | Admin | `demo_admin` | `orvanta-demo` |
 | Manager | `demo_manager` | `orvanta-demo` |
-| Employee | `demo_olena` | `orvanta-demo` |
+| Employee | `demo_emma` | `orvanta-demo` |
 
-The other employee accounts are `demo_natalia`, `demo_iryna`, `demo_tetyana`, and `demo_oksana`; they use the same demo password and organization.
+The other employee accounts are `demo_olivia`, `demo_james`, `demo_sophie`, and `demo_daniel`; they use the same demo password and organization.
 
 Open [http://localhost:8000/login/](http://localhost:8000/login/) and enter the username, generated password, and organization slug. The application admin account is ready to use; creating a Django superuser is not required.
 
@@ -351,6 +377,14 @@ For a local demo with a password you choose, provide it on initial setup:
 ```bash
 docker compose exec web python src/manage.py setup_demo --password 'LocalDemo2026!'
 ```
+
+For a new demo using another currency, choose it before the services are generated:
+
+```bash
+docker compose exec web python src/manage.py setup_demo --currency USD
+```
+
+`EUR` is the default; `UAH` and `USD` are also available. These are independent fictional price lists, not exchange-rate conversions. To replace an older managed demo with the current English/EUR fixtures, use `setup_demo --reset --currency EUR`. This replaces only the managed demo workspace and its credentials.
 
 ### Repeat or refresh the demo
 
@@ -371,7 +405,7 @@ The legacy `python src/seed_salon.py` entry point runs the same demo setup comma
 1. Sign in as `demo_admin` and inspect the dashboard, upcoming appointments, clients, and service catalog.
 2. Open **Finance** to inspect completed-appointment revenue and export a filtered CSV.
 3. Create an appointment, then attempt another appointment for the same employee at an overlapping time to see conflict validation.
-4. Sign in as `demo_olena`. Appointment lists, API responses, and client appointment history are limited to this employee's assigned records.
+4. Sign in as `demo_emma`. Appointment lists, API responses, and client appointment history are limited to this employee's assigned records.
 5. Sign in as `demo_manager` to manage operational data; sign in as `demo_admin` to inspect user management and the audit log.
 
 ### Start with your own organization
